@@ -3,8 +3,110 @@
 
 #calculator {
 	-fx-background-color:#00ff00;
+  -fx-font-family: monospace;
 }
 
-#calculator .grey {
-	-fx-background-color:#ff00ff;
+.bg_darkgrey {
+	-fx-background-color:#c3c3c3;
+  -fx-background-radius: 3,2,2,2;
+}
+
+.lb_values {
+  -fx-font-size: 20px;
+  -fx-text-fill: #000000;
+  fx-text-alignment: right;
+  
+}
+
+.lb_result {
+  -fx-font-weight: bold;
+  -fx-border-color: black, transparent, black;
+  -fx-border-width: 1 0 1 0, 0 0 1 0, 0 0 1 0;
+  -fx-border-insets: 0 0 1 0, 0 0 2 0, 0 0 3 0;
+}
+
+.pl_grid {
+  -fx-hgap: 10;
+  -fx-vgap: 30;
+}
+
+.bt_orange {
+	-fx-background-color:
+      linear-gradient(#ffd65b, #e68400),
+      linear-gradient(#ffef84, #f2ba44),
+      linear-gradient(#ffea6a, #efaa22),
+      linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+      linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 3,2,2,2;
+  -fx-padding: 10 20 10 20;
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: bold;
+  -fx-font-size: 20px;
+  -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.bt_orange:hover {
+  -fx-background-color:
+      eea10b;
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 3,2,2,2;
+  -fx-padding: 10 20 10 20;
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: bold;
+  -fx-font-size: 20px;
+  -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.bt_orange:pressed {
+  -fx-background-color:
+      linear-gradient(#ffd65b, #e68400),
+      linear-gradient(#ffef84, #f2ba44),
+      linear-gradient(#ffea6a, #efaa22),
+      linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+      linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 3,2,2,2;
+  -fx-padding: 10 20 10 20;
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: bold;
+  -fx-font-size: 20px;
+  -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.bt_lightgrey {
+	-fx-background-color:
+      #c3c4c4,
+      linear-gradient(#d6d6d6 50%, white 100%),
+      radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 3,2,2,2;
+  -fx-padding: 10 20 10 20;
+  -fx-text-fill: #000000;
+  -fx-font-size: 20px;
+}
+
+.bt_lightgrey:hover {
+  -fx-background-color: 
+      #c5c6c6
+      linear-gradient(#d6d6d6 50%, white 100%),
+      radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 3,2,2,2;
+  -fx-padding: 10 20 10 20;
+  -fx-text-fill: #000000;
+  -fx-font-size: 20px;
+  -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.bt_lightgrey:pressed {
+  -fx-background-color: 
+      #c0c0c0,
+      radial-gradient(center 50% -40%, radius 200%, #c0c0c0 45%, rgba(230,230,230,0) 50%);
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 3,2,2,2;
+  -fx-padding: 10 20 10 20;
+  -fx-text-fill: #000000;
+  -fx-font-size: 20px;
+  -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
 }
