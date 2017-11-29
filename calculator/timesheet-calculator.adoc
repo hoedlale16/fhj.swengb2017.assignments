@@ -9,17 +9,35 @@
 | Description
 
 | 29.11.17
+| 0.5
+| Review requirement document
+
+| 29.11.17
+| 3
+| Design GUI
+
+| 29.11.17
+| 0.5
+| Review of already existing code
+
+| 29.11.17
 | 1
-| Review of this and that
+| Implement initial Controller calls from GUI (test print "Hello") on Console
 
 | 30.11.17
-| 5
-| implemented css
-
-| 11.07.17
 | 2
-| fixed bugs
+| Implement Controller to handle number buttons(incl. Comma)
 
+| 01.12.17
+| 3
+| Create Classes to handle Numbers and Functions (incl. checks) + Unit-Tests
 
+| 01.12.17
+| 3
+| Implement Polish Notation Enginge
+
+| 04.12.17
+| 2
+| Test implementation and code documentation
 
 |===
