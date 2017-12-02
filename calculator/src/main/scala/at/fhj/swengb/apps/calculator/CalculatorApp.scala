@@ -51,31 +51,69 @@ class CalculatorFX extends javafx.application.Application {
 
 class CalculatorFxController extends Initializable {
 
-  @FXML private var lbValue1: Label = null;
-  @FXML private var lbValue2: Label = null;
-  @FXML private var lbResult: Label = null;
-  @FXML private var btEnter: Button = null;
+  //Output labels
+  @FXML private var lbValue1: Label = _
+  @FXML private var lbValue2: Label = _
+  @FXML private var lbResult: Label = _
 
-  private var writeValue2: Boolean = false;
+  //Functionality Buttons
+  @FXML private var btFunctionEnter: Button = _
+  @FXML private var btFunctionComma: Button = _
+
+
+  //All math function buttons of calculator
+  @FXML var btFuncPercentage: Button = _
+  @FXML var btFunctionMinus: Button = _
+  @FXML var btFunctionPlus: Button =_
+  @FXML var btFunctionMultiplication: Button = _
+  @FXML var btFunctionDivision: Button = _
+
+  private var writeValue2: Boolean = false
+  private var firstNumberEntered: Boolean = false
 
   /**
     * Return expected output File
     * @return
     */
-  private def getCurrentOutValueLabel(): Label = {
+  private def getCurrentOutValueLabel: Label = {
     if (writeValue2 == true)
-      lbValue2;
+      lbValue2
     else
-      lbValue1;
+      lbValue1
   }
+
   @FXML private def onNumberButtonAction(event: ActionEvent): Unit = {
-    val currButton = event.getSource.asInstanceOf[Button];
+    val currButton = event.getSource.asInstanceOf[Button]
     val outputLabel = getCurrentOutValueLabel
 
+    println(currButton.getId)
     currButton.getId match {
-      case "btComma" => outputLabel.setText(outputLabel.getText() + ".")
-      case _   => outputLabel.setText(outputLabel.getText() + currButton.getText)
+      case "btFunctionComma" => {
+        outputLabel.setText(outputLabel.getText + ".")
+
+        //Deactivate Comma Button
+        btFunctionComma.setDisable(true);
+      }
+      case _   => {
+
+        //Check if this is the first number of
+        if ( ! firstNumberEntered) {
+          firstNumberEntered = true
+          outputLabel.setText(currButton.getText)
+          btFunctionComma.setDisable(false)
+        } else {
+          outputLabel.setText(outputLabel.getText + currButton.getText)
+        }
+      }
     }
+  }
+
+    private def handleFunctionButtons(disable: Boolean): Unit = {
+    btFuncPercentage.setDisable(disable)
+    btFunctionMinus.setDisable(disable)
+      btFunctionPlus.setDisable(disable)
+    btFunctionMultiplication.setDisable(disable)
+    btFunctionDivision.setDisable(disable)
   }
 
   /**
@@ -83,9 +121,17 @@ class CalculatorFxController extends Initializable {
     * @param event
     */
   @FXML private def onEnterButtonAction(event: ActionEvent): Unit = {
-    writeValue2 = true;
-    btEnter = event.getSource.asInstanceOf[Button]
-    btEnter.setDisable(true);
+    writeValue2 = true
+    btFunctionEnter.setDisable(true)
+
+
+    //Deactivate Comma Button and reset flag for first digit in value
+    btFunctionComma.setDisable(true);
+    firstNumberEntered = false;
+
+    //Activate function Buttons
+    handleFunctionButtons(false);
+
   }
 
   /**
@@ -93,13 +139,19 @@ class CalculatorFxController extends Initializable {
     */
   @FXML private def onClearButtonAction(event: ActionEvent): Unit = {
     //Check if Enter-Button is already set. If yes, deactivate button again
-    if (btEnter != null)
-      btEnter.setDisable(false)
+   btFunctionEnter.setDisable(false)
+
+    //Reset comma button
+    btFunctionComma.setDisable(true);
+    firstNumberEntered = false;
+
+    //Deactivate function buttons again
+    handleFunctionButtons(true)
 
     //Reset values and output
     writeValue2 = false;
-    lbValue1.setText("");
-    lbValue2.setText("");
+    lbValue1.setText("0");
+    lbValue2.setText("0");
     lbResult.setText("");
   }
 
@@ -130,11 +182,7 @@ class CalculatorFxController extends Initializable {
     lbResult.setText(myResult)
   }
 
-  override def initialize(location: URL, resources: ResourceBundle) = {
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {
     /*TODO*/
-  }
-
-  def sgn(): Unit = {
-    println("an event has happened")
   }
 }

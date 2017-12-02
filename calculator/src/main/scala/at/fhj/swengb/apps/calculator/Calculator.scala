@@ -3,12 +3,15 @@ package at.fhj.swengb.apps.calculator
 import scala.util.matching.Regex
 
 case class Calculator(val number1: Number,
-                      val number2: Number) {
-
-
+                      val number2: Number,
+                      val enginge: CalcEngine)
+{
 
 
 }
+
+trait CalcEngine
+
 
 case class Number(strValue: String) {
 
