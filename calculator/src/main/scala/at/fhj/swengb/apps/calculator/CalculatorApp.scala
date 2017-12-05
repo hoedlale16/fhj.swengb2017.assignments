@@ -19,6 +19,7 @@ object CalculatorApp {
   }
 }
 
+
 class CalculatorFX extends javafx.application.Application {
 
   val fxml = "/at/fhj/swengb/apps/calculator/calculator.fxml"
@@ -62,7 +63,6 @@ class CalculatorFxController extends Initializable {
 
 
   //All math function buttons of calculator
-  @FXML var btFuncPercentage: Button = _
   @FXML var btFunctionMinus: Button = _
   @FXML var btFunctionPlus: Button =_
   @FXML var btFunctionMultiplication: Button = _
@@ -109,7 +109,6 @@ class CalculatorFxController extends Initializable {
   }
 
     private def handleFunctionButtons(disable: Boolean): Unit = {
-    btFuncPercentage.setDisable(disable)
     btFunctionMinus.setDisable(disable)
       btFunctionPlus.setDisable(disable)
     btFunctionMultiplication.setDisable(disable)

@@ -179,7 +179,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btPercentage" fx:id="btFuncPercentage" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="15.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="\%" textAlignment="CENTER" GridPane.columnIndex="2">
+                  <Button id="btClear" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" layoutX="15.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClearButtonAction" prefHeight="50.0" prefWidth="294.0" styleClass="bt_orange" text="Clear" textAlignment="CENTER" GridPane.columnSpan="2">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -187,15 +187,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btClear" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" layoutX="15.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClearButtonAction" styleClass="bt_orange" text="Clear" textAlignment="CENTER">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button id="btChangeSign" alignment="CENTER" contentDisplay="CENTER" layoutX="219.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSignChangeButtonAction" styleClass="bt_orange" text="+/-" textAlignment="CENTER" GridPane.columnIndex="1">
+                  <Button id="btChangeSign" alignment="CENTER" contentDisplay="CENTER" layoutX="219.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSignChangeButtonAction" styleClass="bt_orange" text="+/-" textAlignment="CENTER" GridPane.columnIndex="2">
                      <font>
                         <Font size="20.0" />
                      </font>
