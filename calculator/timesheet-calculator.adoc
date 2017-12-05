@@ -21,19 +21,15 @@
 | Implement initial Controller calls from GUI (test print "Hello") on Console
 
 | 30.11.17
-| 2
+| 1
 | Implement Controller to handle number buttons(incl. Comma)
 
-| 01.12.17
-| 3
-| Create Classes to handle Numbers and Functions (incl. checks) + Unit-Tests
-
-| 01.12.17
-| 3
+| 05.12.17
+| 4
 | Implement Polish Notation Enginge
 
-| 04.12.17
-| 2
-| Test implementation and code documentation
+| 05.12.17
+| 0.5
+| Connect Enginge with GUI
 
 |===

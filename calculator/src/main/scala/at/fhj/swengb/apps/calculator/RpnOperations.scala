@@ -47,11 +47,17 @@ case object Mul extends BinOp {
 }
 
 /**
-  * A case class representing division. Be aware that you have to think about the division through zero. In this case,
-  * a Val(Double.NaN) shoudl be returned.
+  * A case class representing division.
+  * Be aware that you have to think about the division through zero. In this case,
+  * a Val(Double.NaN) should be returned.
   */
 case object Div extends BinOp {
-  override def eval(left: Val, right: Val): Val = ???
+  override def eval(left: Val, right: Val): Val = {
+    if (right.value.equals(0.0))
+      Val(Double.NaN)
+    else
+      Val(left.value / right.value)
+  }
 }
 
 /**

@@ -92,7 +92,6 @@ class CalculatorFxController extends Initializable {
     val currButton = event.getSource.asInstanceOf[Button]
     val outputLabel = getCurrentOutValueLabel
 
-    println(currButton.getId)
     currButton.getId match {
       case "btFunctionComma" => {
         outputLabel.setText(outputLabel.getText + ".")
@@ -179,12 +178,22 @@ class CalculatorFxController extends Initializable {
 
     val pressedButton = event.getSource.asInstanceOf[Button];
 
-    var mathFunction: String = pressedButton.getText;
-    val value1 = lbValue1.getText;
-    val value2 = lbValue2.getText;
 
-    val myResult = "TODO: Call polish calc api with: <" + value1 + "> - <" + value2 + "> (" + mathFunction +")";
-    lbResult.setText(myResult)
+    val value1: Val = Val(lbValue1.getText.toDouble)
+    val value2: Val = Val(lbValue2.getText.toDouble)
+
+    var mathFunction: BinOp = null;
+    pressedButton.getText match {
+      case "+" => mathFunction = Add
+      case "-" => mathFunction = Sub
+      case "*" => mathFunction = Mul
+      case "/" => mathFunction = Div
+      case _ => ??? /*not supported function*/
+
+    }
+
+    var result: Val = mathFunction.eval(value1,value2)
+    lbResult.setText(result.value.toString)
   }
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
