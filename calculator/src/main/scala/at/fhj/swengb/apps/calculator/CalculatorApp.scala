@@ -1,5 +1,6 @@
 package at.fhj.swengb.apps.calculator
 
+import java.awt.event.MouseEvent
 import java.net.URL
 import java.util.ResourceBundle
 import javafx.application.Application
@@ -37,6 +38,9 @@ class CalculatorFX extends javafx.application.Application {
       stage.setMinWidth(stage.getWidth)
       stage.setMinHeight(stage.getHeight)
       stage.setResizable(false)
+
+
+
     } catch {
       case NonFatal(e) => e.printStackTrace()
     }
@@ -66,7 +70,7 @@ class CalculatorFxController extends Initializable {
   //Functionality Buttons
   @FXML private var btFunctionEnter: Button = _
   @FXML private var btFunctionComma: Button = _
-
+  @FXML private var btFunctionClear: Button = _
 
   //All math function buttons of calculator
   @FXML var btFunctionMinus: Button = _
@@ -76,9 +80,10 @@ class CalculatorFxController extends Initializable {
 
   private var writeValue2: Boolean = false
   private var firstNumberEntered: Boolean = false
+  private var firstTimeClearPressed = true
 
   /**
-    * Return expected output File
+    * Return expected output label(value1 or value2)
     * @return
     */
   private def getCurrentOutValueLabel: Label = {
@@ -90,30 +95,32 @@ class CalculatorFxController extends Initializable {
 
   @FXML private def onNumberButtonAction(event: ActionEvent): Unit = {
     val currButton = event.getSource.asInstanceOf[Button]
-    val outputLabel = getCurrentOutValueLabel
 
     currButton.getId match {
       case "btFunctionComma" => {
-        outputLabel.setText(outputLabel.getText + ".")
-
-        //Deactivate Comma Button
+        //Print '.' on output and deactivate Comma Button for this time
+        getCurrentOutValueLabel.setText(getCurrentOutValueLabel.getText + ".")
         btFunctionComma.setDisable(true);
       }
       case _   => {
-
-        //Check if this is the first number of
+        //It was a number button:
+        //Check if this is the first digit. In this case we have to replace the default value
         if ( ! firstNumberEntered) {
           firstNumberEntered = true
-          outputLabel.setText(currButton.getText)
+          getCurrentOutValueLabel.setText(currButton.getText)
           btFunctionComma.setDisable(false)
         } else {
-          outputLabel.setText(outputLabel.getText + currButton.getText)
+          getCurrentOutValueLabel.setText(getCurrentOutValueLabel.getText + currButton.getText)
         }
       }
     }
   }
 
-  private def handleFunctionButtons(disable: Boolean): Unit = {
+  /**
+    * Helper function to disable all function buttons
+    * @param disable
+    */
+  private def handleMathFunctionButtons(disable: Boolean): Unit = {
     btFunctionMinus.setDisable(disable)
     btFunctionPlus.setDisable(disable)
     btFunctionMultiplication.setDisable(disable)
@@ -125,38 +132,51 @@ class CalculatorFxController extends Initializable {
     * @param event
     */
   @FXML private def onEnterButtonAction(event: ActionEvent): Unit = {
+    //Now we write get information about value 2
     writeValue2 = true
+
+    //Reset function buttons(Comma,Clear) and flag which informs that the first digit of the value is set
+    btFunctionComma.setDisable(true)
+    firstNumberEntered = false
+    firstTimeClearPressed = true
+
+    /*Disable Enter button:  We do not support more than 3 values
+      Activate Math-Function-Buttons: After the number we expect a math function
+    */
     btFunctionEnter.setDisable(true)
-
-
-    //Deactivate Comma Button and reset flag for first digit in value
-    btFunctionComma.setDisable(true);
-    firstNumberEntered = false;
-
-    //Activate function Buttons
-    handleFunctionButtons(false);
-
+    handleMathFunctionButtons(false);
   }
 
   /**
     * Reset Calculator - Clear button pressed
+    * If its pressed the first time, just reset curent value label
+    * If it pressed the second time, reset whole calculator
     */
+
   @FXML private def onClearButtonAction(event: ActionEvent): Unit = {
-    //Check if Enter-Button is already set. If yes, deactivate button again
-    btFunctionEnter.setDisable(false)
 
-    //Reset comma button
-    btFunctionComma.setDisable(true);
-    firstNumberEntered = false;
+    //On first click on Clear button, just reset label context of current value
+    if (firstTimeClearPressed ) {
+      getCurrentOutValueLabel.setText("0")
+      firstNumberEntered = false;
+      firstTimeClearPressed = false;
+    } else {
+      //Reset Enter button(Activate it again)
+      //Reset comma button(Deactivate the button)
+      btFunctionEnter.setDisable(false)
+      btFunctionComma.setDisable(true)
+      firstNumberEntered = false
+      firstTimeClearPressed = true
 
-    //Deactivate function buttons again
-    handleFunctionButtons(true)
+      //Deactivate function buttons again
+      handleMathFunctionButtons(true)
 
-    //Reset values and output
-    writeValue2 = false;
-    lbValue1.setText("0");
-    lbValue2.setText("0");
-    lbResult.setText("");
+      //Reset values and output
+      writeValue2 = false;
+      lbValue1.setText("0");
+      lbValue2.setText("0");
+      lbResult.setText("");
+    }
   }
 
   @FXML private def onSignChangeButtonAction(event: ActionEvent): Unit = {
@@ -164,21 +184,21 @@ class CalculatorFxController extends Initializable {
     val currLabel = getCurrentOutValueLabel
     val currText = currLabel.getText;
 
-    if (currText.isEmpty) {
-      currLabel.setText("-");
-    } else {
-      if (currText.head.equals('-'))
-        currLabel.setText(currText.tail)
-      else
-        currLabel.setText("-" + currText)
-    }
+    //Due to default value there exists always a head
+    if (currText.head.equals('-'))
+      currLabel.setText(currText.tail) //just remove '-'
+    else
+      currLabel.setText("-" + currText)
   }
 
+  /**
+    * User pressed a math function.
+    * Calculate result and print on output line
+    * @param event
+    */
   @FXML private def onMathFunctionButtonAction(event: ActionEvent): Unit = {
 
     val pressedButton = event.getSource.asInstanceOf[Button];
-
-
     val value1: Val = Val(lbValue1.getText.toDouble)
     val value2: Val = Val(lbValue2.getText.toDouble)
 
@@ -188,15 +208,21 @@ class CalculatorFxController extends Initializable {
       case "-" => mathFunction = Sub
       case "*" => mathFunction = Mul
       case "/" => mathFunction = Div
-      case _ => ??? /*not supported function*/
+      case _ => println("Not supoorted function <" + pressedButton.getText + ">")
 
     }
 
+    if(mathFunction == null){
+      lbResult.setText("Not supported math function! - Contact this crazy developer!")
+    }
+
+    //Calc result and print on output
     var result: Val = mathFunction.eval(value1,value2)
-    lbResult.setText(result.value.toString)
+    if(result.value.isNaN)
+      lbResult.setText("Not a number!")
+    else
+      lbResult.setText(result.value.toString)
   }
 
-  override def initialize(location: URL, resources: ResourceBundle): Unit = {
-    /*TODO*/
-  }
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {}
 }

@@ -95,7 +95,7 @@ case class RpnCalculator(stack: List[Op] = Nil) {
       if (elem.isInstanceOf[Val])
         myInteralStack = elem.asInstanceOf[Val] :: myInteralStack
       else
-        //If current element is an operation, check if enought values on stack
+        //If current element is an operation, check if enough values on stack
         if (myInteralStack.size >= 2 ) {
           /* If so, take first 2 elements and apply function.
           *  Add result of function to stack agein...*/
