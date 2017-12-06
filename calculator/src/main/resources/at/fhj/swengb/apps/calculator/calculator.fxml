@@ -91,7 +91,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                <children>
-                  <Button id="btZero" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" prefHeight="96.0" prefWidth="221.0" styleClass="bt_lightgrey" text="0" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                  <Button id="btZero" fx:id="btNumberZero" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" prefHeight="96.0" prefWidth="221.0" styleClass="bt_lightgrey" text="0" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="4">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -99,7 +99,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btOne" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="305.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="1" textAlignment="CENTER" GridPane.rowIndex="3">
+                  <Button id="btOne" fx:id="btNumberOne" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="305.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="1" textAlignment="CENTER" GridPane.rowIndex="3">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -107,7 +107,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btTwo" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="2" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Button id="btTwo" fx:id="btNumberTwo" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="2" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -115,7 +115,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btThree" alignment="CENTER" contentDisplay="CENTER" layoutX="115.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="3" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <Button id="btThree" fx:id="btNumberThree" alignment="CENTER" contentDisplay="CENTER" layoutX="115.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="3" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -123,7 +123,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btFour" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="4" textAlignment="CENTER" GridPane.rowIndex="2">
+                  <Button id="btFour" fx:id="btNumberFour" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="4" textAlignment="CENTER" GridPane.rowIndex="2">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -131,7 +131,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btFive" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="5" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Button id="btFive" fx:id="btNumberFive" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="5" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -139,7 +139,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btSix" alignment="CENTER" contentDisplay="CENTER" layoutX="115.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="6" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Button id="btSix" fx:id="btNumberSix" alignment="CENTER" contentDisplay="CENTER" layoutX="115.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="6" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -147,7 +147,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btSeven" alignment="CENTER" contentDisplay="CENTER" layoutX="215.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="7" textAlignment="CENTER" GridPane.rowIndex="1">
+                  <Button id="btSeven" fx:id="btNumberSeven" alignment="CENTER" contentDisplay="CENTER" layoutX="215.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="7" textAlignment="CENTER" GridPane.rowIndex="1">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -155,7 +155,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btNine" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="9" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Button id="btNine" fx:id="btNumberNine" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="9" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -163,7 +163,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btEight" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="8" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Button id="btEight" fx:id="btNumberEight" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNumberButtonAction" styleClass="bt_lightgrey" text="8" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -187,7 +187,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btChangeSign" alignment="CENTER" contentDisplay="CENTER" layoutX="219.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSignChangeButtonAction" styleClass="bt_orange" text="+/-" textAlignment="CENTER" GridPane.columnIndex="2">
+                  <Button id="btChangeSign" fx:id="btFunctionSign" alignment="CENTER" contentDisplay="CENTER" layoutX="219.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSignChangeButtonAction" styleClass="bt_orange" text="+/-" textAlignment="CENTER" GridPane.columnIndex="2">
                      <font>
                         <Font size="20.0" />
                      </font>

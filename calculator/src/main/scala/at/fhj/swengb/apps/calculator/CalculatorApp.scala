@@ -71,12 +71,26 @@ class CalculatorFxController extends Initializable {
   @FXML private var btFunctionEnter: Button = _
   @FXML private var btFunctionComma: Button = _
   @FXML private var btFunctionClear: Button = _
+  @FXML private var btFunctionSign: Button = _
 
   //All math function buttons of calculator
   @FXML var btFunctionMinus: Button = _
   @FXML var btFunctionPlus: Button =_
   @FXML var btFunctionMultiplication: Button = _
   @FXML var btFunctionDivision: Button = _
+
+  //All number buttons of calculator
+  @FXML var btNumberZero: Button = _
+  @FXML var btNumberOne: Button = _
+  @FXML var btNumberTwo: Button = _
+  @FXML var btNumberThree: Button = _
+  @FXML var btNumberFour: Button = _
+  @FXML var btNumberFive: Button = _
+  @FXML var btNumberSix: Button = _
+  @FXML var btNumberSeven: Button = _
+  @FXML var btNumberEight: Button = _
+  @FXML var btNumberNine: Button = _
+
 
   private var writeValue2: Boolean = false
   private var firstNumberEntered: Boolean = false
@@ -127,6 +141,21 @@ class CalculatorFxController extends Initializable {
     btFunctionDivision.setDisable(disable)
   }
 
+  private def handleNumberButtons(disable: Boolean): Unit = {
+    btNumberZero.setDisable(disable)
+    btNumberOne.setDisable(disable)
+    btNumberTwo.setDisable(disable)
+    btNumberThree.setDisable(disable)
+    btNumberFour.setDisable(disable)
+    btNumberFive.setDisable(disable)
+    btNumberSix.setDisable(disable)
+    btNumberSeven.setDisable(disable)
+    btNumberEight.setDisable(disable)
+    btNumberNine.setDisable(disable)
+
+    btFunctionSign.setDisable(disable)
+  }
+
   /**
     * Enter Button pressed - Indicator that first value is entered
     * @param event
@@ -170,6 +199,8 @@ class CalculatorFxController extends Initializable {
 
       //Deactivate function buttons again
       handleMathFunctionButtons(true)
+      handleNumberButtons(false)
+
 
       //Reset values and output
       writeValue2 = false;
@@ -222,6 +253,11 @@ class CalculatorFxController extends Initializable {
       lbResult.setText("Not a number!")
     else
       lbResult.setText(result.value.toString)
+
+
+    //Now deactivate all buttons except Clear
+    handleMathFunctionButtons(true)
+    handleNumberButtons(true)
   }
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {}

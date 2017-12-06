@@ -57,7 +57,7 @@ case class RpnCalculator(stack: List[Op] = Nil) {
       //TODO: We have to throw here a exception if it is empty
 
       //Operation detected try to execute it
-      val fstVal = this.pop()._1.asInstanceOf[Val]
+      val fstVal = this.peek().asInstanceOf[Val]
       val sndVal = this.pop()._2.pop()._1.asInstanceOf[Val]
 
       //new Calc-Obj 2 elements above removed

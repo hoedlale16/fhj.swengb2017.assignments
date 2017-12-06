@@ -32,4 +32,8 @@
 | 0.5
 | Connect Enginge with GUI
 
+| 06.12.17
+| 2
+| Ongoing implementation on Polish Notation Enginge
+
 |===
