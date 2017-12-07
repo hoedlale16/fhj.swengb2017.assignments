@@ -1,13 +1,12 @@
 package at.fhj.swengb.apps.calculator
 
-import java.awt.event.MouseEvent
 import java.net.URL
 import java.util.ResourceBundle
 import javafx.application.Application
-import javafx.event.{ActionEvent, EventHandler}
+import javafx.event.ActionEvent
 import javafx.beans.property.{ObjectProperty, SimpleObjectProperty}
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
-import javafx.scene.control.{Button, Label}
+import javafx.scene.control.{Button, Label, TextArea}
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
@@ -39,8 +38,6 @@ class CalculatorFX extends javafx.application.Application {
       stage.setMinHeight(stage.getHeight)
       stage.setResizable(false)
 
-
-
     } catch {
       case NonFatal(e) => e.printStackTrace()
     }
@@ -56,52 +53,40 @@ class CalculatorFX extends javafx.application.Application {
 
 class CalculatorFxController extends Initializable {
 
-  val calculatorProperty: ObjectProperty[RpnCalculator] = new SimpleObjectProperty[RpnCalculator](RpnCalculator())
+  val calculatorProperty: ObjectProperty[RpnCalculator] =
+    new SimpleObjectProperty[RpnCalculator](RpnCalculator())
 
-  def getCalculator() : RpnCalculator = calculatorProperty.get()
+  def getCalculator(): RpnCalculator = calculatorProperty.get
 
-  def setCalculator(rpnCalculator : RpnCalculator) : Unit = calculatorProperty.set(rpnCalculator)
+  def setCalculator(rpnCalculator: RpnCalculator): Unit =
+    calculatorProperty.set(rpnCalculator)
 
   //Output labels
   @FXML private var lbValue1: Label = _
   @FXML private var lbValue2: Label = _
   @FXML private var lbResult: Label = _
+  @FXML private var taStack: TextArea = _
 
   //Functionality Buttons
-  @FXML private var btFunctionEnter: Button = _
   @FXML private var btFunctionComma: Button = _
-  @FXML private var btFunctionClear: Button = _
-  @FXML private var btFunctionSign: Button = _
 
   //All math function buttons of calculator
   @FXML var btFunctionMinus: Button = _
-  @FXML var btFunctionPlus: Button =_
+  @FXML var btFunctionPlus: Button = _
   @FXML var btFunctionMultiplication: Button = _
   @FXML var btFunctionDivision: Button = _
 
-  //All number buttons of calculator
-  @FXML var btNumberZero: Button = _
-  @FXML var btNumberOne: Button = _
-  @FXML var btNumberTwo: Button = _
-  @FXML var btNumberThree: Button = _
-  @FXML var btNumberFour: Button = _
-  @FXML var btNumberFive: Button = _
-  @FXML var btNumberSix: Button = _
-  @FXML var btNumberSeven: Button = _
-  @FXML var btNumberEight: Button = _
-  @FXML var btNumberNine: Button = _
-
-
-  private var writeValue2: Boolean = false
-  private var firstNumberEntered: Boolean = false
-  private var firstTimeClearPressed = true
+  private var writeToLabel2: Boolean = false
+  private var replaceLabelText: Boolean = true
+  private var clearJustLabelContent = true
+  private var positiveNumber: Boolean = true;
 
   /**
     * Return expected output label(value1 or value2)
     * @return
     */
   private def getCurrentOutValueLabel: Label = {
-    if (writeValue2 == true)
+    if (writeToLabel2)
       lbValue2
     else
       lbValue1
@@ -111,49 +96,23 @@ class CalculatorFxController extends Initializable {
     val currButton = event.getSource.asInstanceOf[Button]
 
     currButton.getId match {
-      case "btFunctionComma" => {
+      case "btFunctionComma" =>
         //Print '.' on output and deactivate Comma Button for this time
         getCurrentOutValueLabel.setText(getCurrentOutValueLabel.getText + ".")
-        btFunctionComma.setDisable(true);
-      }
-      case _   => {
+        btFunctionComma.setDisable(true)
+      case _ => {
         //It was a number button:
         //Check if this is the first digit. In this case we have to replace the default value
-        if ( ! firstNumberEntered) {
-          firstNumberEntered = true
+        if (replaceLabelText) {
+          replaceLabelText = false
           getCurrentOutValueLabel.setText(currButton.getText)
           btFunctionComma.setDisable(false)
         } else {
-          getCurrentOutValueLabel.setText(getCurrentOutValueLabel.getText + currButton.getText)
+          getCurrentOutValueLabel.setText(
+            getCurrentOutValueLabel.getText + currButton.getText)
         }
       }
     }
-  }
-
-  /**
-    * Helper function to disable all function buttons
-    * @param disable
-    */
-  private def handleMathFunctionButtons(disable: Boolean): Unit = {
-    btFunctionMinus.setDisable(disable)
-    btFunctionPlus.setDisable(disable)
-    btFunctionMultiplication.setDisable(disable)
-    btFunctionDivision.setDisable(disable)
-  }
-
-  private def handleNumberButtons(disable: Boolean): Unit = {
-    btNumberZero.setDisable(disable)
-    btNumberOne.setDisable(disable)
-    btNumberTwo.setDisable(disable)
-    btNumberThree.setDisable(disable)
-    btNumberFour.setDisable(disable)
-    btNumberFive.setDisable(disable)
-    btNumberSix.setDisable(disable)
-    btNumberSeven.setDisable(disable)
-    btNumberEight.setDisable(disable)
-    btNumberNine.setDisable(disable)
-
-    btFunctionSign.setDisable(disable)
   }
 
   /**
@@ -161,19 +120,24 @@ class CalculatorFxController extends Initializable {
     * @param event
     */
   @FXML private def onEnterButtonAction(event: ActionEvent): Unit = {
-    //Now we write get information about value 2
-    writeValue2 = true
 
-    //Reset function buttons(Comma,Clear) and flag which informs that the first digit of the value is set
-    btFunctionComma.setDisable(true)
-    firstNumberEntered = false
-    firstTimeClearPressed = true
+    var labelText: String = getCurrentOutValueLabel.getText
+    if (labelText.isEmpty)
+      labelText = "0" //Fallback - Wurde nichts eingegeben, wirds 0
 
-    /*Disable Enter button:  We do not support more than 3 values
-      Activate Math-Function-Buttons: After the number we expect a math function
-    */
-    btFunctionEnter.setDisable(true)
-    handleMathFunctionButtons(false);
+    //Add number to stack
+    getCalculator().push(Op(labelText)) match {
+      case Success(c) => setCalculator(c)
+      case Failure(e) => println("Error occured: " + e.getMessage)
+    }
+
+    //Reset variables for second number
+    this.replaceLabelText = true;
+    this.writeToLabel2 = true;
+    this.positiveNumber = true;
+
+    //Refresh Stack on GUI
+    taStack.setText(getCalculator().stack.mkString("\n"))
   }
 
   /**
@@ -183,30 +147,28 @@ class CalculatorFxController extends Initializable {
     */
 
   @FXML private def onClearButtonAction(event: ActionEvent): Unit = {
-
     //On first click on Clear button, just reset label context of current value
-    if (firstTimeClearPressed ) {
-      getCurrentOutValueLabel.setText("0")
-      firstNumberEntered = false;
-      firstTimeClearPressed = false;
+    if (clearJustLabelContent) {
+      //Reset handling variables
+      replaceLabelText = true
+      clearJustLabelContent = false
+
+      //Reset Output
+      getCurrentOutValueLabel.setText("")
     } else {
-      //Reset Enter button(Activate it again)
-      //Reset comma button(Deactivate the button)
-      btFunctionEnter.setDisable(false)
-      btFunctionComma.setDisable(true)
-      firstNumberEntered = false
-      firstTimeClearPressed = true
+      //Reset Stack and Refresh Stack on GUI
+      setCalculator(RpnCalculator())
+      taStack.setText(getCalculator().stack.mkString("\n"))
 
-      //Deactivate function buttons again
-      handleMathFunctionButtons(true)
-      handleNumberButtons(false)
+      //Reset handling variables
+      writeToLabel2 = false
+      replaceLabelText = true
+      clearJustLabelContent = true
 
-
-      //Reset values and output
-      writeValue2 = false;
-      lbValue1.setText("0");
-      lbValue2.setText("0");
-      lbResult.setText("");
+      //Reset output
+      lbValue1.setText("")
+      lbValue2.setText("")
+      lbResult.setText("")
     }
   }
 
@@ -215,11 +177,16 @@ class CalculatorFxController extends Initializable {
     val currLabel = getCurrentOutValueLabel
     val currText = currLabel.getText;
 
-    //Due to default value there exists always a head
-    if (currText.head.equals('-'))
-      currLabel.setText(currText.tail) //just remove '-'
-    else
+    if (positiveNumber) {
+      positiveNumber = false
       currLabel.setText("-" + currText)
+    } else {
+      positiveNumber = true
+      if (currText.head.equals('-'))
+        currLabel.setText(currText.tail) //just remove '-'
+      else
+        currLabel.setText(currText)
+    }
   }
 
   /**
@@ -230,38 +197,39 @@ class CalculatorFxController extends Initializable {
   @FXML private def onMathFunctionButtonAction(event: ActionEvent): Unit = {
 
     val pressedButton = event.getSource.asInstanceOf[Button];
-    val value1: Val = Val(lbValue1.getText.toDouble)
-    val value2: Val = Val(lbValue2.getText.toDouble)
-
     var mathFunction: BinOp = null;
     pressedButton.getText match {
       case "+" => mathFunction = Add
       case "-" => mathFunction = Sub
       case "*" => mathFunction = Mul
       case "/" => mathFunction = Div
-      case _ => println("Not supoorted function <" + pressedButton.getText + ">")
-
     }
 
-    if(mathFunction == null){
-      lbResult.setText("Not supported math function! - Contact this crazy developer!")
+    getCalculator().push(mathFunction) match {
+      case Success(c) => {
+        setCalculator(c)
+
+        //Refresh Stack on GUI
+        taStack.setText(getCalculator().stack.mkString("\n"))
+
+        getCalculator().stack.last match {
+          case v: Val => {
+            if (v.value.isNaN)
+              lbResult.setText("Not a number!")
+            else
+              lbResult.setText(v.value.toString)
+          }
+          case b: BinOp =>
+            lbResult.setText(
+              "Error in stack - Detected BinOp - Reset Calculator!");
+        }
+      }
+      case Failure(e) => lbResult.setText("Error in stack - Reset Calculator!");
     }
-
-    //Calc result and print on output
-    var result: Val = mathFunction.eval(value1,value2)
-    if(result.value.isNaN)
-      lbResult.setText("Not a number!")
-    else
-      lbResult.setText(result.value.toString)
-
-
-    //Now deactivate all buttons except Clear
-    handleMathFunctionButtons(true)
-    handleNumberButtons(true)
 
     //Assume that user pressed already once for clear to reset whole calc on
     //fist button click
-    firstTimeClearPressed = false
+    clearJustLabelContent = false
   }
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {}

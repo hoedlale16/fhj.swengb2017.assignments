@@ -4,13 +4,14 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhj.swengb.apps.calculator.CalculatorFxController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="675.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhj.swengb.apps.calculator.CalculatorFxController">
    <top>
       <GridPane alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -195,7 +196,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btDevision" fx:id="btFunctionDivision" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="15.0" layoutY="193.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="/" textAlignment="CENTER" GridPane.columnIndex="3">
+                  <Button id="btDevision" fx:id="btFunctionDivision" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="193.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="/" textAlignment="CENTER" GridPane.columnIndex="3">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -203,7 +204,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btMultiplication" fx:id="btFunctionMultiplication" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="460.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="*" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <Button id="btMultiplication" fx:id="btFunctionMultiplication" alignment="CENTER" contentDisplay="CENTER" layoutX="460.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="*" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -214,7 +215,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btAddition" fx:id="btFunctionPlus" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="460.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                  <Button id="btAddition" fx:id="btFunctionPlus" alignment="CENTER" contentDisplay="CENTER" layoutX="460.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -222,7 +223,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button id="btSubstraction" fx:id="btFunctionMinus" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="460.0" layoutY="134.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="-" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                  <Button id="btSubstraction" fx:id="btFunctionMinus" alignment="CENTER" contentDisplay="CENTER" layoutX="460.0" layoutY="134.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onMathFunctionButtonAction" styleClass="bt_orange" text="-" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="3">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -246,4 +247,21 @@
          </BorderPane.margin>
       </BorderPane>
    </center>
+   <right>
+      <BorderPane prefHeight="280.0" prefWidth="111.0" BorderPane.alignment="CENTER">
+         <top>
+            <Label text="Stack-Content" BorderPane.alignment="CENTER" />
+         </top>
+         <center>
+            <TextArea fx:id="taStack" editable="false" prefHeight="257.0" prefWidth="77.0" BorderPane.alignment="CENTER">
+               <opaqueInsets>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </opaqueInsets>
+               <BorderPane.margin>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </BorderPane.margin>
+            </TextArea>
+         </center>
+      </BorderPane>
+   </right>
 </BorderPane>

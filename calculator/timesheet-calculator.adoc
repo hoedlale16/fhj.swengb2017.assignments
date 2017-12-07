@@ -21,4 +21,7 @@
 | 05.12.17
 | 4
 | Implement Polish Notation Enginge
+| 07.12.17
+| 3
+| Redesign and Controllerimplementation according requirement specification
 |===
