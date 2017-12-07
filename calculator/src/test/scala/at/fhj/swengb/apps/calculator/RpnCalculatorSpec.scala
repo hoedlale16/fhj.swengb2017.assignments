@@ -102,6 +102,7 @@ class RpnCalculatorSpec extends WordSpecLike {
       }
     }
     "RevPolCal('* 4')" in {
+
       RpnCalculator("* 4") match {
         case Failure(e: NoSuchElementException) =>
         case _ => fail()

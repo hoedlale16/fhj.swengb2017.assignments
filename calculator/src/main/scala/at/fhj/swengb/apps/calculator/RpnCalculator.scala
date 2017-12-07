@@ -24,8 +24,17 @@ object RpnCalculator {
 
       //Create new empty Calc and push all elements on stack
       var myCalc: Try[RpnCalculator] = Try(RpnCalculator())
-      for (elem <- myStack) {
-        myCalc = myCalc.get.push(elem)
+      try {
+        for (elem <- myStack) {
+          //TODO: Exception Handling: Wenn hier ein Fail zurückkommt aufhören!
+          if (myCalc.isFailure) {
+            throw new NoSuchElementException;
+          } else {
+            myCalc = myCalc.get.push(elem)
+          }
+        }
+      }catch {
+        case _ => Try[RpnCalculator](throw new NoSuchElementException)
       }
 
       myCalc
@@ -51,41 +60,33 @@ case class RpnCalculator(stack: List[Op] = Nil) {
     */
   def push(op: Op): Try[RpnCalculator] = {
 
-    if (op.isInstanceOf[Val]) {
-      //Return a new instance of RpnCalculator with a higher stack
-      Try(RpnCalculator(stack :+ op))
-    } else {
-
-      //Check if there are still values on stack
-      //TODO: We have to throw here a exception if it is empty
-
-      /*Operation detected: try to execute it
+    op match {
+      case v: Val => Try(RpnCalculator(stack :+ op))
+      case o: BinOp => {
+        try {
+          /*Operation detected: try to execute it
           -> Get first element from stack (is possible, otherwise peek returns exception)
           -> Remove first element(pop) and continue with remaining stack
           -> Try to get snd element from stack( if possible, otherwise peek returns exception)
           -> Remove snd element(pop) and continue with remaining stack
           -> Execute Operation and push result on remaining Stack
-      */
-      try {
-        //Try to get first element and remove it from stack
-        val fstVal = peek.asInstanceOf[Val]
-        var remainCalc = pop._2
+         */
 
-        //Try to get snd element and remove it from stack
-        val sndVal = remainCalc.peek.asInstanceOf[Val]
-        remainCalc = remainCalc.pop._2
+          //Try to get first element and remove it from stack
+          val fstVal = peek.asInstanceOf[Val]
+          var remainCalc = pop._2
 
-        val result: Val = op.asInstanceOf[BinOp].eval(fstVal, sndVal)
-        //Ass result to remaining Calculator
-        remainCalc.push(result)
-      }
-      catch{
-        case e: NoSuchElementException => {
-          println("Es gibt keine Values am Stack! - Wie geb ich diese Exception im Try as fehler zurück?")
-          Try(this) //.failed
+          //Try to get snd element and remove it from stack
+          val sndVal = remainCalc.peek.asInstanceOf[Val]
+          remainCalc = remainCalc.pop._2
+
+          val result: Val = o.eval(fstVal, sndVal)
+          //Ass result to remaining Calculator
+          remainCalc.push(result)
+        } catch {
+          case _ => Try[RpnCalculator](throw new NoSuchElementException)
         }
-
-      }
+       }
 
     }
   }
