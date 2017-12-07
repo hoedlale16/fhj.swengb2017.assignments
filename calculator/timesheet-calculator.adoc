@@ -1,6 +1,5 @@
 == Time expenditure: Calculator assignment
 
-
 [cols="1,1,4", options="header"]
 .Time expenditure
 |===
@@ -27,13 +26,4 @@
 | 05.12.17
 | 4
 | Implement Polish Notation Enginge
-
-| 05.12.17
-| 0.5
-| Connect Enginge with GUI
-
-| 06.12.17
-| 2
-| Ongoing implementation on Polish Notation Enginge
-
 |===
