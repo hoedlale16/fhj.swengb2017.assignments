@@ -1,6 +1,8 @@
 package at.fhj.swengb.apps.calculator
 
-import scala.util.Try
+import java.util.NoSuchElementException
+
+import scala.util.{Try}
 
 /**
   * Companion object for our reverse polish notation calculator.
@@ -19,8 +21,9 @@ object RpnCalculator {
       Try(RpnCalculator())
     else {
       val myStack: List[Op] = s.split(' ').map(e => Op(e)).toList
-      var myCalc: Try[RpnCalculator] = Try(RpnCalculator())
 
+      //Create new empty Calc and push all elements on stack
+      var myCalc: Try[RpnCalculator] = Try(RpnCalculator())
       for (elem <- myStack) {
         myCalc = myCalc.get.push(elem)
       }
@@ -50,21 +53,40 @@ case class RpnCalculator(stack: List[Op] = Nil) {
 
     if (op.isInstanceOf[Val]) {
       //Return a new instance of RpnCalculator with a higher stack
-      Try(RpnCalculator(op :: stack))
+      Try(RpnCalculator(stack :+ op))
     } else {
 
       //Check if there are still values on stack
       //TODO: We have to throw here a exception if it is empty
 
-      //Operation detected try to execute it
-      val fstVal = this.peek().asInstanceOf[Val]
-      val sndVal = this.pop()._2.pop()._1.asInstanceOf[Val]
+      /*Operation detected: try to execute it
+          -> Get first element from stack (is possible, otherwise peek returns exception)
+          -> Remove first element(pop) and continue with remaining stack
+          -> Try to get snd element from stack( if possible, otherwise peek returns exception)
+          -> Remove snd element(pop) and continue with remaining stack
+          -> Execute Operation and push result on remaining Stack
+      */
+      try {
+        //Try to get first element and remove it from stack
+        val fstVal = peek.asInstanceOf[Val]
+        var remainCalc = pop._2
 
-      //new Calc-Obj 2 elements above removed
-      var myStack = this.pop()._2.pop()._2.stack
+        //Try to get snd element and remove it from stack
+        val sndVal = remainCalc.peek.asInstanceOf[Val]
+        remainCalc = remainCalc.pop._2
 
-      val result: Val = op.asInstanceOf[BinOp].eval(sndVal, fstVal)
-      push(result :: myStack)
+        val result: Val = op.asInstanceOf[BinOp].eval(fstVal, sndVal)
+        //Ass result to remaining Calculator
+        remainCalc.push(result)
+      }
+      catch{
+        case e: NoSuchElementException => {
+          println("Es gibt keine Values am Stack! - Wie geb ich diese Exception im Try as fehler zurück?")
+          Try(this) //.failed
+        }
+
+      }
+
     }
   }
 
