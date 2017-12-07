@@ -32,7 +32,7 @@ class CalculatorFX extends javafx.application.Application {
 
   override def start(stage: Stage): Unit =
     try {
-      stage.setTitle("Calculator")
+      stage.setTitle("Calculator by Alexander Hödl (IMA16 - SWENGB)")
       setSkin(stage, fxml, css)
       stage.show()
       stage.setMinWidth(stage.getWidth)
@@ -258,6 +258,10 @@ class CalculatorFxController extends Initializable {
     //Now deactivate all buttons except Clear
     handleMathFunctionButtons(true)
     handleNumberButtons(true)
+
+    //Assume that user pressed already once for clear to reset whole calc on
+    //fist button click
+    firstTimeClearPressed = false
   }
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {}
