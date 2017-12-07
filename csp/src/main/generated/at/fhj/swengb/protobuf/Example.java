@@ -19,19 +19,29 @@ public final class Example {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional string hello = 1;</code>
+     * <code>string hello = 1;</code>
      */
     java.lang.String getHello();
     /**
-     * <code>optional string hello = 1;</code>
+     * <code>string hello = 1;</code>
      */
     com.google.protobuf.ByteString
         getHelloBytes();
 
     /**
-     * <code>optional int32 test = 2;</code>
+     * <code>int32 test = 2;</code>
      */
     int getTest();
+
+    /**
+     * <code>string bla = 3;</code>
+     */
+    java.lang.String getBla();
+    /**
+     * <code>string bla = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getBlaBytes();
   }
   /**
    * Protobuf type {@code at.fhj.swengb.protobuf.Helloworld}
@@ -40,6 +50,7 @@ public final class Example {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:at.fhj.swengb.protobuf.Helloworld)
       HelloworldOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use Helloworld.newBuilder() to construct.
     private Helloworld(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -47,19 +58,25 @@ public final class Example {
     private Helloworld() {
       hello_ = "";
       test_ = 0;
+      bla_ = "";
     }
 
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+      return this.unknownFields;
     }
     private Helloworld(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -69,7 +86,8 @@ public final class Example {
               done = true;
               break;
             default: {
-              if (!input.skipField(tag)) {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -85,6 +103,12 @@ public final class Example {
               test_ = input.readInt32();
               break;
             }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              bla_ = s;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -93,6 +117,7 @@ public final class Example {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
@@ -111,7 +136,7 @@ public final class Example {
     public static final int HELLO_FIELD_NUMBER = 1;
     private volatile java.lang.Object hello_;
     /**
-     * <code>optional string hello = 1;</code>
+     * <code>string hello = 1;</code>
      */
     public java.lang.String getHello() {
       java.lang.Object ref = hello_;
@@ -126,7 +151,7 @@ public final class Example {
       }
     }
     /**
-     * <code>optional string hello = 1;</code>
+     * <code>string hello = 1;</code>
      */
     public com.google.protobuf.ByteString
         getHelloBytes() {
@@ -145,10 +170,44 @@ public final class Example {
     public static final int TEST_FIELD_NUMBER = 2;
     private int test_;
     /**
-     * <code>optional int32 test = 2;</code>
+     * <code>int32 test = 2;</code>
      */
     public int getTest() {
       return test_;
+    }
+
+    public static final int BLA_FIELD_NUMBER = 3;
+    private volatile java.lang.Object bla_;
+    /**
+     * <code>string bla = 3;</code>
+     */
+    public java.lang.String getBla() {
+      java.lang.Object ref = bla_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        bla_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string bla = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getBlaBytes() {
+      java.lang.Object ref = bla_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        bla_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -169,6 +228,10 @@ public final class Example {
       if (test_ != 0) {
         output.writeInt32(2, test_);
       }
+      if (!getBlaBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, bla_);
+      }
+      unknownFields.writeTo(output);
     }
 
     public int getSerializedSize() {
@@ -183,11 +246,14 @@ public final class Example {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, test_);
       }
+      if (!getBlaBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, bla_);
+      }
+      size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
@@ -203,6 +269,9 @@ public final class Example {
           .equals(other.getHello());
       result = result && (getTest()
           == other.getTest());
+      result = result && getBla()
+          .equals(other.getBla());
+      result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
 
@@ -212,16 +281,29 @@ public final class Example {
         return memoizedHashCode;
       }
       int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + HELLO_FIELD_NUMBER;
       hash = (53 * hash) + getHello().hashCode();
       hash = (37 * hash) + TEST_FIELD_NUMBER;
       hash = (53 * hash) + getTest();
+      hash = (37 * hash) + BLA_FIELD_NUMBER;
+      hash = (53 * hash) + getBla().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
+    public static at.fhj.swengb.protobuf.Example.Helloworld parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static at.fhj.swengb.protobuf.Example.Helloworld parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static at.fhj.swengb.protobuf.Example.Helloworld parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -339,6 +421,8 @@ public final class Example {
 
         test_ = 0;
 
+        bla_ = "";
+
         return this;
       }
 
@@ -363,6 +447,7 @@ public final class Example {
         at.fhj.swengb.protobuf.Example.Helloworld result = new at.fhj.swengb.protobuf.Example.Helloworld(this);
         result.hello_ = hello_;
         result.test_ = test_;
+        result.bla_ = bla_;
         onBuilt();
         return result;
       }
@@ -372,7 +457,7 @@ public final class Example {
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
       public Builder clearField(
@@ -385,12 +470,12 @@ public final class Example {
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -411,6 +496,11 @@ public final class Example {
         if (other.getTest() != 0) {
           setTest(other.getTest());
         }
+        if (!other.getBla().isEmpty()) {
+          bla_ = other.bla_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
@@ -439,7 +529,7 @@ public final class Example {
 
       private java.lang.Object hello_ = "";
       /**
-       * <code>optional string hello = 1;</code>
+       * <code>string hello = 1;</code>
        */
       public java.lang.String getHello() {
         java.lang.Object ref = hello_;
@@ -454,7 +544,7 @@ public final class Example {
         }
       }
       /**
-       * <code>optional string hello = 1;</code>
+       * <code>string hello = 1;</code>
        */
       public com.google.protobuf.ByteString
           getHelloBytes() {
@@ -470,7 +560,7 @@ public final class Example {
         }
       }
       /**
-       * <code>optional string hello = 1;</code>
+       * <code>string hello = 1;</code>
        */
       public Builder setHello(
           java.lang.String value) {
@@ -483,7 +573,7 @@ public final class Example {
         return this;
       }
       /**
-       * <code>optional string hello = 1;</code>
+       * <code>string hello = 1;</code>
        */
       public Builder clearHello() {
         
@@ -492,7 +582,7 @@ public final class Example {
         return this;
       }
       /**
-       * <code>optional string hello = 1;</code>
+       * <code>string hello = 1;</code>
        */
       public Builder setHelloBytes(
           com.google.protobuf.ByteString value) {
@@ -508,13 +598,13 @@ public final class Example {
 
       private int test_ ;
       /**
-       * <code>optional int32 test = 2;</code>
+       * <code>int32 test = 2;</code>
        */
       public int getTest() {
         return test_;
       }
       /**
-       * <code>optional int32 test = 2;</code>
+       * <code>int32 test = 2;</code>
        */
       public Builder setTest(int value) {
         
@@ -523,7 +613,7 @@ public final class Example {
         return this;
       }
       /**
-       * <code>optional int32 test = 2;</code>
+       * <code>int32 test = 2;</code>
        */
       public Builder clearTest() {
         
@@ -531,14 +621,83 @@ public final class Example {
         onChanged();
         return this;
       }
+
+      private java.lang.Object bla_ = "";
+      /**
+       * <code>string bla = 3;</code>
+       */
+      public java.lang.String getBla() {
+        java.lang.Object ref = bla_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          bla_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string bla = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getBlaBytes() {
+        java.lang.Object ref = bla_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          bla_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string bla = 3;</code>
+       */
+      public Builder setBla(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        bla_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string bla = 3;</code>
+       */
+      public Builder clearBla() {
+        
+        bla_ = getDefaultInstance().getBla();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string bla = 3;</code>
+       */
+      public Builder setBlaBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        bla_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
+        return super.mergeUnknownFields(unknownFields);
       }
 
 
@@ -561,7 +720,7 @@ public final class Example {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Helloworld(input, extensionRegistry);
+        return new Helloworld(input, extensionRegistry);
       }
     };
 
@@ -595,8 +754,9 @@ public final class Example {
   static {
     java.lang.String[] descriptorData = {
       "\n\rExample.proto\022\026at.fhj.swengb.protobuf\"" +
-      ")\n\nHelloworld\022\r\n\005hello\030\001 \001(\t\022\014\n\004test\030\002 \001" +
-      "(\005B\030\n\026at.fhj.swengb.protobufb\006proto3"
+      "6\n\nHelloworld\022\r\n\005hello\030\001 \001(\t\022\014\n\004test\030\002 \001" +
+      "(\005\022\013\n\003bla\030\003 \001(\tB\030\n\026at.fhj.swengb.protobu" +
+      "fb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -615,7 +775,7 @@ public final class Example {
     internal_static_at_fhj_swengb_protobuf_Helloworld_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_at_fhj_swengb_protobuf_Helloworld_descriptor,
-        new java.lang.String[] { "Hello", "Test", });
+        new java.lang.String[] { "Hello", "Test", "Bla", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -2,7 +2,7 @@ package at.fhj.swengb.apps.calculator
 
 import java.util.NoSuchElementException
 
-import scala.util.{Try}
+import scala.util.Try
 
 /**
   * Companion object for our reverse polish notation calculator.
@@ -27,7 +27,7 @@ object RpnCalculator {
       try {
         for (elem <- myStack) {
           if (myCalc.isFailure) {
-            throw new NoSuchElementException;
+            throw new NoSuchElementException
           } else {
             myCalc = myCalc.get.push(elem)
           }
@@ -54,14 +54,14 @@ case class RpnCalculator(stack: List[Op] = Nil) {
     * is just put on the stack,
     * if not then the stack is examined and the correct operation is performed.
     *
-    * @param op
+    * @param op - New Value or Operation added to to stack
     * @return
     */
   def push(op: Op): Try[RpnCalculator] = {
 
     op match {
       case v: Val => Try(RpnCalculator(stack :+ op))
-      case o: BinOp => {
+      case o: BinOp =>
         try {
           /*Operation detected: try to execute it
           -> Get first element from stack (is possible, otherwise peek returns exception)
@@ -71,22 +71,31 @@ case class RpnCalculator(stack: List[Op] = Nil) {
           -> Execute Operation and push result on remaining Stack
          */
 
+          /**
+            * Helper method to return next value
+            * Throws Exception if next one is a BinOp!
+            */
+          def getNextVal(rpnCal: RpnCalculator): Val = {
+            val myVal = rpnCal.peek()
+            myVal match {
+              case v: Val => v
+              case b: BinOp => throw new NoSuchElementException
+            }
+          }
+
           //Try to get first element and remove it from stack
-          val fstVal = peek.asInstanceOf[Val]
-          var remainCalc = pop._2
+          val fstVal = getNextVal(this)
+          var remainCalc = pop()._2
 
           //Try to get snd element and remove it from stack
-          val sndVal = remainCalc.peek.asInstanceOf[Val]
-          remainCalc = remainCalc.pop._2
+          val sndVal = getNextVal(remainCalc)
+          remainCalc = remainCalc.pop()._2
 
           val result: Val = o.eval(fstVal, sndVal)
-          //Ass result to remaining Calculator
           remainCalc.push(result)
         } catch {
           case _ => Try[RpnCalculator](throw new NoSuchElementException)
         }
-       }
-
     }
   }
 
@@ -95,7 +104,7 @@ case class RpnCalculator(stack: List[Op] = Nil) {
     *
     * If op is not a val, pop two numbers from the stack and apply the operation.
     *
-    * @param op
+    * @param op New op instance to add to calc
     * @return
     */
   def push(op: Seq[Op]): Try[RpnCalculator] = {
@@ -124,7 +133,7 @@ case class RpnCalculator(stack: List[Op] = Nil) {
     if (stack.isEmpty)
       throw new NoSuchElementException
     else
-      stack.head;
+      stack.head
   }
 
   /**

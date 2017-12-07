@@ -8,4 +8,5 @@ option java_package         = "at.fhj.swengb.protobuf";
 message Helloworld {
     string hello = 1;
     int32 test = 2;
+    string bla = 3;
 }
