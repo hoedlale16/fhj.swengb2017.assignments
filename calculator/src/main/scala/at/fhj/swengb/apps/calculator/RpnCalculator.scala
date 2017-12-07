@@ -26,7 +26,6 @@ object RpnCalculator {
       var myCalc: Try[RpnCalculator] = Try(RpnCalculator())
       try {
         for (elem <- myStack) {
-          //TODO: Exception Handling: Wenn hier ein Fail zurückkommt aufhören!
           if (myCalc.isFailure) {
             throw new NoSuchElementException;
           } else {
