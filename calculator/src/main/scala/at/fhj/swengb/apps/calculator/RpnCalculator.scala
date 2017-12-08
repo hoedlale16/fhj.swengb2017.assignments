@@ -20,23 +20,13 @@ object RpnCalculator {
     if (s.isEmpty)
       Try(RpnCalculator())
     else {
-      val myStack: List[Op] = s.split(' ').map(e => Op(e)).toList
-
-      //Create new empty Calc and push all elements on stack
-      var myCalc: Try[RpnCalculator] = Try(RpnCalculator())
       try {
-        for (elem <- myStack) {
-          if (myCalc.isFailure) {
-            throw new NoSuchElementException
-          } else {
-            myCalc = myCalc.get.push(elem)
-          }
-        }
-      }catch {
-        case _ => Try[RpnCalculator](throw new NoSuchElementException)
+        val myStack: List[Op] = s.split(' ').map(e => Op(e)).toList
+        myStack.foldLeft(Try(RpnCalculator()))(
+          (acc, elem) => acc.get.push(elem))
+      } catch {
+        case e: Exception => Try[RpnCalculator](throw e)
       }
-
-      myCalc
     }
   }
 
@@ -60,26 +50,15 @@ case class RpnCalculator(stack: List[Op] = Nil) {
   def push(op: Op): Try[RpnCalculator] = {
 
     op match {
-      case v: Val => Try(RpnCalculator(stack :+ op))
+      case v: Val => Try(RpnCalculator(stack :+ v))
       case o: BinOp =>
         try {
-          /*Operation detected: try to execute it
-          -> Get first element from stack (is possible, otherwise peek returns exception)
-          -> Remove first element(pop) and continue with remaining stack
-          -> Try to get snd element from stack( if possible, otherwise peek returns exception)
-          -> Remove snd element(pop) and continue with remaining stack
-          -> Execute Operation and push result on remaining Stack
-         */
-
-          /**
-            * Helper method to return next value
-            * Throws Exception if next one is a BinOp!
-            */
+          //Helper method to return next value or throws Exception
           def getNextVal(rpnCal: RpnCalculator): Val = {
             val myVal = rpnCal.peek()
             myVal match {
-              case v: Val => v
-              case b: BinOp => throw new NoSuchElementException
+              case v: Val   => v
+              case _: BinOp => throw new NoSuchElementException
             }
           }
 
@@ -91,10 +70,12 @@ case class RpnCalculator(stack: List[Op] = Nil) {
           val sndVal = getNextVal(remainCalc)
           remainCalc = remainCalc.pop()._2
 
+          //Execute given Operation with values
           val result: Val = o.eval(fstVal, sndVal)
+          //Add result on stack
           remainCalc.push(result)
         } catch {
-          case _ => Try[RpnCalculator](throw new NoSuchElementException)
+          case e: Exception => Try[RpnCalculator](throw e)
         }
     }
   }
@@ -107,14 +88,8 @@ case class RpnCalculator(stack: List[Op] = Nil) {
     * @param op New op instance to add to calc
     * @return
     */
-  def push(op: Seq[Op]): Try[RpnCalculator] = {
-
-    var myCalc = RpnCalculator()
-    for (elem <- op.toList) {
-      myCalc = myCalc.push(elem).get
-    }
-    Try(myCalc)
-  }
+  def push(op: Seq[Op]): Try[RpnCalculator] =
+    op.foldLeft(Try(RpnCalculator()))((acc, elem) => acc.get.push(elem))
 
   /**
     * Returns an tuple of Op and a RpnCalculator instance with the remainder of the stack.

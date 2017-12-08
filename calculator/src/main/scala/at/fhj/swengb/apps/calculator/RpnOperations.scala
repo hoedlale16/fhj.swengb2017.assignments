@@ -10,7 +10,7 @@ object Op {
   /**
     * A convenience constructor to create an Op from a string. No error handling is performed.
     *
-    * @param s
+    * @param s String represents function
     * @return
     */
   def apply(s: String): Op = {
@@ -28,7 +28,7 @@ object Op {
 /**
   * A class representing a number which can be used in the RPN.
   *
-  * @param value
+  * @param value Concrete value of instance Val
   */
 case class Val(value: Double) extends Op
 
