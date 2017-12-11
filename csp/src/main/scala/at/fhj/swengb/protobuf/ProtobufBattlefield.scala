@@ -35,19 +35,16 @@ object ProtobufBattlefield {
     writeProtobufTo(battlefield,filePath)
 
     //---------------------------------------------
-
-
-    // reads data from disc and prints output
+    // Just to test: Read data from disc and print output
     val bfIn: Battlefield = readFromProtobuf(filePath)
-    println(
-      "read Battflefield-Size: " + bfIn.getFieldWidth + "/" + bfIn.getFieldHeight)
-    println("HitPos: ")
+    println("Battlefield-Size: " + bfIn.getFieldWidth + "/" + bfIn.getFieldHeight)
+    println("Already clicked positions: ")
     bfIn.getClickedPositionsList.asScala.foreach(e =>
-      println(e.getX + "/" + e.getY))
+      println("  (" + e.getX + "/" + e.getY + ")"))
 
     println("Vessels: ");
     bfIn.getVesselsList.asScala.foreach(e =>
-      println(e.getName + "[" + e.getType + "] - StartPos: (" +
+      println("  " + e.getName + "[" + e.getType + "] - StartPos: (" +
               e.getStartPos.getX + "/" + e.getStartPos.getY + ") - Orientation: " + e.getOrientation))
 
   }
@@ -84,6 +81,15 @@ object ProtobufBattlefield {
   }
 
 
+  /**
+    * Create a Vessel to store with Protobuf - API
+    * @param name Name of vessel
+    * @param vesselType VesselType of protobuf instance VesselType
+    * @param orientation horizontal/verzitkal with protobuf instance VesselOrientation
+    * @param startX - X-coordinate of startpoint of vessel
+    * @param startY - Y-coordinate of startpoint of vessel
+    * @return Returns instance of vessel to store
+    */
   private def createProtobufVessel(name: String,
                                    vesselType: VesselType,
                                    orientation: VesselOrientation,
