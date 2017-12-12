@@ -29,8 +29,10 @@ lazy val calculator = (project in file("calculator/")).
   settings(name := "calculator")
 
 lazy val csp = (project in file("csp/")).
+  enablePlugins(ProtobufPlugin).
   settings(commonSettings: _*).
-  settings(name := "csp")
+  settings(name := "csp",
+    javaSource in ProtobufConfig := ((sourceDirectory in Compile).value / "generated"))
 
 // ------------------------------------------------------
 // main project
