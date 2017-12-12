@@ -2,65 +2,38 @@ import sbt._
 import Dependencies._
 import BuildConstants._
 
+lazy val commonSettings: Seq[Def.SettingsDefinition] = Seq(
+  organization := org,
+  scalaVersion := scalaVer,
+  version := buildVer,
+  libraryDependencies += scalaTest,
+  fork := true
+)
+
 
 // ------------------------------------------------------
 lazy val tutorial = (project in file("tutorial/")).
-  settings(
-    organization := org,
-    scalaVersion := scalaVer,
-    version := buildVer,
-    name := "tutorial",
-    libraryDependencies += scalaTest,
-    fork := true
-  )
+  settings(commonSettings: _*).
+  settings(name := "tutorial")
 
 lazy val tree = (project in file("tree/")).
-  settings(
-    organization := org,
-    scalaVersion := scalaVer,
-    version := buildVer,
-    name := "tree",
-    libraryDependencies += scalaTest,
-    fork := true
-  )
+  settings(commonSettings: _*).
+  settings(name := "tree")
 
 lazy val functional = (project in file("functional/")).
-  settings(
-    organization := org,
-    scalaVersion := scalaVer,
-    version := buildVer,
-    name := "functional",
-    libraryDependencies += scalaTest,
-    fork := true
-  )
+  settings(commonSettings: _*).
+  settings(name := "functional")
 
 lazy val calculator = (project in file("calculator/")).
-  settings(
-    organization := org,
-    scalaVersion := scalaVer,
-    version := buildVer,
-    name := "calculator",
-    libraryDependencies += scalaTest,
-    fork := true
-  )
+  settings(commonSettings: _*).
+  settings(name := "calculator")
 
 lazy val csp = (project in file("csp/")).
-  settings(
-    organization := org,
-    scalaVersion := scalaVer,
-    version := buildVer,
-    name := "csp",
-    libraryDependencies += scalaTest,
-    fork := true
-  )
+  settings(commonSettings: _*).
+  settings(name := "csp")
 
 // ------------------------------------------------------
 // main project
 lazy val assignments = (project in file(".")).
-  settings(
-    organization := org,
-    scalaVersion := scalaVer,
-    version := buildVer,
-    name := "assignments",
-    libraryDependencies += scalaTest
-  ).aggregate(tutorial, functional, tree, calculator, csp)
+  settings(commonSettings: _*).
+  settings(name := "assignments").aggregate(tutorial, functional, tree, calculator, csp)
