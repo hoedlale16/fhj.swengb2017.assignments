@@ -7,13 +7,6 @@ option java_package         = "at.fhj.swengb.protobuf";
 
 message Battlefield {
 
-    enum VesselType {
-        Battleship = 0;
-        Cruiser = 1;
-        Destroyer = 2;
-        Submarine = 3;
-    }
-
     enum VesselOrientation {
         Horizontal = 0;
         Vertical = 1;
@@ -26,7 +19,7 @@ message Battlefield {
 
     message Vessel {
         string name = 1;
-        VesselType type = 2;
+        int32 size = 2;
         VesselOrientation orientation = 3;
         Position startPos = 4;
     }

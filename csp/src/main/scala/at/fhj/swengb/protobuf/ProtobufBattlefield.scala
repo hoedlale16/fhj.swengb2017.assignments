@@ -2,127 +2,157 @@ package at.fhj.swengb.protobuf
 
 import java.nio.file.{Files, Paths}
 
+import at.fhj.swengb.apps.battleship.jfx.BattleShipGame
+import at.fhj.swengb.apps.battleship.{BattlePos, _}
 import at.fhj.swengb.protobuf.BattlefieldOuterClass.Battlefield
-import at.fhj.swengb.protobuf.BattlefieldOuterClass.Battlefield.{Position, Vessel, VesselOrientation, VesselType}
+import at.fhj.swengb.protobuf.BattlefieldOuterClass.Battlefield.{
+  Position,
+  Vessel,
+  VesselOrientation
+}
 
 import scala.collection.JavaConverters._
 
 object ProtobufBattlefield {
 
-  val filePath: String = "target/battefield.bin"
-
-  def main(args: Array[String]): Unit = {
-
-    //Create already clicked positions
-    val clickedPos1: Position = Position.newBuilder().setX(0).setY(0).build()
-    val clickedPos2: Position = Position.newBuilder().setX(0).setY(0).build()
-    val clickedPos3: Position = Position.newBuilder().setX(4).setY(7).build()
-    val clickedPos4: Position = Position.newBuilder().setX(3).setY(5).build()
-    val clickedPos5: Position = Position.newBuilder().setX(2).setY(1).build()
-
-    val clickedPosistions = Set(clickedPos1,clickedPos2,clickedPos3,clickedPos4,clickedPos5)
-
-    //Creates my Fleet
-    val myBattleship: Vessel = createProtobufVessel("Battleship",VesselType.Battleship,VesselOrientation.Horizontal,1,1)
-    val myCruiser: Vessel = createProtobufVessel("Cruiser",VesselType.Cruiser,VesselOrientation.Vertical,4,5)
-    val myDestroyer: Vessel = createProtobufVessel("Destroyer",VesselType.Destroyer,VesselOrientation.Horizontal,3,2)
-    val mySubmarine: Vessel = createProtobufVessel("Submarine",VesselType.Submarine,VesselOrientation.Horizontal,7,7)
-
-    val fleet: Seq[Vessel] = Seq(myBattleship,myCruiser,myDestroyer,mySubmarine)
-
-    //Finally create Battlefiled to store and write it to dics
-    val battlefield: Battlefield = createProtobufBattlefiled(10,10,clickedPosistions,fleet)
-    writeProtobufTo(battlefield,filePath)
-
-    //---------------------------------------------
-    // Just to test: Read data from disc and print output
-    val bfIn: Battlefield = readFromProtobuf(filePath)
-    println("Battlefield-Size: " + bfIn.getFieldWidth + "/" + bfIn.getFieldHeight)
-    println("Already clicked positions: ")
-    bfIn.getClickedPositionsList.asScala.foreach(e =>
-      println("  (" + e.getX + "/" + e.getY + ")"))
-
-    println("Vessels: ");
-    bfIn.getVesselsList.asScala.foreach(e =>
-      println("  " + e.getName + "[" + e.getType + "] - StartPos: (" +
-              e.getStartPos.getX + "/" + e.getStartPos.getY + ") - Orientation: " + e.getOrientation))
-
-  }
-
+  def main(args: Array[String]): Unit = {}
 
   /**
-    * Creates a new Object of Battlefield to store with Protobuf API
-    * @param fieldWidth => Width of battlefile
-    * @param fieldHeight => Height of battlefile
-    * @param clickedPos Set of already clicked positions
-    * @param vessels List of vessels from battlefield
-    * @return Storeable object for protobuf API
+    * Method to save game state of battleship game
+    *
+    * @param game
+    * @param filePath
     */
-  private def createProtobufBattlefiled(fieldWidth: Int,
-                               fieldHeight: Int,
-                               clickedPos: Set[Position],
-                               vessels: Seq[Vessel]): Battlefield = {
+  def saveBattleShipGame(game: BattleShipGame, filePath: String) = {
 
-    //Create new Object battlefile
-    val battlefield = BattlefieldOuterClass.Battlefield
+    //Create Protobuf Battlefield
+    val protoBattleField = BattlefieldOuterClass.Battlefield
       .newBuilder()
-      .setFieldWidth(fieldWidth)
-      .setFieldHeight(fieldHeight)
+      .setFieldWidth(game.battleField.width)
+      .setFieldHeight(game.battleField.height)
 
-    //Add Clicked positions
-    clickedPos.foreach(e => battlefield.addClickedPositions(e))
+    //Convert vessesls to protobuf-Vessels and add it
+    val fleetProtobuf: Set[Vessel] =
+      game.battleField.fleet.vessels.map(e => convertVesseltoProtobufVessel(e))
+    fleetProtobuf.foreach(e => protoBattleField.addVessels(e))
 
-    //Add Vessesls
-    vessels.foreach(e => battlefield.addVessels(e))
+    //Convert set of BattleBos to Protobuf clicked positions add add it
+    val clickedPos =
+      game.clickedPositions.map(e => convertBattlePosToProtobufPosition(e))
+    clickedPos.foreach(e => protoBattleField.addClickedPositions(e))
 
-
-    //Build battlefield and return
-    battlefield.build()
+    //Build battlefield and write to file
+    protoBattleField.build().writeTo(Files.newOutputStream(Paths.get(filePath)))
   }
 
+  /**
+    * Load given protobuf file and creates a battlefield out of it.
+    * Returns a Tuple with battleField and already clicked positions
+    *
+    * @param filePath
+    * @return
+    */
+  def loadBattleField(filePath: String)
+  : (at.fhj.swengb.apps.battleship.BattleField, Set[BattlePos]) = {
+    val bfIn: Battlefield =
+      Battlefield.parseFrom(Files.newInputStream(Paths.get(filePath)))
+
+    //Create BattleField
+    val fleet: Fleet = Fleet(
+      bfIn.getVesselsList.asScala
+        .map(e => convertProtobufVesseltoVessel(e))
+        .toSet)
+    val battleField =
+      BattleField(bfIn.getFieldWidth, bfIn.getFieldHeight, fleet)
+
+    //Create set of alread clicked positions
+    val clickedPos: Set[BattlePos] =
+      bfIn.getClickedPositionsList.asScala
+        .map(e => convertProtoBufPositionToBattlePos(e))
+        .toSet
+
+    //Return Battlefield and already clicked positions
+    (battleField, clickedPos)
+  }
 
   /**
-    * Create a Vessel to store with Protobuf - API
-    * @param name Name of vessel
-    * @param vesselType VesselType of protobuf instance VesselType
-    * @param orientation horizontal/verzitkal with protobuf instance VesselOrientation
-    * @param startX - X-coordinate of startpoint of vessel
-    * @param startY - Y-coordinate of startpoint of vessel
-    * @return Returns instance of vessel to store
+    * Convertes a given Battleship-Game Vessel to an Protobuf Vessel to store
+    *
+    * @param vessel
+    * @return
     */
-  private def createProtobufVessel(name: String,
-                                   vesselType: VesselType,
-                                   orientation: VesselOrientation,
-                                   startX: Int,
-                                   startY: Int) = {
+  private def convertVesseltoProtobufVessel(
+                                             vessel: at.fhj.swengb.apps.battleship.Vessel): Vessel = {
+
+    val vesselOrientation = {
+      vessel.direction match {
+        case Horizontal => VesselOrientation.Horizontal;
+        case Vertical => VesselOrientation.Vertical;
+        case _ => ??? /*When this happens, some crazy shit is going on... */
+      }
+    }
+
+    //Create new protobuf Vessel
     Vessel
       .newBuilder()
-      .setName(name)
-      .setType(vesselType)
-      .setOrientation(orientation)
-      .setStartPos(Position.newBuilder().setX(startX).setY(startY).build())
+      .setName(vessel.name.value)
+      .setSize(vessel.size)
+      .setOrientation(vesselOrientation)
+      .setStartPos(
+        Position
+          .newBuilder()
+          .setX(vessel.startPos.x)
+          .setY(vessel.startPos.y)
+          .build())
       .build()
   }
 
   /**
-    * Write Protobuf-Battlefield to given path
-    * @param battlefield - Battlefield instance to write to
-    * @param path filepath to write to
+    * Convert a Protobuf Vessel to a BattleShipGame Vessel
+    *
+    * @param vessel
+    * @return
     */
-  private def writeProtobufTo(battlefield: Battlefield, path: String) = {
-    val target = Paths.get(path)
-    println("wrote to: " + target.toAbsolutePath.toString)
-    battlefield.writeTo(Files.newOutputStream(target))
+  private def convertProtobufVesseltoVessel(
+                                             vessel: Vessel): at.fhj.swengb.apps.battleship.Vessel = {
+
+    val name: NonEmptyString = NonEmptyString(vessel.getName)
+    val startPos: BattlePos =
+      BattlePos(vessel.getStartPos.getX, vessel.getStartPos.getY)
+    val size = vessel.getSize
+    val direction: Direction = vessel.getOrientation match {
+      case VesselOrientation.Horizontal => Horizontal
+      case VesselOrientation.Vertical => Vertical
+      case _ => ???
+    }
+
+    //Create Battleship Vessel and return it.
+    at.fhj.swengb.apps.battleship.Vessel(name, startPos, direction, size)
   }
 
   /**
-    * Read binary protobuf-File with API
-    * @param path - Path from file to read from
+    * Generates a Protobuf Position from given BattlePos possiton
+    *
+    * @param battlePos
     * @return
     */
-  private def readFromProtobuf(path: String): Battlefield = {
-    val target = Paths.get(path)
-    println("read from: " + target.toAbsolutePath.toString)
-    Battlefield.parseFrom(Files.newInputStream(target))
+  private def convertBattlePosToProtobufPosition(
+                                                  battlePos: BattlePos): Position = {
+    Position
+      .newBuilder()
+      .setX(battlePos.x)
+      .setY(battlePos.y)
+      .build()
+  }
+
+  /**
+    * Converts a Protobuf Position to a BattleShipGame BattlePos
+    *
+    * @param position
+    * @return
+    */
+  private def convertProtoBufPositionToBattlePos(
+                                                  position: Position): BattlePos = {
+    BattlePos(position.getX, position.getY)
   }
 }
