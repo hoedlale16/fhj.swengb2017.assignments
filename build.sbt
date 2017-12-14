@@ -28,14 +28,21 @@ lazy val calculator = (project in file("calculator/")).
   settings(commonSettings: _*).
   settings(name := "calculator")
 
-lazy val csp = (project in file("csp/")).
+lazy val battleShipModel = (project in file("battleship/model/")).
   enablePlugins(ProtobufPlugin).
   settings(commonSettings: _*).
-  settings(name := "csp",
-    javaSource in ProtobufConfig := ((sourceDirectory in Compile).value / "generated"))
+  settings(name := "battleship-model",
+    javaSource in ProtobufConfig := ((sourceDirectory in Compile).value / "generated"),
+    libraryDependencies += scalacheck
+  )
+
+lazy val battleShipFx = (project in file("battleship/jfx"))
+  .settings(commonSettings: _*).
+  settings(name := "battleship-jfx",
+  ).dependsOn(battleShipModel)
 
 // ------------------------------------------------------
 // main project
 lazy val assignments = (project in file(".")).
   settings(commonSettings: _*).
-  settings(name := "assignments").aggregate(tutorial, functional, tree, calculator, csp)
+  settings(name := "assignments").aggregate(tutorial, functional, tree, calculator, battleShipFx)
