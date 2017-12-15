@@ -48,9 +48,7 @@ case class BattleShipGame(battleField: BattleField,
   //Adds a new Position to clicked set
   def updateClickedPositions(pos: BattlePos): Unit = {
     //We keep already clicked positions awell!
-    println("curr pos: " + pos)
     clickedPositions = pos +: clickedPositions
-    println(clickedPositions)
   }
 
   //Simulates click for all positions in list
