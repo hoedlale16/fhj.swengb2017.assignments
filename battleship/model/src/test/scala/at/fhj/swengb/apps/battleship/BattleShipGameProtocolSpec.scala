@@ -15,6 +15,7 @@ class BattleShipProtocolSpec extends WordSpecLike {
         expected: BattleShipGame => {
           val actual = BattleShipProtocol.convert(BattleShipProtocol.convert(expected))
           actual.battleField == expected.battleField
+          actual.clickedPositions == expected.clickedPositions
         }
       })
     }
