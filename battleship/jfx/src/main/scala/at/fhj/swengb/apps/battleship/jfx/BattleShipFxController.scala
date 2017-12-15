@@ -5,18 +5,20 @@ import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.util.ResourceBundle
 import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.TextArea
+import javafx.scene.control.{Slider, TextArea}
 import javafx.scene.layout.GridPane
 import javax.swing.JFileChooser
 
-import at.fhj.swengb.apps.battleship.{BattleShipProtobuf, BattleShipProtocol}
+import at.fhj.swengb.apps.battleship.BattleShipProtocol
 import at.fhj.swengb.apps.battleship.model._
 
 class BattleShipFxController extends Initializable {
 
-  var game: BattleShipGame = null;
+  //Initialized in init
+  private var game: BattleShipGame = null;
 
   @FXML private var battleGroundGridPane: GridPane = _
+  @FXML private var clickHistorySlider: Slider = _
 
   /**
     * A text area box to place the history of the game
@@ -28,7 +30,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def saveGame(): Unit = {
     try {
-      var chooser = new JFileChooser();
+      val chooser = new JFileChooser();
       chooser.setDialogTitle("Select path to store")
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
       chooser.setAcceptAllFileFilterUsed(false)
@@ -50,7 +52,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def loadGame(): Unit = {
     try {
-      var chooser = new JFileChooser();
+      var chooser = new JFileChooser
       chooser.setDialogTitle("Select path to load gamestate")
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
       chooser.setAcceptAllFileFilterUsed(false)
@@ -67,18 +69,22 @@ class BattleShipFxController extends Initializable {
         val loadedBattleShipGame: BattleShipGame =
           BattleShipProtocol.convert(bsgIn)
 
-        //Create new game-Event based on loaded Data
-        game = BattleShipGame(loadedBattleShipGame.battleField,
-                              getCellWidth,
-                              getCellHeight,
-                              appendLog)
-        init(game)
-
-        //Set already clicked positions and update GUI!
-        game.simulateClicksOnClickedPositions(
-          loadedBattleShipGame.clickedPositions)
 
         appendLog("Load Game-state: [" + filePath + "]")
+
+        //Create new game-Event based on loaded Data
+        val battleShipGame = BattleShipGame(loadedBattleShipGame.battleField,
+          getCellWidth,
+          getCellHeight,
+          appendLog)
+
+        //Init Game
+        init(battleShipGame)
+
+        //Now simulate all already clicked positions!
+        battleShipGame.simulateClicksOnClickedPositions(
+          loadedBattleShipGame.clickedPositions)
+
       }
     } catch {
       case e: Exception => appendLog("ERROR - Loading failed: " + e.getMessage)
@@ -104,7 +110,10 @@ class BattleShipFxController extends Initializable {
     * - placing your ships at random on the battleground
     *
     */
-  def init(game: BattleShipGame): Unit = {
+  def init(g: BattleShipGame): Unit = {
+    //Initialize BattleShipGame
+    game = g;
+
     battleGroundGridPane.getChildren.clear()
     for (c <- game.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
@@ -113,16 +122,14 @@ class BattleShipFxController extends Initializable {
   }
 
   private def initGame(): Unit = {
-    game = createNewGame()
-    init(game)
+    init(createNewGame)
     appendLog("New game started.")
   }
 
   private def createNewGame(): BattleShipGame = {
     val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
-
     val battleField: BattleField = BattleField.placeRandomly(field)
-
     BattleShipGame(battleField, getCellWidth, getCellHeight, appendLog)
   }
+
 }
