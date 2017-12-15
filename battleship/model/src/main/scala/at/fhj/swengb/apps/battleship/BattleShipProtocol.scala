@@ -41,8 +41,12 @@ object BattleShipProtocol {
         .map(e => convert(e))
         .toSet
 
-    //Create BattleshipGame
-    BattleShipGame(battleField,(e=> e.toDouble),(e => e.toDouble), (e => println(e)))
+    //Create BattleshipGame and set aready clicked positions
+    val game = BattleShipGame(battleField,(e=> e.toDouble),(e => e.toDouble), (e => println(e)))
+    game.clickedPositions = clickedPos
+
+    //return game
+    game
   }
 
 
