@@ -1,12 +1,16 @@
 package at.fhj.swengb.apps.battleship
 
-import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame.{Position, Vessel, VesselOrientation}
+import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame.{
+  Position,
+  Vessel,
+  VesselOrientation
+}
 import at.fhj.swengb.apps.battleship.model._
 import scala.collection.JavaConverters._
 
 object BattleShipProtocol {
 
-  def convert(g : BattleShipGame) : BattleShipProtobuf.BattleShipGame = {
+  def convert(g: BattleShipGame): BattleShipProtobuf.BattleShipGame = {
     //Create Protobuf Battlefield
     val protoBattleField = BattleShipProtobuf.BattleShipGame
       .newBuilder()
@@ -27,29 +31,27 @@ object BattleShipProtocol {
     protoBattleField.build()
   }
 
-  def convert(g : BattleShipProtobuf.BattleShipGame) : BattleShipGame = {
+  def convert(g: BattleShipProtobuf.BattleShipGame): BattleShipGame = {
     //Create data for BattleField
-    val fleet: Fleet = Fleet( g.getVesselsList.asScala
-        .map(e => convert(e))
-        .toSet)
+    val fleet: Fleet = Fleet(
+      g.getVesselsList.asScala.map(e => convert(e)).toSet)
 
     val battleField = BattleField(g.getFieldWidth, g.getFieldHeight, fleet)
 
     //Create set of alread clicked positions
-    val clickedPos: Set[BattlePos] =
-      g.getClickedPositionsList.asScala
-        .map(e => convert(e))
-        .toSet
+    val clickedPos: Seq[BattlePos] =
+      g.getClickedPositionsList.asScala.map(e => convert(e)).toSeq
 
     //Create BattleshipGame and set aready clicked positions
-    val game = BattleShipGame(battleField,(e=> e.toDouble),(e => e.toDouble), (e => println(e)))
+    val game = BattleShipGame(battleField,
+                              (e => e.toDouble),
+                              (e => e.toDouble),
+                              (e => println(e)))
     game.clickedPositions = clickedPos
 
     //return game
     game
   }
-
-
 
   /**
     * Convertes a given Battleship-Game Vessel to an Protobuf Vessel to store
@@ -63,8 +65,8 @@ object BattleShipProtocol {
     val vesselOrientation = {
       vessel.direction match {
         case Horizontal => VesselOrientation.Horizontal;
-        case Vertical => VesselOrientation.Vertical;
-        case _ => ??? /*When this happens, some crazy shit is going on... */
+        case Vertical   => VesselOrientation.Vertical;
+        case _          => ??? /*When this happens, some crazy shit is going on... */
       }
     }
 
@@ -98,8 +100,8 @@ object BattleShipProtocol {
     val size = vessel.getSize
     val direction: Direction = vessel.getOrientation match {
       case VesselOrientation.Horizontal => Horizontal
-      case VesselOrientation.Vertical => Vertical
-      case _ => ???
+      case VesselOrientation.Vertical   => Vertical
+      case _                            => ???
     }
 
     //Create Battleship Vessel and return it.
@@ -122,10 +124,10 @@ object BattleShipProtocol {
   }
 
   /** Converts a Protobuf Position to a BattleShipGame BattlePos
-  *
-  * @param position
+    *
+    * @param position
     * @return
-  */
+    */
   //previous convertProtoBufPositionToBattlePos
   private def convert(position: Position): BattlePos = {
     BattlePos(position.getX, position.getY)

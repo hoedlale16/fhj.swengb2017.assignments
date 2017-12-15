@@ -12,11 +12,13 @@ class BattleShipProtocolSpec extends WordSpecLike {
   "BattleShipProtocol" should {
     "be deserializable" in {
       Checkers.check(Prop.forAll(battleShipGameGen) {
-        expected: BattleShipGame => {
-          val actual = BattleShipProtocol.convert(BattleShipProtocol.convert(expected))
-          actual.battleField == expected.battleField
-          actual.clickedPositions == expected.clickedPositions
-        }
+        expected: BattleShipGame =>
+          {
+            val actual =
+              BattleShipProtocol.convert(BattleShipProtocol.convert(expected))
+            actual.battleField == expected.battleField
+            actual.clickedPositions == expected.clickedPositions
+          }
       })
     }
   }

@@ -75,8 +75,8 @@ class BattleShipFxController extends Initializable {
         init(game)
 
         //Set already clicked positions and update GUI!
-        game.clickedPositions = loadedBattleShipGame.clickedPositions
-        game.simulateClicksOnClickedPositions()
+        game.simulateClicksOnClickedPositions(
+          loadedBattleShipGame.clickedPositions)
 
         appendLog("Load Game-state: [" + filePath + "]")
       }

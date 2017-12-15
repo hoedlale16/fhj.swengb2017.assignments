@@ -39,6 +39,14 @@
 | 1
 | Implement functionality for loading (Buttonclick,Filechooser,...)
 
+| hoedlale16
+| 16.12.2017
+| 3
+| 2
+| Implement Slide-Bar functionality (Backend) -> Sequence clickes and read correct sequence for click history
+
+
+
 | hoedlale16,fernbach16
 | 18.12.2017
 | 2

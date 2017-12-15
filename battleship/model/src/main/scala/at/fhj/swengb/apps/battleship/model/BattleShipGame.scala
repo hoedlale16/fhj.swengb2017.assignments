@@ -21,37 +21,44 @@ case class BattleShipGame(battleField: BattleField,
   var sunkShips: Set[Vessel] = Set()
 
   /**
-    * Contains all already clicked positions
+    * Contains all already clicked positions.
+    * Array keeps sorting...
     */
-  var clickedPositions: Set[BattlePos] = Set();
+  var clickedPositions: Seq[BattlePos] = Seq();
 
   /**
     * We don't ever change cells, they should be initialized only once.
     */
-  private val cells: Seq[BattleFxCell] = for {x <- 0 until battleField.width
-                                              y <- 0 until battleField.height
-                                              pos = BattlePos(x, y)} yield {
+  private val cells: Seq[BattleFxCell] = for {
+    x <- 0 until battleField.width
+    y <- 0 until battleField.height
+    pos = BattlePos(x, y)
+  } yield {
     BattleFxCell(BattlePos(x, y),
-      getCellWidth(x),
-      getCellHeight(y),
-      log,
-      battleField.fleet.findByPos(pos),
-      updateGameState,
-      updateClickedPositions)
+                 getCellWidth(x),
+                 getCellHeight(y),
+                 log,
+                 battleField.fleet.findByPos(pos),
+                 updateGameState,
+                 updateClickedPositions)
   }
 
   def getCells(): Seq[BattleFxCell] = cells
 
   //Adds a new Position to clicked set
   def updateClickedPositions(pos: BattlePos): Unit = {
-    clickedPositions = clickedPositions + pos
+    //We keep already clicked positions awell!
+    println("curr pos: " + pos)
+    clickedPositions = pos +: clickedPositions
+    println(clickedPositions)
   }
 
   //Simulates click for all positions in list
-  def simulateClicksOnClickedPositions(): Unit = {
+  def simulateClicksOnClickedPositions(pos: Seq[BattlePos]): Unit = {
 
     //This are all affected Cells
-    val relevantCells: Seq[BattleFxCell] = cells.filter(c => clickedPositions.contains(c.pos))
+    val relevantCells: Seq[BattleFxCell] =
+      cells.filter(c => pos.contains(c.pos))
 
     //Simulate Mouseclick
     relevantCells.map(e => e.handleMouseClick())
@@ -93,7 +100,6 @@ case class BattleShipGame(battleField: BattleField,
         }
       }
 
-
     } else {
       // vessel is not part of the map
       // but vessel was hit!
@@ -102,6 +108,5 @@ case class BattleShipGame(battleField: BattleField,
     }
 
   }
-
 
 }
