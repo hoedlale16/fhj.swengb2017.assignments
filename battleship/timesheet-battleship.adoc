@@ -13,19 +13,38 @@
 | 14.12.17
 | 1
 | 1
-| Design Protobuf-Conzept
+| Design Protobuf-Concept
 
 | hoedlale16,fernbach16
 | 15.12.2017
-| 4
-| 2
-| Implementation of Protobuf-Conzept & Unit-Tests
+| 3
+| 2.5
+| Implement Unit-Test generator BattleShipGen.
 
-| hoedlale16
+| hoedlale16,fernbach16
 | 15.12.2017
 | 2
 | 2
-| Implement Safe-Funktionality(Buttonclick,Filechooser,...)
+| Implementation of previous created Concept for Protobuf. 
+
+| hoedlale16
+| 16.12.2017
+| 1
+| 1
+| Implement functionality for save(Buttonclick,Filechooser,...)
+
+| hoedlale16
+| 16.12.2017
+| 1
+| 1
+| Implement functionality for loading (Buttonclick,Filechooser,...)
+
+| hoedlale16,fernbach16
+| 18.12.2017
+| 2
+| 2
+| Design/CSS Style to make Game look pretty
+
 
 
 
