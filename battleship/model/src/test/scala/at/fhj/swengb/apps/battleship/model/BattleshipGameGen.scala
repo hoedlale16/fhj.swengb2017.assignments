@@ -28,8 +28,6 @@ object BattleshipGameGen {
 
   val battleShipGameGen: Gen[BattleShipGame] = for {
     battlefield <- battlefieldGen
-    //cellWidth <- cellGen
-    //cellHeigth <- cellGen
   } yield {
     BattleShipGame(battlefield, ( x => x.toDouble), ( x => x.toDouble), (x => println(x)))
   }
