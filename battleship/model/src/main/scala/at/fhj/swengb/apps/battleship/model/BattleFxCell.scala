@@ -1,20 +1,19 @@
 package at.fhj.swengb.apps.battleship.model
 
 import javafx.scene.paint.Color
-import javafx.scene.shape.Rectangle
-;
+import javafx.scene.shape.Rectangle;
 
 /**
   * Represents one part of a vessel or one part of the ocean.
   */
-
-case class BattleFxCell(pos: BattlePos
-                        , width: Double
-                        , height: Double
-                        , log: String => Unit
-                        , someVessel: Option[Vessel] = None
-                        , fn: (Vessel, BattlePos) => Unit
-                        ) extends Rectangle(width, height) {
+case class BattleFxCell(pos: BattlePos,
+                        width: Double,
+                        height: Double,
+                        log: String => Unit,
+                        someVessel: Option[Vessel] = None,
+                        fn: (Vessel, BattlePos) => Unit,
+                        upClickedPos: BattlePos => Unit)
+    extends Rectangle(width, height) {
 
   def init(): Unit = {
     if (someVessel.isDefined) {
@@ -25,6 +24,13 @@ case class BattleFxCell(pos: BattlePos
   }
 
   setOnMouseClicked(e => {
+    handleMouseClick
+  })
+
+  def handleMouseClick() = {
+    //Add Cell to clicked Positions
+    upClickedPos(pos)
+
     someVessel match {
       case None =>
         log(s"Missed. Just hit water.")
@@ -34,6 +40,6 @@ case class BattleFxCell(pos: BattlePos
         fn(v, pos)
         setFill(Color.RED)
     }
-  })
+  }
 
 }

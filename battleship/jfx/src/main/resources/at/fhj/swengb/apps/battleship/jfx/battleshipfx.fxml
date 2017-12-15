@@ -24,11 +24,11 @@
         </Label>
     </top>
     <right>
-        <VBox prefHeight="392.0" prefWidth="138.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="392.0" prefWidth="138.0" spacing="5.0" BorderPane.alignment="CENTER">
             <children>
-                <Button id="button" fx:id="button" onAction="#newGame" prefHeight="27.0" prefWidth="142.0" text="New Game" />
-            <Button id="button" fx:id="button1" prefHeight="27.0" prefWidth="142.0" text="Load Game" />
-            <Button id="button" fx:id="button11" prefHeight="27.0" prefWidth="142.0" text="Save Game" />
+                <Button id="button" fx:id="btNewGame" onAction="#newGame" prefHeight="27.0" prefWidth="142.0" text="New Game" />
+            <Button id="button" fx:id="btLoadGame" onAction="#loadGame" prefHeight="27.0" prefWidth="142.0" text="Load Game" />
+            <Button id="button" fx:id="btSaveGame" onAction="#saveGame" prefHeight="27.0" prefWidth="142.0" text="Save Game" />
             </children>
         </VBox>
     </right>

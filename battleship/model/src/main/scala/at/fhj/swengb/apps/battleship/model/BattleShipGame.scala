@@ -36,11 +36,27 @@ case class BattleShipGame(battleField: BattleField,
       getCellHeight(y),
       log,
       battleField.fleet.findByPos(pos),
-      updateGameState)
+      updateGameState,
+      updateClickedPositions)
   }
 
   def getCells(): Seq[BattleFxCell] = cells
 
+  //Adds a new Position to clicked set
+  def updateClickedPositions(pos: BattlePos): Unit = {
+    clickedPositions = clickedPositions + pos
+  }
+
+  //Simulates click for all positions in list
+  def simulateClicksOnClickedPositions(): Unit = {
+
+    //This are all affected Cells
+    val relevantCells: Seq[BattleFxCell] = cells.filter(c => clickedPositions.contains(c.pos))
+
+    //Simulate Mouseclick
+    relevantCells.map(e => e.handleMouseClick())
+
+  }
 
   def updateGameState(vessel: Vessel, pos: BattlePos): Unit = {
     log("Vessel " + vessel.name.value + " was hit at position " + pos)
