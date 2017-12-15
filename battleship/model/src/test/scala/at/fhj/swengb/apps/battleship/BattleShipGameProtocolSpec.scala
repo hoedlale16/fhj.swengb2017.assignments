@@ -1,10 +1,9 @@
 package at.fhj.swengb.apps.battleship
 
-import at.fhj.swengb.apps.battleship.model.BattleShipGame
+import at.fhj.swengb.apps.battleship.model._
 import org.scalacheck.{Gen, Prop}
 import org.scalatest.WordSpecLike
 import org.scalatest.prop.Checkers
-
 
 class BattleShipProtocolSpec extends WordSpecLike {
 
@@ -15,7 +14,7 @@ class BattleShipProtocolSpec extends WordSpecLike {
       Checkers.check(Prop.forAll(battleShipGameGen) {
         expected: BattleShipGame => {
           val actual = BattleShipProtocol.convert(BattleShipProtocol.convert(expected))
-          actual == expected
+          actual.battleField == expected.battleField
         }
       })
     }

@@ -21,6 +21,11 @@ case class BattleShipGame(battleField: BattleField,
   var sunkShips: Set[Vessel] = Set()
 
   /**
+    * Contains all already clicked positions
+    */
+  var clickedPositions: Set[BattlePos] = Set();
+
+  /**
     * We don't ever change cells, they should be initialized only once.
     */
   private val cells: Seq[BattleFxCell] = for {x <- 0 until battleField.width
