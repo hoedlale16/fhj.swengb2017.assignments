@@ -1,0 +1,29 @@
+// see https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
+// see http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
+
+#battleship {
+  -fx-font-family: monospace;
+}
+
+.lb_header {
+  -fx-font-size: 40px;
+  -fx-text-fill: #ffffff;
+  fx-text-alignment: center;
+  -fx-font-weight: bold;
+  
+}
+
+.bg_sea {
+  -fx-background-image:url(meer.jpg);
+  -fx-background-size:cover;
+  
+}
+
+.bg_gray {
+	-fx-background-color:#c3c4c4;  
+}
+
+.bg_tarnfarbe {
+  -fx-background-image:url(tarnfarbe.jpg);
+  -fx-background-size:cover;
+}
