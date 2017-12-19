@@ -13,6 +13,15 @@
   
 }
 
+//  -fx-font-size: 15px;
+//  -fx-text-fill: #ffffff;
+//  -fx-font-weight: bold; 
+.slider .axis { 
+  -fx-pref-width: 300px;
+  -fx-tick-label-fill: #ffffff; 
+  -fx-tick-label-font-weight: bold;
+}
+
 .bg_sea {
   -fx-background-image:url(meer.jpg);
   -fx-background-size:cover;

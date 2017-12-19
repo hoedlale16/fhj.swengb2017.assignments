@@ -24,7 +24,7 @@ case class BattleShipGame(battleField: BattleField,
     * Contains all already clicked positions.
     * Array keeps sorting...
     */
-  var clickedPositions: Seq[BattlePos] = Seq();
+  var clickedPositions: List[BattlePos] = List();
 
   /**
     * We don't ever change cells, they should be initialized only once.
@@ -48,19 +48,24 @@ case class BattleShipGame(battleField: BattleField,
   //Adds a new Position to clicked set
   def updateClickedPositions(pos: BattlePos): Unit = {
     //We keep already clicked positions awell!
-    clickedPositions = pos +: clickedPositions
+    clickedPositions = pos :: clickedPositions
   }
 
   //Simulates click for all positions in list
-  def simulateClicksOnClickedPositions(pos: Seq[BattlePos]): Unit = {
+  def simulateClicksOnClickedPositions(pos: List[BattlePos]): Unit = {
 
-    //This are all affected Cells
-    val relevantCells: Seq[BattleFxCell] =
-      cells.filter(c => pos.contains(c.pos))
-
-    //Simulate Mouseclick
-    relevantCells.map(e => e.handleMouseClick())
-
+    /*
+    We have to iterate to get the correct sequence.
+    We are not allowed to do this:
+        val relevantCells: Seq[BattleFxCell] = cells.filter(c => pos.contains(c.pos))
+        relevantCells.map(e => e.handleMouseClick())
+    because filter is unsorted and would destroy the sequence
+     */
+    for (p <- pos) {
+      //There is just one, we take the risc
+      val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(p)).head
+      fxCell.handleMouseClick()
+    }
   }
 
   def updateGameState(vessel: Vessel, pos: BattlePos): Unit = {

@@ -17,14 +17,13 @@ case class BattleFxCell(pos: BattlePos,
 
   def init(): Unit = {
 
-    setFill(Color.DARKBLUE)
+    //setFill(Color.DARKBLUE)
 
-    /*if (someVessel.isDefined) {
+    if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
-      setFill(Color.BLUE)
+      setFill(Color.DARKBLUE)
     }
-    */
   }
 
   setOnMouseClicked(e => {
@@ -32,8 +31,14 @@ case class BattleFxCell(pos: BattlePos,
   })
 
   def handleMouseClick() = {
-    //Add Cell to clicked Positions
-    upClickedPos(pos)
+    /*IF Button is disabled, we are in simulation mode
+    in this case we're not allowed to add position to clickedPos-List
+    because click is already there...
+
+    Otherwhise, add click to position Lits
+     */
+    if(!isDisable)
+      upClickedPos(pos)
 
     someVessel match {
       case None =>

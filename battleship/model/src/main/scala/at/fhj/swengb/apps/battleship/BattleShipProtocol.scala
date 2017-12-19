@@ -39,8 +39,8 @@ object BattleShipProtocol {
     val battleField = BattleField(g.getFieldWidth, g.getFieldHeight, fleet)
 
     //Create set of alread clicked positions
-    val clickedPos: Seq[BattlePos] =
-      g.getClickedPositionsList.asScala.map(e => convert(e)).toSeq
+    val clickedPos: List[BattlePos] =
+      g.getClickedPositionsList.asScala.map(e => convert(e)).toList
 
     //Create BattleshipGame and set aready clicked positions
     val game = BattleShipGame(battleField,
