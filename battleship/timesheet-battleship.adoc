@@ -45,7 +45,11 @@
 | 2
 | Design/CSS Style to make Game look pretty
 
-
+| hoedlale16
+| 19.12.2017
+| 3
+| 4
+| React on Slider and update game state on load
 
 
 |===
