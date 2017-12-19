@@ -1,7 +1,7 @@
 package at.fhj.swengb.apps.battleship
 
 import at.fhj.swengb.apps.battleship.model._
-import org.scalacheck.{Gen, Prop}
+import org.scalacheck.Prop
 import org.scalatest.WordSpecLike
 import org.scalatest.prop.Checkers
 
@@ -16,6 +16,7 @@ class BattleShipProtocolSpec extends WordSpecLike {
           {
             val actual =
               BattleShipProtocol.convert(BattleShipProtocol.convert(expected))
+            //Make no sense to declare global functions just to test whole BattleShipGame object.
             actual.battleField == expected.battleField
             actual.clickedPositions == expected.clickedPositions
           }

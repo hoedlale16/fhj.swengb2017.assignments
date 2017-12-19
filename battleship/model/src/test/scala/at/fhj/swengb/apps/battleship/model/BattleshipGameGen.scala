@@ -2,6 +2,8 @@ package at.fhj.swengb.apps.battleship.model
 
 import org.scalacheck.Gen
 
+import scala.collection.JavaConverters._
+
 /**
   * Implement in the same manner like MazeGen from the lab, adapt it to requirements of BattleShip
   */
@@ -36,7 +38,8 @@ object BattleshipGameGen {
     val game = BattleShipGame(battlefield,
                               (x => x.toDouble),
                               (x => x.toDouble),
-                              (x => println(x)))
+                              (x => ()),
+                              (x => ()))
     game.clickedPositions = clickedPos
     game
   }

@@ -17,13 +17,15 @@ case class BattleFxCell(pos: BattlePos,
 
   def init(): Unit = {
 
-    //setFill(Color.DARKBLUE)
+    setFill(Color.DARKBLUE)
 
+    /* Deactivate test mode
     if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
       setFill(Color.DARKBLUE)
     }
+    */
   }
 
   setOnMouseClicked(e => {
@@ -39,6 +41,7 @@ case class BattleFxCell(pos: BattlePos,
      */
     if(!isDisable)
       upClickedPos(pos)
+
 
     someVessel match {
       case None =>

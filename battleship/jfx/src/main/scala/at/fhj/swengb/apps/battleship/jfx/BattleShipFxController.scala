@@ -1,6 +1,5 @@
 package at.fhj.swengb.apps.battleship.jfx
 
-import java.io.{File, FileOutputStream}
 import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.util.ResourceBundle
@@ -15,7 +14,7 @@ import at.fhj.swengb.apps.battleship.model._
 class BattleShipFxController extends Initializable {
 
   //Initialized in init
-  private var game: BattleShipGame = null;
+  private var game: BattleShipGame = _
 
   @FXML private var battleGroundGridPane: GridPane = _
   @FXML private var clickHistorySlider: Slider = _
@@ -29,37 +28,35 @@ class BattleShipFxController extends Initializable {
 
   @FXML def saveGame(): Unit = {
     try {
-      val chooser = new JFileChooser();
+      val chooser = new JFileChooser
       chooser.setDialogTitle("Select path to store")
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
       chooser.setAcceptAllFileFilterUsed(false)
 
       if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
         val filePath = chooser.getSelectedFile.getAbsolutePath + "\\battleship.bin"
-        val protoBattleShipGame = BattleShipProtocol.convert(game);
+        val protoBattleShipGame = BattleShipProtocol.convert(game)
         protoBattleShipGame.writeTo(Files.newOutputStream(Paths.get(filePath)))
         appendLog("Saved Game-state: [" + filePath + "]")
       }
     } catch {
-      case e: Exception => {
-        appendLog("ERROR - Saveing failed: " + e.getMessage)
-      }
+      case e: Exception => appendLog("ERROR - Saveing failed: " + e.getMessage)
     }
   }
 
   @FXML def loadGame(): Unit = {
     try {
-      var chooser = new JFileChooser
+      val chooser = new JFileChooser
       chooser.setDialogTitle("Select path to load gamestate")
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
       chooser.setAcceptAllFileFilterUsed(false)
 
       if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
         val filePath = chooser.getSelectedFile.getAbsolutePath
-        val (battleShipGame,clickedPos) = loadGame(filePath)
+        val (battleShipGame, clickedPos) = loadGame(filePath)
         //Reset text area and init game
         log.setText("Load Game-state: [" + filePath + "]")
-        init(battleShipGame,clickedPos)
+        init(battleShipGame, clickedPos)
       }
     } catch {
       case e: Exception => appendLog("ERROR - Loading failed: " + e.getMessage)
@@ -68,29 +65,43 @@ class BattleShipFxController extends Initializable {
 
   @FXML def onSliderChanged(): Unit = {
     val currVal = clickHistorySlider.getValue.toInt
+    var simModeActive: Boolean = true
 
-    //Do not call init, this destroys the original game state!
-    //And we have to disable the buttons if we're in history aswell!
-    battleGroundGridPane.getChildren.clear()
-    for (c <- game.getCells) {
-      battleGroundGridPane.add(c, c.pos.x, c.pos.y)
+    //Current List of clicks to simulate
+    //Reverse clickedPos List.. Take required list and reverse it again!
+    val simClickPos: List[BattlePos] = game.clickedPositions.reverse.take(currVal).reverse
+
+
+    //Print some fancy output to user
+    if (currVal == clickHistorySlider.getMax.toInt) {
+      appendLog("HISTORY VIEW DEACTIVATED")
+      simModeActive=false
+      /*We are in the present now again, which means that the buttons get active again
+        In this case we add the clicks to the list, that means we would have them tice.
+        Remove them here now - they get inserted with simulateClicks anyway...
+       */
+      game.clickedPositions = List()
+    } else {
+      appendLog("HISTORY VIEW ACTIVATED (" + simClickPos.size + ")")
+      simModeActive=true
     }
 
-    for ( c <- game.getCells()) {
+    //If we are simulation mode, deactivate buttons
+    battleGroundGridPane.getChildren.clear()
+    for (c <- game.getCells()) {
+      battleGroundGridPane.add(c, c.pos.x, c.pos.y)
       c.init()
       //Deactivate Buttons if we're in the history data!
       //History is not changeable, we just can learn from history!
-      if(currVal == clickHistorySlider.getMax.toInt)
-        c.setDisable(false)
-      else
-        c.setDisable(true)
+      c.setDisable(simModeActive)
     }
 
+
     //Now simulate all already clicked positions
-    game.simulateClicksOnClickedPositions(game.clickedPositions.take(currVal))
+    game.simulateClicksOnClickedPositions(simClickPos)
   }
 
-  override def initialize(url: URL, rb: ResourceBundle): Unit =  startNewGame
+  override def initialize(url: URL, rb: ResourceBundle): Unit = startNewGame()
 
   private def getCellHeight(y: Int): Double =
     battleGroundGridPane.getRowConstraints.get(y).getPrefHeight
@@ -109,16 +120,16 @@ class BattleShipFxController extends Initializable {
     * - placing your ships at random on the battleground
     *
     */
-  def init(g: BattleShipGame,simulateClicks: List[BattlePos]): Unit = {
+  def init(g: BattleShipGame, simulateClicks: List[BattlePos]): Unit = {
     //Initialize BattleShipGame
     //Required to save state!
-    game = g;
+    game = g
 
     battleGroundGridPane.getChildren.clear()
-    for (c <- g.getCells) {
+    for (c <- g.getCells()) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
     }
-    g.getCells().foreach(c => c.init)
+    g.getCells().foreach(c => c.init())
 
     //Reset all previous clicked positions
     //simulate all already clicked positions and update GUI-Slider!
@@ -129,17 +140,17 @@ class BattleShipFxController extends Initializable {
 
   private def startNewGame(): Unit = {
     appendLog("New game started.")
-    init(createNewGame,List())
+    init(createNewGame(), List())
   }
 
   private def createNewGame(): BattleShipGame = {
     val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
     val battleField: BattleField = BattleField.placeRandomly(field)
-    val game = BattleShipGame(battleField, getCellWidth, getCellHeight, appendLog)
+    val game = BattleShipGame(battleField, getCellWidth, getCellHeight, appendLog,updateSlider)
     game
   }
 
-  private def loadGame(filePath: String): (BattleShipGame,List[BattlePos]) = {
+  private def loadGame(filePath: String): (BattleShipGame, List[BattlePos]) = {
     //Read Protobuf-Object
     val bsgIn =
       at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame
@@ -153,11 +164,12 @@ class BattleShipFxController extends Initializable {
     val battleShipGame = BattleShipGame(loadedBattleShipGame.battleField,
       getCellWidth,
       getCellHeight,
-      appendLog)
-    
+      appendLog,
+      updateSlider)
+
     battleShipGame.clickedPositions = List()
 
-    (battleShipGame,loadedBattleShipGame.clickedPositions)
+    (battleShipGame, loadedBattleShipGame.clickedPositions)
   }
 
   def updateSlider(maxClicks: Int): Unit = {

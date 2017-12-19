@@ -6,7 +6,8 @@ package at.fhj.swengb.apps.battleship.model
 case class BattleShipGame(battleField: BattleField,
                           getCellWidth: Int => Double,
                           getCellHeight: Int => Double,
-                          log: String => Unit) {
+                          log: String => Unit,
+                          updateSlider: Int => Unit) {
 
   /**
     * remembers which vessel was hit at which position
@@ -49,6 +50,9 @@ case class BattleShipGame(battleField: BattleField,
   def updateClickedPositions(pos: BattlePos): Unit = {
     //We keep already clicked positions awell!
     clickedPositions = pos :: clickedPositions
+
+    //Update Slider aswell
+    updateSlider(clickedPositions.size)
   }
 
   //Simulates click for all positions in list

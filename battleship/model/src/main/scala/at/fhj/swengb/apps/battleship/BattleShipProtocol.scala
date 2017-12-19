@@ -46,7 +46,8 @@ object BattleShipProtocol {
     val game = BattleShipGame(battleField,
                               (e => e.toDouble),
                               (e => e.toDouble),
-                              (e => println(e)))
+                              (e => ()),
+                              (e => ()))
     game.clickedPositions = clickedPos
 
     //return game

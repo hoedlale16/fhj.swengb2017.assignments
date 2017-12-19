@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
-import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
 object BattleShipFxApp {
@@ -24,12 +23,13 @@ class BattleShipFxApp extends Application {
 
   val triedRoot = Try(FXMLLoader.load[Parent](getClass.getResource(fxml)))
 
-  override def start(stage: Stage) = {
+  override def start(stage: Stage): Unit = {
     triedRoot match {
       case Success(root) =>
         stage.setScene(new Scene(root))
         stage.setTitle("BattleshipGame by Alexander Hödl/ Gregor Fernbach (IMA16 - SWENGB)")
         setSkin(stage,fxml,css)
+        stage.setResizable(false)
         stage.show()
       case Failure(e) => e.printStackTrace()
     }

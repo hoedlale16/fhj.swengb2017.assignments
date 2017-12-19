@@ -68,7 +68,7 @@
         </GridPane>
     </center>
    <left>
-        <TextArea fx:id="log" prefHeight="489.0" prefWidth="128.0" BorderPane.alignment="CENTER" />
+        <TextArea fx:id="log" prefHeight="413.0" prefWidth="182.0" BorderPane.alignment="CENTER" />
    </left>
    <bottom>
       <Slider fx:id="clickHistorySlider" majorTickUnit="1.0" max="0.0" minorTickCount="0" onMouseClicked="#onSliderChanged" prefHeight="69.0" prefWidth="752.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" BorderPane.alignment="CENTER" />
