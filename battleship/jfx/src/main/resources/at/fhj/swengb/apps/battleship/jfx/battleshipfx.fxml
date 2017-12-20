@@ -18,7 +18,7 @@
 
     </right>
     <top>
-        <Label contentDisplay="CENTER" styleClass="lb_header" text="Battleship" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
+        <Label fx:id="lbHeader" contentDisplay="CENTER" styleClass="lb_header" text="Battleship" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
             <font>
                 <Font size="27.0" />
             </font>

@@ -4,7 +4,7 @@ import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.util.ResourceBundle
 import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.{Slider, TextArea}
+import javafx.scene.control.{Label, Slider, TextArea}
 import javafx.scene.layout.GridPane
 import javax.swing.JFileChooser
 
@@ -18,6 +18,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML private var battleGroundGridPane: GridPane = _
   @FXML private var clickHistorySlider: Slider = _
+  @FXML private var lbHeader: Label = _
 
   /**
     * A text area box to place the history of the game
@@ -75,6 +76,7 @@ class BattleShipFxController extends Initializable {
     //Print some fancy output to user
     if (currVal == clickHistorySlider.getMax.toInt) {
       appendLog("HISTORY VIEW DEACTIVATED")
+      lbHeader.setText("Battleship")
       simModeActive=false
       /*We are in the present now again, which means that the buttons get active again
         In this case we add the clicks to the list, that means we would have them tice.
@@ -83,6 +85,7 @@ class BattleShipFxController extends Initializable {
       game.clickedPositions = List()
     } else {
       appendLog("HISTORY VIEW ACTIVATED (" + simClickPos.size + ")")
+      lbHeader.setText("Battleship (History)")
       simModeActive=true
     }
 
@@ -174,7 +177,6 @@ class BattleShipFxController extends Initializable {
 
   def updateSlider(maxClicks: Int): Unit = {
     clickHistorySlider.setMax(maxClicks)
-    clickHistorySlider.setSnapToTicks(true)
     clickHistorySlider.setValue(maxClicks)
   }
 

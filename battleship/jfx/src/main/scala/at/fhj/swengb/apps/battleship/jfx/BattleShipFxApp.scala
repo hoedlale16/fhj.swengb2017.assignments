@@ -42,30 +42,4 @@ class BattleShipFxApp extends Application {
     stage.getScene.getStylesheets.add(css)
   }
 
-  /*
-  def mkFxmlLoader(fxml: String): FXMLLoader = {
-    new FXMLLoader(getClass.getResource(fxml))
-  }
-
-  override def start(stage: Stage): Unit =
-    try {
-      stage.setTitle("BattleshipGame by Alexander Hödl/ Gregor Fernbach (IMA16 - SWENGB)")
-      setSkin(stage, fxml, css)
-      stage.show()
-      stage.setMinWidth(stage.getWidth)
-      stage.setMinHeight(stage.getHeight)
-      stage.setResizable(false)
-
-    } catch {
-      case NonFatal(e) => e.printStackTrace()
-    }
-
-  def setSkin(stage: Stage, fxml: String, css: String): Boolean = {
-    val scene = new Scene(mkFxmlLoader(fxml).load[Parent]())
-    stage.setScene(scene)
-    stage.getScene.getStylesheets.clear()
-    stage.getScene.getStylesheets.add(css)
-  }
-  */
-
 }
