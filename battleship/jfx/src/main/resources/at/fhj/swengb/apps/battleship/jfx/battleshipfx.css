@@ -13,9 +13,6 @@
   
 }
 
-//  -fx-font-size: 15px;
-//  -fx-text-fill: #ffffff;
-//  -fx-font-weight: bold; 
 .slider .axis { 
   -fx-pref-width: 300px;
   -fx-tick-label-fill: #ffffff; 

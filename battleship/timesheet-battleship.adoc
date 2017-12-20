@@ -51,5 +51,10 @@
 | 4
 | React on Slider and update game state on load
 
+| fernbach16
+| 19.12.2017
+| 3
+| 2
+| Game testing
 
 |===
