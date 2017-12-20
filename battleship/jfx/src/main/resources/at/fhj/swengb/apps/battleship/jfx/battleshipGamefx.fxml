@@ -30,6 +30,7 @@
                 <Button id="button" fx:id="btNewGame" onAction="#newGame" prefHeight="27.0" prefWidth="142.0" text="New Game" />
             <Button id="button" fx:id="btLoadGame" onAction="#loadGame" prefHeight="27.0" prefWidth="142.0" text="Load Game" />
             <Button id="button" fx:id="btSaveGame" onAction="#saveGame" prefHeight="27.0" prefWidth="142.0" text="Save Game" />
+            <Button id="button" fx:id="btBackToMain" layoutX="15.0" layoutY="79.0" onAction="#returnToMain" prefHeight="27.0" prefWidth="142.0" text="Zurück" />
             </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

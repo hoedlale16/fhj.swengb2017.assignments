@@ -64,6 +64,11 @@ class BattleShipFxController extends Initializable {
     }
   }
 
+  @FXML def returnToMain(): Unit = {
+    //Abort and switch back to main
+    BattleShipFxApp.sceneManager.loadMainScene
+  }
+
   @FXML def onSliderChanged(): Unit = {
     val currVal = clickHistorySlider.getValue.toInt
     var simModeActive: Boolean = true
