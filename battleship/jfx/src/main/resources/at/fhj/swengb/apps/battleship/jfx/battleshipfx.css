@@ -13,6 +13,29 @@
   
 }
 
+.btGame {
+  -fx-background-image: url(meerButton.jpg);
+  -fx-background-size: 32px;
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: 100%;
+}
+
+.btGameExpWater {
+  -fx-background-image: url(waterExplosion.jpg);
+  -fx-background-size: 32px;
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: 100%;
+}
+
+.btGameExpShip {
+  -fx-background-image: url(shipExplosion.jpg);
+  -fx-background-size: 32px;
+  -fx-background-repeat: no-repeat;
+  -fx-background-position: 100%;
+}
+
+
+
 //  -fx-font-size: 15px;
 //  -fx-text-fill: #ffffff;
 //  -fx-font-weight: bold; 

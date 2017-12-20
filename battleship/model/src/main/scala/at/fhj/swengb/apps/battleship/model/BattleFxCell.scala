@@ -1,5 +1,10 @@
 package at.fhj.swengb.apps.battleship.model
 
+import java.io.InputStream
+import java.nio.file.{Files, Paths}
+import javafx.event.{ActionEvent, EventHandler}
+import javafx.scene.control.Button
+import javafx.scene.image.{Image, ImageView}
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle;
 
@@ -13,11 +18,21 @@ case class BattleFxCell(pos: BattlePos,
                         someVessel: Option[Vessel] = None,
                         fn: (Vessel, BattlePos) => Unit,
                         upClickedPos: BattlePos => Unit)
-    extends Rectangle(width, height) {
+    extends Button {
 
   def init(): Unit = {
+    //val view: ImageView  = new ImageView()
+    //var is: InputStream = Files.newInputStream(Paths.get("battleship/jfx/src/main/resources/at/fhj/swengb/apps/battleship/jfx/meerButton.jpg"))
 
-    setFill(Color.DARKBLUE)
+    setOnAction(buttonEventHandler)
+
+    this.setPrefSize(100,100)
+    this.setMaxSize(100,100)
+    this.getStyleClass.add("btGame")
+    //view.setImage(new Image(is))
+    //setGraphic(view)
+
+
 
     /* Deactivate test mode
     if (someVessel.isDefined) {
@@ -27,6 +42,14 @@ case class BattleFxCell(pos: BattlePos,
     }
     */
   }
+
+  val buttonEventHandler = new EventHandler[ActionEvent] {
+    override def handle(event: ActionEvent): Unit = {
+      handleMouseClick
+    }
+  }
+
+
 
   setOnMouseClicked(e => {
     handleMouseClick
@@ -42,15 +65,23 @@ case class BattleFxCell(pos: BattlePos,
     if(!isDisable)
       upClickedPos(pos)
 
+    //val view: ImageView  = new ImageView()
+    //var is: InputStream = Files.newInputStream(Paths.get("battleship/jfx/src/main/resources/at/fhj/swengb/apps/battleship/jfx/shipExplosion.jpg"))
 
     someVessel match {
       case None =>
         log(s"Missed. Just hit water.")
-        setFill(Color.MEDIUMAQUAMARINE)
-      case Some(v) =>
+        //is = Files.newInputStream(Paths.get("battleship/jfx/src/main/resources/at/fhj/swengb/apps/battleship/jfx/waterExplosion.jpg"))
+        //view.setImage(new Image(is))
+        //setGraphic(view)
+        this.getStyleClass.add("btGameExpWater")
+      case Some(v) => {
         // log(s"Hit an enemy vessel!")
+        //view.setImage(new Image(is))
+        //setGraphic(view)
+        this.getStyleClass.add("btGameExpShip")
         fn(v, pos)
-        setFill(Color.RED)
+      }
     }
   }
 
