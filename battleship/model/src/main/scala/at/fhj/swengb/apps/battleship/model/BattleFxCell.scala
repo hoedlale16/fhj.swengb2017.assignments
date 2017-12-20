@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 /**
   * Represents one part of a vessel or one part of the ocean.
   */
-case class BattleFxCell(pos: BattlePos,
+case class BattleFxCellBUTTON(pos: BattlePos,
                         width: Double,
                         height: Double,
                         log: String => Unit,
