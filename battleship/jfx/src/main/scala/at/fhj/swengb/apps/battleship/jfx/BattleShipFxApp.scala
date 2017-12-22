@@ -1,7 +1,9 @@
 package at.fhj.swengb.apps.battleship.jfx
 
+import java.nio.file.Paths
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
+import javafx.scene.image.Image
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
@@ -15,10 +17,10 @@ object BattleShipFxApp {
     Application.launch(classOf[BattleShipFxApp], args: _*)
   }
 
-  def loadMainScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/battleshipMainfx.fxml")
-  def loadGameScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/battleshipGamefx.fxml")
-  def loadHighscoreScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/battleshipHighscorefx.fxml")
-  def loadCreditsScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/battleshipCreditsfx.fxml")
+  def loadMainScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
+  def loadGameScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipGamefx.fxml")
+  def loadHighscoreScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
+  def loadCreditsScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipCreditsfx.fxml")
 
   /**
     * Internal method to loadScene scene from given fxml
@@ -46,7 +48,8 @@ object BattleShipFxApp {
           val css = "/at/fhj/swengb/apps/battleship/jfx/battleshipfx.css"
           stage.getScene.getStylesheets.add(css)
 
-          //Display stage...
+          //Set Icon and Display stage...
+          stage.getIcons().add(new Image(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/logo.jpg").toString))
           stage.show()
         case Failure(e) => e.printStackTrace()
       }
