@@ -1,5 +1,8 @@
 == Time expenditure: battleship assignment
 
+=== Notes:
+The project is based on homework 4 assignment.
+
 [cols="1,1,1, 1,4", options="header"]
 .Time expenditure
 |===
@@ -9,52 +12,22 @@
 | Actual Hours
 | Description
 
-| hoedlale16,fernbach16
-| 14.12.17
+| hoedlale16
+| 20.12.17
 | 1
 | 1
-| Design Protobuf-Concept
-
-| hoedlale16,fernbach16
-| 15.12.2017
-| 3
-| 2.5
-| Implement Unit-Test generator BattleShipGen.
-
-| hoedlale16,fernbach16
-| 15.12.2017
-| 2
-| 2
-| Implementation of previous created Concept for Protobuf. 
+| Create environment(branch) and initial setup)
 
 | hoedlale16
-| 16.12.2017
-| 1
-| 1
-| Implement functionality for save(Buttonclick,Filechooser,...)
-
-| hoedlale16
-| 16.12.2017
-| 1
-| 1
-| Implement functionality for loading (Buttonclick,Filechooser,...)
-
-| hoedlale16
-| 16.12.2017
-| 2
-| 2
-| Design/CSS Style to make Game look pretty
-
-| hoedlale16
-| 19.12.2017
-| 3
-| 4
-| React on Slider and update game state on load
-
-| fernbach16
-| 19.12.2017
+| 20.12.2017
 | 3
 | 2
-| Game testing
+| GUI-Framework: Swtich between sceens
+
+| hoedlale16
+| 22.12.2017
+| 2
+| 2
+| Initial framework to start Single/Multiplayer games
 
 |===
