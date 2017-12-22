@@ -1,12 +1,14 @@
 package at.fhj.swengb.apps.battleship.jfx
 
+import java.io.{File, FilenameFilter}
 import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.util.ResourceBundle
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.{Label, Slider, TextArea}
 import javafx.scene.layout.GridPane
-import javax.swing.JFileChooser
+import javafx.stage.FileChooser
+import javafx.stage.FileChooser.ExtensionFilter
 
 import at.fhj.swengb.apps.battleship.BattleShipProtocol
 import at.fhj.swengb.apps.battleship.model._
@@ -29,16 +31,22 @@ class BattleShipFxController extends Initializable {
 
   @FXML def saveGame(): Unit = {
     try {
-      val chooser = new JFileChooser
-      chooser.setDialogTitle("Select path to store")
-      chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
-      chooser.setAcceptAllFileFilterUsed(false)
+      val chooser = new FileChooser();
+      chooser.setTitle("Select path to store")
 
-      if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-        val filePath = chooser.getSelectedFile.getAbsolutePath + "\\battleship.bin"
+      //Set Extention filter
+      val extensionFilter: FileChooser.ExtensionFilter = new ExtensionFilter("Protobuf files","*.bin")
+      chooser.getExtensionFilters.add(extensionFilter)
+
+      //Handle selected file
+      var selectedFile: File = chooser.showSaveDialog(BattleShipFxApp.rootStage)
+
+      if ( selectedFile != null ) {
+        //Save game state
         val protoBattleShipGame = BattleShipProtocol.convert(game)
-        protoBattleShipGame.writeTo(Files.newOutputStream(Paths.get(filePath)))
-        appendLog("Saved Game-state: [" + filePath + "]")
+        protoBattleShipGame.writeTo(Files.newOutputStream(Paths.get(selectedFile.getAbsolutePath)))
+        appendLog("Saved Game-state: [" + selectedFile.getAbsolutePath + "]")
+
       }
     } catch {
       case e: Exception => appendLog("ERROR - Saveing failed: " + e.getMessage)
@@ -47,16 +55,20 @@ class BattleShipFxController extends Initializable {
 
   @FXML def loadGame(): Unit = {
     try {
-      val chooser = new JFileChooser
-      chooser.setDialogTitle("Select path to load gamestate")
-      chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
-      chooser.setAcceptAllFileFilterUsed(false)
+      val chooser = new FileChooser();
+      chooser.setTitle("Select path to load BattleshipGame")
 
-      if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        val filePath = chooser.getSelectedFile.getAbsolutePath
-        val (battleShipGame, clickedPos) = loadGame(filePath)
+      //Set Extention filter
+      val extensionFilter: FileChooser.ExtensionFilter = new ExtensionFilter("Protobuf files","*.bin")
+      chooser.getExtensionFilters.add(extensionFilter)
+
+      //Handle selected file
+      var selectedFile: File = chooser.showOpenDialog(BattleShipFxApp.rootStage)
+      if ( selectedFile != null ) {
+        //Load game state
+        val (battleShipGame, clickedPos) = loadGame(selectedFile.getAbsolutePath)
         //Reset text area and init game
-        log.setText("Load Game-state: [" + filePath + "]")
+        log.setText("Load Game-state: [" + selectedFile.getAbsolutePath + "]")
         init(battleShipGame, clickedPos)
       }
     } catch {

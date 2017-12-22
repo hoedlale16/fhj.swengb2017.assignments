@@ -57,4 +57,10 @@
 | 2
 | Game testing
 
+| hoedlale16
+| 22.12.2017
+| 1
+| 1
+| Refactor JFileChooser to FileChooser
+
 |===
