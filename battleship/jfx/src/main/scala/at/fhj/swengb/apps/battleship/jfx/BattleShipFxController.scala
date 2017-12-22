@@ -56,6 +56,10 @@ class BattleShipFxController extends Initializable {
         }
         case "Multiplayer" => {
           appendLog("Sorry, not implemented yet!")
+
+          /*TODO: Create a new Window(Dialog) Where user can edit the fleet
+          After confirming the ship positions. Player B can do that.
+          When both players confirmed the field. build game and start game*/
           val playerAField = BattleField(10, 10, Fleet(FleetConfig.Standard))
           val playerABattleField: BattleField =
             BattleField.placeRandomly(playerAField)
@@ -64,6 +68,7 @@ class BattleShipFxController extends Initializable {
           val playerBBattleField: BattleField =
             BattleField.placeRandomly(playerAField)
 
+          //Start game
           val game = BattleShipGame(playerABattleField,
                                     playerBBattleField,
                                     getCellWidth,
@@ -72,7 +77,6 @@ class BattleShipFxController extends Initializable {
                                     updateSlider)
 
           init(game, List())
-
         }
       }
 
