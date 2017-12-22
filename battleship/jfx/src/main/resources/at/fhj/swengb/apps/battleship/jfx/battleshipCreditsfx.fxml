@@ -21,7 +21,7 @@
    <bottom>
       <BorderPane prefHeight="51.0" prefWidth="752.0" BorderPane.alignment="CENTER">
          <right>
-            <Button id="button" fx:id="btReturnToMain" onAction="#returnToMain" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Zurück" BorderPane.alignment="CENTER" />
+            <Button id="button" fx:id="btReturnToMain" onAction="#returnToMain" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Return to Main" BorderPane.alignment="CENTER" />
          </right>
       </BorderPane>
    </bottom>

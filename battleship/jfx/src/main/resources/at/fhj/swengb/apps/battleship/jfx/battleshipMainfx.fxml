@@ -22,8 +22,7 @@
    <center>
         <VBox alignment="CENTER" prefHeight="392.0" prefWidth="138.0" spacing="15.0" BorderPane.alignment="CENTER">
             <children>
-                <Button id="button" fx:id="btNewGame" onAction="#onStartNewGame" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="New Game" />
-            <Button id="button" fx:id="btLoadGame" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Load Game" />
+                <Button id="button" fx:id="btStartGame" onAction="#onStartGame" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Start Game" />
             <Button id="button" fx:id="btShowHighscore" onAction="#onShowHighscore" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Show Highscore" />
             <Button id="button" fx:id="btCredits" layoutX="315.0" layoutY="279.0" onAction="#onShowCredits" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Credits" />
             </children>

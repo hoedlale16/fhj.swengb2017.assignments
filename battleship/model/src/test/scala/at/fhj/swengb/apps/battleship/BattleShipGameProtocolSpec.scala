@@ -17,7 +17,7 @@ class BattleShipProtocolSpec extends WordSpecLike {
             val actual =
               BattleShipProtocol.convert(BattleShipProtocol.convert(expected))
             //Make no sense to declare global functions just to test whole BattleShipGame object.
-            actual.battleField == expected.battleField
+            actual.battleFieldA == expected.battleFieldA
             actual.clickedPositions == expected.clickedPositions
           }
       })

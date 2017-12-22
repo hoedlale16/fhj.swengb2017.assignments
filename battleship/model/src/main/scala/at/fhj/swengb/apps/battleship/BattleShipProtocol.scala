@@ -14,12 +14,12 @@ object BattleShipProtocol {
     //Create Protobuf Battlefield
     val protoBattleField = BattleShipProtobuf.BattleShipGame
       .newBuilder()
-      .setFieldWidth(g.battleField.width)
-      .setFieldHeight(g.battleField.height)
+      .setFieldWidth(g.battleFieldA.width)
+      .setFieldHeight(g.battleFieldA.height)
 
     //Convert vessesls to protobuf-Vessels and add it
     val fleetProtobuf: Set[Vessel] =
-      g.battleField.fleet.vessels.map(e => convert(e))
+      g.battleFieldA.fleet.vessels.map(e => convert(e))
     fleetProtobuf.foreach(e => protoBattleField.addVessels(e))
 
     //Convert set of BattleBos to Protobuf clicked positions add add it
@@ -43,7 +43,8 @@ object BattleShipProtocol {
       g.getClickedPositionsList.asScala.map(e => convert(e)).toList
 
     //Create BattleshipGame and set aready clicked positions
-    val game = BattleShipGame(battleField,
+    //TODO: Handling to read single and multiplyer games!
+    val game = BattleShipGame(battleField,null,
                               (e => e.toDouble),
                               (e => e.toDouble),
                               (e => ()),

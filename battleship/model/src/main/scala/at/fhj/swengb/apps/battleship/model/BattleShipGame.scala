@@ -2,8 +2,15 @@ package at.fhj.swengb.apps.battleship.model
 
 /**
   * Contains all information about a battleship game.
+  * @param battleFieldA  => Battefield area of player A
+  * @param battleFieldB  => Battlefield area of player B. in Singleplayer this is null!
+  * @param getCellWidth  => Size of Cell
+  * @param getCellHeight => Size of Cell
+  * @param log           => Function where to write the log
+  * @param updateSlider  => Function to show history of game
   */
-case class BattleShipGame(battleField: BattleField,
+case class BattleShipGame(battleFieldA: BattleField,
+                          battleFieldB: BattleField,
                           getCellWidth: Int => Double,
                           getCellHeight: Int => Double,
                           log: String => Unit,
@@ -31,15 +38,15 @@ case class BattleShipGame(battleField: BattleField,
     * We don't ever change cells, they should be initialized only once.
     */
   private val cells: Seq[BattleFxCell] = for {
-    x <- 0 until battleField.width
-    y <- 0 until battleField.height
+    x <- 0 until battleFieldA.width
+    y <- 0 until battleFieldA.height
     pos = BattlePos(x, y)
   } yield {
     BattleFxCell(BattlePos(x, y),
                  getCellWidth(x),
                  getCellHeight(y),
                  log,
-                 battleField.fleet.findByPos(pos),
+                 battleFieldA.fleet.findByPos(pos),
                  updateGameState,
                  updateClickedPositions)
   }
@@ -102,7 +109,7 @@ case class BattleShipGame(battleField: BattleField,
         log(s"Ship ${vessel.name.value} was destroyed.")
         sunkShips = sunkShips + vessel
 
-        if (battleField.fleet.vessels == sunkShips) {
+        if (battleFieldA.fleet.vessels == sunkShips) {
           log("G A M E   totally  O V E R")
         }
       }
