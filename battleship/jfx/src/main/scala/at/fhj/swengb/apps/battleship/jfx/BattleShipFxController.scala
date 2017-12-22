@@ -66,7 +66,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def returnToMain(): Unit = {
     //Abort and switch back to main
-    BattleShipFxApp.sceneManager.loadMainScene
+    BattleShipFxApp.loadMainScene
   }
 
   @FXML def onSliderChanged(): Unit = {

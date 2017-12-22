@@ -17,21 +17,21 @@ class BattleShipMainFxController extends Initializable {
     * Change Scene to Game scene
     */
   @FXML def onStartNewGame(): Unit = {
-    BattleShipFxApp.sceneManager.loadGameScene
+    BattleShipFxApp.loadGameScene
   }
 
   /**
     * Change Scene to Game scene
     */
   @FXML def onShowHighscore(): Unit = {
-    BattleShipFxApp.sceneManager.loadHighscoreScene
+    BattleShipFxApp.loadHighscoreScene
   }
 
   /**
     * Change Scene to Game scene
     */
   @FXML def onShowCredits(): Unit = {
-    BattleShipFxApp.sceneManager.loadCreditsScene
+    BattleShipFxApp.loadCreditsScene
   }
 
 }
