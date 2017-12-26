@@ -91,7 +91,17 @@ Just required if BattleFxCellBUTTON is used!
 	-fx-background-color:#c3c4c4;  
 }
 
-.bg_tarnfarbe {
-  -fx-background-image:url(pics/tarnfarbe.jpg);
+.bg_game {
+  -fx-background-image:url(pics/backgroundGame.jpg);
+  -fx-background-size:cover;
+}
+
+.bg_playerA {
+  -fx-background-image:url(pics/backgroundPlayerA.jpg);
+  -fx-background-size:cover;
+}
+
+.bg_playerB {
+  -fx-background-image:url(pics/backgroundPlayerB.jpg);
   -fx-background-size:cover;
 }

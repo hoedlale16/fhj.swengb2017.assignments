@@ -22,20 +22,24 @@ object BattleshipGameGen {
   } yield BattleField(width, height, Fleet(fleetConfigSeq(x)))
 
   //Simulate a random set of already clicked battle positions
-  val clickedPosGen: Gen[List[BattlePos]] = for {
+  val clickedPosGen: Gen[List[(Int,BattlePos)]] = for {
     i <- Gen.chooseNum[Int](0, maxWidth * maxHeight)
     x <- Gen.chooseNum[Int](0, maxWidth - 1)
     y <- Gen.chooseNum[Int](0, maxHeight - 1)
+    player <- Gen.chooseNum[Int](1,2)
   } yield {
-    List.fill(i)(BattlePos(x, y))
+    List.fill(i)( (player,BattlePos(x, y)) )
   }
 
   //Generate a random BattleShipGame
   val battleShipGameGen: Gen[BattleShipGame] = for {
-    battlefield <- battlefieldGen
+    battlefieldA <- battlefieldGen
+    battlefieldB <- battlefieldGen
     clickedPos <- clickedPosGen
   } yield {
-    val game = BattleShipGame(battlefield,
+    val game = BattleShipGame("Unit-Test game",
+                              battlefieldA,
+                              battlefieldB,
                               (x => x.toDouble),
                               (x => x.toDouble),
                               (x => ()),

@@ -1,11 +1,8 @@
 package at.fhj.swengb.apps.battleship
 
-import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame.{
-  Position,
-  Vessel,
-  VesselOrientation
-}
+import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame.{ClickPos, Position, Vessel, VesselOrientation}
 import at.fhj.swengb.apps.battleship.model._
+
 import scala.collection.JavaConverters._
 
 object BattleShipProtocol {
@@ -14,17 +11,17 @@ object BattleShipProtocol {
     //Create Protobuf Battlefield
     val protoBattleField = BattleShipProtobuf.BattleShipGame
       .newBuilder()
-      .setFieldWidth(g.battleFieldA.width)
+      .setGameName(g.gameName)
+      .setFieldWidth(g.battleFieldA.width) //A & B have the same size...
       .setFieldHeight(g.battleFieldA.height)
 
     //Convert vessesls to protobuf-Vessels and add it
     val fleetProtobuf: Set[Vessel] =
       g.battleFieldA.fleet.vessels.map(e => convert(e))
-    fleetProtobuf.foreach(e => protoBattleField.addVessels(e))
+    fleetProtobuf.foreach(e => protoBattleField.addVesselsPlayerA(e))
 
     //Convert set of BattleBos to Protobuf clicked positions add add it
-    val clickedPos =
-      g.clickedPositions.map(e => convert(e))
+    val clickedPos: List[ClickPos] = g.clickedPositions.map(e => convert(e._1,e._2))
     clickedPos.foreach(e => protoBattleField.addClickedPositions(e))
 
     //Build battlefield and write to file
@@ -34,17 +31,22 @@ object BattleShipProtocol {
   def convert(g: BattleShipProtobuf.BattleShipGame): BattleShipGame = {
     //Create data for BattleField
     val fleet: Fleet = Fleet(
-      g.getVesselsList.asScala.map(e => convert(e)).toSet)
+      g.getVesselsPlayerAList.asScala.map(e => convert(e)).toSet)
 
-    val battleField = BattleField(g.getFieldWidth, g.getFieldHeight, fleet)
+    val battleFieldA = BattleField(g.getFieldWidth, g.getFieldHeight, fleet)
+    val battleFieldB = null //TODO: Read Battlefield for player 2 or null if singleplayer
 
     //Create set of alread clicked positions
-    val clickedPos: List[BattlePos] =
+    val clickedPos: List[(Int,BattlePos)] =
       g.getClickedPositionsList.asScala.map(e => convert(e)).toList
 
+    //Read BattleShipGameName from Protobuf!
+    val gameName: String = g.getGameName
+
     //Create BattleshipGame and set aready clicked positions
-    //TODO: Handling to read single and multiplyer games!
-    val game = BattleShipGame(battleField,null,
+    val game = BattleShipGame(gameName,
+                              battleFieldA,
+                              battleFieldB,
                               (e => e.toDouble),
                               (e => e.toDouble),
                               (e => ()),
@@ -123,6 +125,32 @@ object BattleShipProtocol {
       .setX(battlePos.x)
       .setY(battlePos.y)
       .build()
+  }
+
+  /**
+    * Generates a clicked position to store in protobuf
+    * @param playerNr -> Player which clicked. starts with 1
+    * @param pos -> Clicked position
+    * @return
+    */
+  private def convert(playerNr: Int,pos: BattlePos): ClickPos = {
+    ClickPos
+      .newBuilder()
+      .setClickedPos(convert(pos))
+      .setPlayerNumber(playerNr)
+      .build()
+  }
+
+  /**
+    * Converts a ClickedPos from protobuf and returns a tuple of playernr and Position
+    * @param clickPos
+    * @return
+    */
+  private def convert(clickPos: ClickPos): (Int,BattlePos) = {
+    val battlePos: BattlePos = convert(clickPos.getClickedPos)
+    val playerNr: Int = clickPos.getPlayerNumber
+
+    (playerNr,battlePos)
   }
 
   /** Converts a Protobuf Position to a BattleShipGame BattlePos

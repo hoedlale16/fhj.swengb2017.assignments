@@ -7,14 +7,18 @@ package at.fhj.swengb.apps.battleship.model
   * @param getCellWidth  => Size of Cell
   * @param getCellHeight => Size of Cell
   * @param log           => Function where to write the log
-  * @param updateSlider  => Function to show history of game
+  * @param updateGUI     => Function to update GUI after Click action (e.g. update Slider for history)
   */
-case class BattleShipGame(battleFieldA: BattleField,
+case class BattleShipGame(gameName: String,
+                          battleFieldA: BattleField,
                           battleFieldB: BattleField,
                           getCellWidth: Int => Double,
                           getCellHeight: Int => Double,
                           log: String => Unit,
-                          updateSlider: Int => Unit) {
+                          updateGUI: BattleShipGame => Unit) {
+
+  //BattleShipGame requires a name
+  require( ! gameName.isEmpty)
 
   /**
     * remembers which vessel was hit at which position
@@ -32,7 +36,7 @@ case class BattleShipGame(battleFieldA: BattleField,
     * Contains all already clicked positions.
     * Array keeps sorting...
     */
-  var clickedPositions: List[BattlePos] = List();
+  var clickedPositions: List[(Int,BattlePos)] = List();
 
   /**
     * We don't ever change cells, they should be initialized only once.
@@ -56,14 +60,15 @@ case class BattleShipGame(battleFieldA: BattleField,
   //Adds a new Position to clicked set
   def updateClickedPositions(pos: BattlePos): Unit = {
     //We keep already clicked positions awell!
-    clickedPositions = pos :: clickedPositions
+    //TODO: set corret player: Currently always player 1
+    clickedPositions = (1,pos) :: clickedPositions
 
-    //Update Slider aswell
-    updateSlider(clickedPositions.size)
+    //Update GUI after click as well
+    updateGUI(this)
   }
 
   //Simulates click for all positions in list
-  def simulateClicksOnClickedPositions(pos: List[BattlePos]): Unit = {
+  def simulateClicksOnClickedPositions(pos: List[(Int,BattlePos)]): Unit = {
 
     /*
     We have to iterate to get the correct sequence.
@@ -72,9 +77,11 @@ case class BattleShipGame(battleFieldA: BattleField,
         relevantCells.map(e => e.handleMouseClick())
     because filter is unsorted and would destroy the sequence
      */
-    for (p <- pos) {
-      //There is just one, we take the risc
-      val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(p)).head
+    for ((player,clickedPos) <- pos) {
+      //TODO: Handling according player => Switch battlefields!
+
+      //All Cells in 'cells' are unique. So we know that there is just one and need to exception handling
+      val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(clickedPos)).head
       fxCell.handleMouseClick()
     }
   }

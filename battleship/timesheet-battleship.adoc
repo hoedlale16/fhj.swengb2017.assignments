@@ -30,4 +30,16 @@ The project is based on homework 4 assignment.
 | 2
 | Initial framework to start Single/Multiplayer games
 
+| hoedlale16
+| 26.12.2017
+| 1
+| 1
+| Create functionality to name games randomly (Feature 'Naming of games')
+
+| hoedlale16
+| 26.12.2017
+| 3
+| 2
+| Create protobuf functionality to safe single and multiplayer games.
+
 |===

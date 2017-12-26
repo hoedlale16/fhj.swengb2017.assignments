@@ -6,18 +6,21 @@ import java.nio.file.{Files, Paths}
 import java.util.{Optional, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.{ChoiceDialog, _}
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.{BorderPane, GridPane}
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 
 import at.fhj.swengb.apps.battleship.BattleShipProtocol
 import at.fhj.swengb.apps.battleship.model._
 
+import scala.util.Random
+
 class BattleShipFxController extends Initializable {
 
   //Initialized in init
   private var game: BattleShipGame = _
 
+  @FXML private var gameBackground: BorderPane = _
   @FXML private var battleGroundGridPane: GridPane = _
   @FXML private var clickHistorySlider: Slider = _
   @FXML private var lbHeader: Label = _
@@ -40,17 +43,23 @@ class BattleShipFxController extends Initializable {
     if (result.isPresent) {
       appendLog("Started new <" + result.get() + "> Game")
 
+      //Generate a random name for new game
+      val gameName: String = createRandomBattleShipGameName()
+
+      println(gameName)
+
       //Start game according selection
       result.get() match {
         case "Singleplayer" => {
           val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
           val battleField: BattleField = BattleField.placeRandomly(field)
-          val game = BattleShipGame(battleField,
+          val game = BattleShipGame(gameName,
+                                    battleField,
                                     null,
                                     getCellWidth,
                                     getCellHeight,
                                     appendLog,
-                                    updateSlider)
+                                    updateGUIAfterAction)
 
           init(game, List())
         }
@@ -69,12 +78,13 @@ class BattleShipFxController extends Initializable {
             BattleField.placeRandomly(playerAField)
 
           //Start game
-          val game = BattleShipGame(playerABattleField,
+          val game = BattleShipGame(gameName,
+                                    playerABattleField,
                                     playerBBattleField,
                                     getCellWidth,
                                     getCellHeight,
                                     appendLog,
-                                    updateSlider)
+                                    updateGUIAfterAction)
 
           init(game, List())
         }
@@ -145,7 +155,7 @@ class BattleShipFxController extends Initializable {
 
     //Current List of clicks to simulate
     //Reverse clickedPos List.. Take required list and reverse it again!
-    val simClickPos: List[BattlePos] =
+    val simClickPos: List[(Int,BattlePos)] =
       game.clickedPositions.reverse.take(currVal).reverse
 
     //Print some fancy output to user
@@ -204,7 +214,7 @@ class BattleShipFxController extends Initializable {
     * - placing your ships at random on the battleground
     *
     */
-  def init(g: BattleShipGame, simulateClicks: List[BattlePos]): Unit = {
+  def init(g: BattleShipGame, simulateClicks: List[(Int,BattlePos)]): Unit = {
     //Initialize BattleShipGame
     //Required to save state!
     game = g
@@ -225,9 +235,17 @@ class BattleShipFxController extends Initializable {
     btSaveGame.setDisable(false)
     battleGroundGridPane.setVisible(true)
     clickHistorySlider.setVisible(true)
+
+    //Set name of game
+    lbHeader.setText(g.gameName)
+
+    //Reset Background for game which handles multiplayer/singleplyer mode
+    gameBackground.getStyleClass.remove("bg_playerA")
+    gameBackground.getStyleClass.remove("bg_playerB")
+    gameBackground.getStyleClass.add("bg_game")
   }
 
-  private def loadGame(filePath: String): (BattleShipGame, List[BattlePos]) = {
+  private def loadGame(filePath: String): (BattleShipGame, List[(Int,BattlePos)]) = {
     //Read Protobuf-Object
     val bsgIn =
       at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame
@@ -238,21 +256,69 @@ class BattleShipFxController extends Initializable {
       BattleShipProtocol.convert(bsgIn)
 
     //Create new game-Event based on loaded Data
-    //TODO Handle to load single/multiplayer games!
-    val battleShipGame = BattleShipGame(loadedBattleShipGame.battleFieldA,null,
+    val battleShipGame = BattleShipGame(loadedBattleShipGame.gameName,
+                                        loadedBattleShipGame.battleFieldA,
+                                        loadedBattleShipGame.battleFieldB,
                                         getCellWidth,
                                         getCellHeight,
                                         appendLog,
-                                        updateSlider)
+      updateGUIAfterAction)
 
     battleShipGame.clickedPositions = List()
 
     (battleShipGame, loadedBattleShipGame.clickedPositions)
   }
 
-  def updateSlider(maxClicks: Int): Unit = {
+  def updateGUIAfterAction(game: BattleShipGame): Unit = {
+
+    updateSlider(game.clickedPositions.size)
+
+    //TODO Handling for initial - Player A has to start!
+    /*Handling for Multiplayer game...
+        -> Change Background to visible that player to is ready to play
+    */
+    if(game.battleFieldB != null) {
+      switchPlayerBackGround
+    }
+
+  }
+
+  private def updateSlider(maxClicks: Int): Unit = {
     clickHistorySlider.setMax(maxClicks)
     clickHistorySlider.setValue(maxClicks)
+  }
+
+
+  private def switchPlayerBackGround(): Unit = {
+
+    if (gameBackground.getStyleClass.contains("bg_playerA")) {
+      gameBackground.getStyleClass.remove("bg_playerA")
+      gameBackground.getStyleClass.add("bg_playerB")
+    } else {
+      gameBackground.getStyleClass.remove("bg_playerB")
+      gameBackground.getStyleClass.add("bg_playerA")
+    }
+  }
+
+  /**
+    * Creates a random Name for a new created battleship game according feature "Naming of battles"
+    * Name is build from 4 lists where words get randomly choosen.
+    * @return Random generated Name for a new battleshipName
+    */
+  private def createRandomBattleShipGameName(): String = {
+    val w1: Seq[String] = Seq("The", "Holy", "Deadly")
+    val w2: Seq[String] = Seq("battle", "fight", "encounter")
+    val w3: Seq[String] = Seq("of", "from", "since")
+    val w4: Seq[String] = Seq("Graz", "Eggenberg", "1908")
+
+    val rGen: Random = new Random();
+
+    val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
+                       w2(rGen.nextInt(w2.size - 1)) + " " +
+                       w3(rGen.nextInt(w3.size - 1)) + " " +
+                       w4(rGen.nextInt(w4.size -1))
+
+    name;
   }
 
 }

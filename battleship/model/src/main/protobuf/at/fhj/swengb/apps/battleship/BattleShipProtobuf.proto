@@ -18,6 +18,12 @@ message BattleShipGame {
         int32 y = 2;
     }
 
+    message ClickPos {
+        Position clickedPos = 1;
+        int32 playerNumber = 2; //Singleplayer: always 1
+                                //Multiplayer: 1 => PlayerA, 2 => PlayerB
+    }
+
     message Vessel {
         string name = 1;
         int32 size = 2;
@@ -25,9 +31,11 @@ message BattleShipGame {
         Position startPos = 4;
     }
 
-    int32 fieldWidth = 1;
-    int32 fieldHeight = 2;
-    repeated Vessel vessels = 3;
-    repeated Position clickedPositions= 4;
+    string gameName = 1;
+    int32 fieldWidth = 2;
+    int32 fieldHeight = 3;
+    repeated Vessel vesselsPlayerA = 4;
+    repeated Vessel vesselsPlayerB = 5; //SinglePlayerGame: This is null
+    repeated ClickPos clickedPositions= 6; //Contains all clicks of game in a Tuple (Player,Position). Singleplyer: Only one...
 
 }
