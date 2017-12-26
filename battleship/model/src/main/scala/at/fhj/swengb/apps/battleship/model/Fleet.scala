@@ -8,11 +8,6 @@ object Fleet {
   val Empty = Fleet(Set[Vessel]())
 
 
-  // TODO add other vessels as well to the fleet
-  // TODO add more randomness to the placement of the fleet.
-  // TODO add constraints such that all ships are placed completely _in_ the battlefield
-  // TODO maybe a battlefield is too small for a Battleship?
-  // TODO what is the smallest battlefield all vessels could be placed on?
   def apply(battleField: BattleField): Fleet = {
     Default
   }

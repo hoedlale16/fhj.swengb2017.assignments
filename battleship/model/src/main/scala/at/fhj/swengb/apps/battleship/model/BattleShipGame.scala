@@ -16,7 +16,7 @@ case class BattleShipGame(gameName: String,
                           updateGUI: BattleShipGame => Unit) {
 
   //BattleShipGame requires a name
-  require( ! gameName.isEmpty)
+  require( gameName.nonEmpty)
 
   //Allow only Singleplayer or Multiplayer(2 Player) games
   require (battlefields.nonEmpty && battlefields.size <= 2)
@@ -104,7 +104,8 @@ case class BattleShipGame(gameName: String,
     because filter is unsorted and would destroy the sequence
      */
     for ((player,clickedPos) <- pos) {
-      //TODO: Handling according player => Switch battlefields!
+      //Set current player
+      currentPlayer = player
 
       //All Cells in 'cells' are unique. So we know that there is just one and need to exception handling
       val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(clickedPos)).head

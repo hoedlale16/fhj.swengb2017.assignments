@@ -62,22 +62,10 @@ Here starts the application. rootStage (represents frame/window) get initializie
 get loaded
  */
 class BattleShipFxApp extends Application {
-  override def start(stage: Stage): Unit = {
+    override def start(stage: Stage): Unit = {
     //Assign main root stage to allow to set differenct sceens in this frame
     BattleShipFxApp.rootStage = stage
     //Load MAIN scene for start
     BattleShipFxApp.loadMainScene
   }
-}
-
-/**
-  * Class to switch between scenes which represents the main windows
-  * -> Main-Menu
-  * -> Game-Scene
-  * -> Highscore
-  * -> Credits
-  */
-class SceneManager {
-
-
 }

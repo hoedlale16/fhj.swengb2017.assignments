@@ -51,27 +51,30 @@ class BattleShipFxController extends Initializable {
       //Start game according selection
       result.get() match {
         case "Singleplayer" => {
-          val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
-          val battleField: BattleField = BattleField.placeRandomly(field)
+          //Ask for username
+          val nameDialog: TextInputDialog = new TextInputDialog
+          nameDialog.setTitle("Please enter your name")
+          nameDialog.setContentText("Please enter your name:")
 
-          //TODO: Ask for username
-          val player: Player = Player("TODOplayer","bg_playerA")
+          val playerName: Optional[String] = nameDialog.showAndWait()
+          if (playerName.isPresent) {
+            val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
+            val battlefields: Map[Player, BattleField] = Map()
 
-          val battlefields: Map[Player,BattleField] = Map()
+            val game = BattleShipGame(gameName,
+              battlefields.updated(Player(playerName.get(), "bg_playerA"), BattleField.placeRandomly(field)),
+              getCellWidth,
+              getCellHeight,
+              appendLog,
+              updateGUIAfterAction)
 
-          val game = BattleShipGame(gameName,
-                                    battlefields.updated(player,battleField),
-                                    getCellWidth,
-                                    getCellHeight,
-                                    appendLog,
-                                    updateGUIAfterAction)
-
-          init(game, List())
+            init(game, List())
+          }
         }
         case "Multiplayer" => {
           appendLog("Sorry, not implemented yet!")
 
-          /*TODO: Create a new Window(Dialog) Where user can edit the fleet
+          /*TODO: Create a new Window(Dialog) Where user can edit the fleet and enter Name!
           After confirming the ship positions. Player B can do that.
           When both players confirmed the field. build game and start game*/
 
