@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -68,10 +69,22 @@
          </BorderPane.margin>
         </GridPane>
     </center>
-   <left>
-        <TextArea fx:id="log" prefHeight="413.0" prefWidth="182.0" BorderPane.alignment="CENTER" />
-   </left>
    <bottom>
       <Slider fx:id="clickHistorySlider" majorTickUnit="1.0" max="0.0" minorTickCount="0" onMouseClicked="#onSliderChanged" prefHeight="69.0" prefWidth="752.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" BorderPane.alignment="CENTER" />
    </bottom>
+   <left>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+              <TextArea fx:id="log" prefHeight="413.0" prefWidth="182.0" BorderPane.alignment="CENTER" />
+         </center>
+         <top>
+            <HBox prefHeight="28.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label styleClass="lb_player" text="Player: " />
+                  <Label fx:id="lbPlayerName" styleClass="lb_player" />
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>
+   </left>
 </BorderPane>

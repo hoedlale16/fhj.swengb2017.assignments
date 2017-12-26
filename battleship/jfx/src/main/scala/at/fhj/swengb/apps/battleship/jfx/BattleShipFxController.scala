@@ -5,6 +5,7 @@ import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.util.{Optional, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ChoiceDialog, _}
 import javafx.scene.layout.{BorderPane, GridPane}
 import javafx.stage.FileChooser
@@ -25,6 +26,7 @@ class BattleShipFxController extends Initializable {
   @FXML private var clickHistorySlider: Slider = _
   @FXML private var lbHeader: Label = _
   @FXML private var btSaveGame: Button = _
+  @FXML private var lbPlayerName: Label = _
 
   /**
     * A text area box to place the history of the game
@@ -46,16 +48,19 @@ class BattleShipFxController extends Initializable {
       //Generate a random name for new game
       val gameName: String = createRandomBattleShipGameName()
 
-      println(gameName)
-
       //Start game according selection
       result.get() match {
         case "Singleplayer" => {
           val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
           val battleField: BattleField = BattleField.placeRandomly(field)
+
+          //TODO: Ask for username
+          val player: Player = Player("TODOplayer","bg_playerA")
+
+          val battlefields: Map[Player,BattleField] = Map()
+
           val game = BattleShipGame(gameName,
-                                    battleField,
-                                    null,
+                                    battlefields.updated(player,battleField),
                                     getCellWidth,
                                     getCellHeight,
                                     appendLog,
@@ -69,18 +74,25 @@ class BattleShipFxController extends Initializable {
           /*TODO: Create a new Window(Dialog) Where user can edit the fleet
           After confirming the ship positions. Player B can do that.
           When both players confirmed the field. build game and start game*/
-          val playerAField = BattleField(10, 10, Fleet(FleetConfig.Standard))
-          val playerABattleField: BattleField =
-            BattleField.placeRandomly(playerAField)
 
+
+          val playerA: Player = Player("PlayerA","bg_playerA")
+          val playerAField = BattleField(10, 10, Fleet(FleetConfig.Standard))
+          val playerABattleField: BattleField = BattleField.placeRandomly(playerAField)
+
+          val playerB: Player = Player("PlayerB","bg_playerB")
           val playerBField = BattleField(10, 10, Fleet(FleetConfig.Standard))
           val playerBBattleField: BattleField =
             BattleField.placeRandomly(playerAField)
 
+
+          var battlefields: Map[Player,BattleField] = Map()
+          battlefields = battlefields.updated(playerA,playerABattleField)
+          battlefields = battlefields.updated(playerB,playerBBattleField)
+
           //Start game
           val game = BattleShipGame(gameName,
-                                    playerABattleField,
-                                    playerBBattleField,
+                                    battlefields,
                                     getCellWidth,
                                     getCellHeight,
                                     appendLog,
@@ -95,7 +107,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def saveGame(): Unit = {
     try {
-      val chooser = new FileChooser();
+      val chooser = new FileChooser
       chooser.setTitle("Select path to store")
 
       //Set Extention filter
@@ -121,7 +133,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def loadGame(): Unit = {
     try {
-      val chooser = new FileChooser();
+      val chooser = new FileChooser
       chooser.setTitle("Select path to load BattleshipGame")
 
       //Set Extention filter
@@ -153,10 +165,12 @@ class BattleShipFxController extends Initializable {
     val currVal = clickHistorySlider.getValue.toInt
     var simModeActive: Boolean = true
 
+    //TODO: Add handling to switch between players!
+
     //Current List of clicks to simulate
     //Reverse clickedPos List.. Take required list and reverse it again!
-    val simClickPos: List[(Int,BattlePos)] =
-      game.clickedPositions.reverse.take(currVal).reverse
+    val simClickPos: List[(Player,BattlePos)] =
+      game.clickedPositions.takeRight(currVal).reverse
 
     //Print some fancy output to user
     if (currVal == clickHistorySlider.getMax.toInt) {
@@ -176,7 +190,7 @@ class BattleShipFxController extends Initializable {
 
     //If we are simulation mode, deactivate buttons
     battleGroundGridPane.getChildren.clear()
-    for (c <- game.getCells()) {
+    for (c <- game.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
       c.init()
       //Deactivate Buttons if we're in the history data!
@@ -214,16 +228,16 @@ class BattleShipFxController extends Initializable {
     * - placing your ships at random on the battleground
     *
     */
-  def init(g: BattleShipGame, simulateClicks: List[(Int,BattlePos)]): Unit = {
+  def init(g: BattleShipGame, simulateClicks: List[(Player,BattlePos)]): Unit = {
     //Initialize BattleShipGame
     //Required to save state!
     game = g
 
     battleGroundGridPane.getChildren.clear()
-    for (c <- g.getCells()) {
+    for (c <- g.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
     }
-    g.getCells().foreach(c => c.init())
+    g.getCells.foreach(c => c.init())
 
     //Reset all previous clicked positions
     //simulate all already clicked positions and update GUI-Slider!
@@ -234,10 +248,17 @@ class BattleShipFxController extends Initializable {
     //Enable gaming Buttons
     btSaveGame.setDisable(false)
     battleGroundGridPane.setVisible(true)
-    clickHistorySlider.setVisible(true)
 
-    //Set name of game
+    //Just show slider in SinglePlayer Mode
+    if (game.battlefields.size == 1) {
+      clickHistorySlider.setVisible(true)
+    } else {
+      clickHistorySlider.setVisible(false)
+    }
+
+    //Set name of game and Player
     lbHeader.setText(g.gameName)
+    lbPlayerName.setText(g.currentPlayer.name)
 
     //Reset Background for game which handles multiplayer/singleplyer mode
     gameBackground.getStyleClass.remove("bg_playerA")
@@ -245,7 +266,7 @@ class BattleShipFxController extends Initializable {
     gameBackground.getStyleClass.add("bg_game")
   }
 
-  private def loadGame(filePath: String): (BattleShipGame, List[(Int,BattlePos)]) = {
+  private def loadGame(filePath: String): (BattleShipGame, List[(Player,BattlePos)]) = {
     //Read Protobuf-Object
     val bsgIn =
       at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame
@@ -257,8 +278,7 @@ class BattleShipFxController extends Initializable {
 
     //Create new game-Event based on loaded Data
     val battleShipGame = BattleShipGame(loadedBattleShipGame.gameName,
-                                        loadedBattleShipGame.battleFieldA,
-                                        loadedBattleShipGame.battleFieldB,
+                                        loadedBattleShipGame.battlefields,
                                         getCellWidth,
                                         getCellHeight,
                                         appendLog,
@@ -273,12 +293,16 @@ class BattleShipFxController extends Initializable {
 
     updateSlider(game.clickedPositions.size)
 
-    //TODO Handling for initial - Player A has to start!
+    //Check if game is over!
+    if (game.isGameOver)
+      showGameOverDialog(game)
+    else
+
     /*Handling for Multiplayer game...
         -> Change Background to visible that player to is ready to play
     */
-    if(game.battleFieldB != null) {
-      switchPlayerBackGround
+    if (game.battlefields.size > 1) {
+      switchPlayer(game.currentPlayer)
     }
 
   }
@@ -289,15 +313,16 @@ class BattleShipFxController extends Initializable {
   }
 
 
-  private def switchPlayerBackGround(): Unit = {
+  private def switchPlayer(newPlayer: Player): Unit = {
 
-    if (gameBackground.getStyleClass.contains("bg_playerA")) {
-      gameBackground.getStyleClass.remove("bg_playerA")
-      gameBackground.getStyleClass.add("bg_playerB")
-    } else {
-      gameBackground.getStyleClass.remove("bg_playerB")
-      gameBackground.getStyleClass.add("bg_playerA")
-    }
+    //Set Playername
+    lbPlayerName.setText(newPlayer.name)
+
+    println(newPlayer.name + "-" + newPlayer.cssStyleClass)
+    //Change Background
+    gameBackground.getStyleClass.remove("bg_playerA")
+    gameBackground.getStyleClass.remove("bg_playerB")
+    gameBackground.getStyleClass.add(newPlayer.cssStyleClass)
   }
 
   /**
@@ -311,14 +336,30 @@ class BattleShipFxController extends Initializable {
     val w3: Seq[String] = Seq("of", "from", "since")
     val w4: Seq[String] = Seq("Graz", "Eggenberg", "1908")
 
-    val rGen: Random = new Random();
+    val rGen: Random = new Random
 
     val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
                        w2(rGen.nextInt(w2.size - 1)) + " " +
                        w3(rGen.nextInt(w3.size - 1)) + " " +
                        w4(rGen.nextInt(w4.size -1))
 
-    name;
+    name
+  }
+
+
+  private def showGameOverDialog(game: BattleShipGame): Unit = {
+
+    val alert = new Alert(AlertType.INFORMATION)
+    alert.setTitle("G A M E - O V E R")
+    alert.setHeaderText("Game over!")
+    alert.setContentText("Player <" + game.currentPlayer.name + "> has won!")
+    alert.show()
+
+    //Deactivate game field
+    game.getCells.foreach(e => e.setDisable(true))
+
+    //Deactiveate store button
+    btSaveGame.setDisable(true)
   }
 
 }

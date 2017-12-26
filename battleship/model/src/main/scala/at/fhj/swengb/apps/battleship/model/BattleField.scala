@@ -36,10 +36,10 @@ case class BattleField(width: Int, height: Int, fleet: Fleet) {
 
     def loop(pos: Set[BattlePos], currBf: BattleField, found: Boolean): BattleField = {
       if (found) {
-        println(s"Placed vessel of type ${v.getClass.getSimpleName} on battlefield ...")
+        //println(s"Placed vessel of type ${v.getClass.getSimpleName} on battlefield ...")
         currBf
       } else if (pos.isEmpty) {
-        println(s"Giving up on vessel of type ${v.getClass.getSimpleName}. No place left.")
+        //println(s"Giving up on vessel of type ${v.getClass.getSimpleName}. No place left.")
         currBf
       } else {
         // take random position out of available positions

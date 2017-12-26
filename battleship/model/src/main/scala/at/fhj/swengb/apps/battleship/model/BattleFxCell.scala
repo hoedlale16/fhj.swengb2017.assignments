@@ -1,7 +1,7 @@
 package at.fhj.swengb.apps.battleship.model
 
 import javafx.scene.paint.Color
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Rectangle
 
 /**
   * Represents one part of a vessel or one part of the ocean.
@@ -19,20 +19,20 @@ case class BattleFxCell(pos: BattlePos,
 
     setFill(Color.DARKBLUE)
 
-    /* Deactivate test mode
-    if (someVessel.isDefined) {
+    //Just required for internal test mode
+    /*if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
       setFill(Color.DARKBLUE)
-    }
-    */
+    }*/
+
   }
 
   setOnMouseClicked(e => {
     handleMouseClick
   })
 
-  def handleMouseClick() = {
+  def handleMouseClick: Unit= {
     /*IF Button is disabled, we are in simulation mode
     in this case we're not allowed to add position to clickedPos-List
     because click is already there...

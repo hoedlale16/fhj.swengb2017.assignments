@@ -2,16 +2,14 @@ package at.fhj.swengb.apps.battleship.model
 
 /**
   * Contains all information about a battleship game.
-  * @param battleFieldA  => Battefield area of player A
-  * @param battleFieldB  => Battlefield area of player B. in Singleplayer this is null!
+  * @param battlefields  => List of Tuples represents a Player and his Battlefield
   * @param getCellWidth  => Size of Cell
   * @param getCellHeight => Size of Cell
   * @param log           => Function where to write the log
   * @param updateGUI     => Function to update GUI after Click action (e.g. update Slider for history)
   */
 case class BattleShipGame(gameName: String,
-                          battleFieldA: BattleField,
-                          battleFieldB: BattleField,
+                          battlefields: Map[Player,BattleField],
                           getCellWidth: Int => Double,
                           getCellHeight: Int => Double,
                           log: String => Unit,
@@ -19,6 +17,9 @@ case class BattleShipGame(gameName: String,
 
   //BattleShipGame requires a name
   require( ! gameName.isEmpty)
+
+  //Allow only Singleplayer or Multiplayer(2 Player) games
+  require (battlefields.nonEmpty && battlefields.size <= 2)
 
   /**
     * remembers which vessel was hit at which position
@@ -36,39 +37,64 @@ case class BattleShipGame(gameName: String,
     * Contains all already clicked positions.
     * Array keeps sorting...
     */
-  var clickedPositions: List[(Int,BattlePos)] = List();
+  var clickedPositions: List[(Player,BattlePos)] = List()
+
+  //All available players
+  var players: List[Player] = battlefields.keys.toList
+
+  //Initial: Start with player A
+  var currentPlayer: Player = players.head
+
+  //Returns current battlefield
+  var currentBattleField: BattleField = {
+    battlefields.get(currentPlayer) match {
+      case Some(field) => field
+      case None => {
+        log("FATAL ERROR - Player not found!")
+        null; //If this happens, some crazy shit is going on...
+      }
+    }
+  }
+
+
+  var isGameOver: Boolean = false
 
   /**
     * We don't ever change cells, they should be initialized only once.
     */
   private val cells: Seq[BattleFxCell] = for {
-    x <- 0 until battleFieldA.width
-    y <- 0 until battleFieldA.height
+    x <- 0 until currentBattleField.width
+    y <- 0 until currentBattleField.height
     pos = BattlePos(x, y)
   } yield {
     BattleFxCell(BattlePos(x, y),
                  getCellWidth(x),
                  getCellHeight(y),
                  log,
-                 battleFieldA.fleet.findByPos(pos),
+                 currentBattleField.fleet.findByPos(pos),
                  updateGameState,
                  updateClickedPositions)
   }
 
-  def getCells(): Seq[BattleFxCell] = cells
+  def getCells: Seq[BattleFxCell] = cells
 
   //Adds a new Position to clicked set
   def updateClickedPositions(pos: BattlePos): Unit = {
     //We keep already clicked positions awell!
-    //TODO: set corret player: Currently always player 1
-    clickedPositions = (1,pos) :: clickedPositions
+    clickedPositions = (currentPlayer,pos) :: clickedPositions
+
+    //Switch player on Multiplayermode when game not finished yet!
+    if (battlefields.size > 1 && ! isGameOver) {
+      currentPlayer = battlefields.keys.filter(e => !e.eq(currentPlayer)).head
+      //TODO: Change Battlefield aswell
+    }
 
     //Update GUI after click as well
     updateGUI(this)
   }
 
   //Simulates click for all positions in list
-  def simulateClicksOnClickedPositions(pos: List[(Int,BattlePos)]): Unit = {
+  def simulateClicksOnClickedPositions(pos: List[(Player,BattlePos)]): Unit = {
 
     /*
     We have to iterate to get the correct sequence.
@@ -82,7 +108,7 @@ case class BattleShipGame(gameName: String,
 
       //All Cells in 'cells' are unique. So we know that there is just one and need to exception handling
       val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(clickedPos)).head
-      fxCell.handleMouseClick()
+      fxCell.handleMouseClick
     }
   }
 
@@ -90,23 +116,8 @@ case class BattleShipGame(gameName: String,
     log("Vessel " + vessel.name.value + " was hit at position " + pos)
 
     if (hits.contains(vessel)) {
-      // this code is executed if vessel was already hit at least once
-
-      // pos
-      // vessel
-      // map (hits)
-
-      // we want to update the hits map
-      // the map should be updated if
-      // we hit a vessel which is already contained
-      // in the 'hits' map, and it's values (
-      // the set of BattlePos) should be added
-      // the current pos
       val oldPos: Set[BattlePos] = hits(vessel)
-
       hits = hits.updated(vessel, oldPos + pos)
-
-      hits(vessel).foreach(p => log(p.toString))
 
       if (oldPos.contains(pos)) {
         log("Position was triggered two times.")
@@ -116,8 +127,10 @@ case class BattleShipGame(gameName: String,
         log(s"Ship ${vessel.name.value} was destroyed.")
         sunkShips = sunkShips + vessel
 
-        if (battleFieldA.fleet.vessels == sunkShips) {
+        if (currentBattleField.fleet.vessels == sunkShips) {
           log("G A M E   totally  O V E R")
+          isGameOver = true
+          updateGUI(this)
         }
       }
 
