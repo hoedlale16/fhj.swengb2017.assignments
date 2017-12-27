@@ -306,12 +306,8 @@ class BattleShipFxController extends Initializable {
 
       val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
       //Show Infodialog that other user is ready to play
-      battleGroundGridPane.setVisible(false)
       dialogHandler.showPlayerChangeDialog(otherGame.player)
       changeGameGridField(otherGame)
-      battleGroundGridPane.setVisible(true)
-
-
     }
   }
 

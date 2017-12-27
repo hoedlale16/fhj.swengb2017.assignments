@@ -13,9 +13,14 @@ case class BattleShipGamePlayRound(name: String,
   require(games.nonEmpty && games.size <= 2)
 
 
-  //TODO: Set correct game instance for multiplayer mode...
+  //Current battleshipGame in multiplayer mode...
+  //Default(Init) => Player1
   var currentBattleShipGame: BattleShipGame = games.head
 
+  /**
+    * Return BattleShipGame of other player
+    * @return
+    */
   def getOtherBattleShipGame: BattleShipGame = {
     /*
     There are only ONE or TWO games in the list.

@@ -62,10 +62,8 @@ case class BattleShipGame(player: Player,
     //We keep already clicked positions awell!
     clickedPositions = pos :: clickedPositions
 
-    //TODO: Switch player on Multiplayermode when game not finished yet!
+    //Update GUI after click. On Multiplayermode switch player/games!
     if (! isGameOver) {
-      //TODO: Change UI aswell!
-      //Update GUI after click as well
       updateGUI(this)
     }
   }
