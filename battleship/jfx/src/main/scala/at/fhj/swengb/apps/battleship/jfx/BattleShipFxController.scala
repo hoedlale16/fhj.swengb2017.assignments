@@ -3,13 +3,14 @@ package at.fhj.swengb.apps.battleship.jfx
 import java.io.File
 import java.net.URL
 import java.nio.file.{Files, Paths}
-import java.util.{Optional, ResourceBundle}
+import java.util.{Calendar, Optional, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ChoiceDialog, _}
 import javafx.scene.layout.{BorderPane, GridPane}
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
+import javafx.util.Callback
 
 import at.fhj.swengb.apps.battleship.BattleShipProtocol
 import at.fhj.swengb.apps.battleship.model._
@@ -19,7 +20,10 @@ import scala.util.Random
 class BattleShipFxController extends Initializable {
 
   //Initialized in init
-  private var game: BattleShipGame = _
+  private var gamePlayround: BattleShipGamePlayRound = _
+
+  //Object which handels all dialogs
+  private val dialogHandler: BattleShipFxDialogHandler = new BattleShipFxDialogHandler;
 
   @FXML private var gameBackground: BorderPane = _
   @FXML private var battleGroundGridPane: GridPane = _
@@ -29,79 +33,50 @@ class BattleShipFxController extends Initializable {
   @FXML private var lbPlayerName: Label = _
 
   /**
-    * A text area box to place the history of the game
+    * A text area box to place the history of the gamePlayround
     */
   @FXML private var log: TextArea = _
 
   @FXML def newGame(): Unit = {
-    //Show Dialog to ask user for Single or Multiplayer game
-    val dialog: ChoiceDialog[String] =
-      new ChoiceDialog("Singleplayer", "Singleplayer", "Multiplayer")
-    dialog.setTitle("Select Game setting")
-    dialog.setHeaderText("Start a new Game:")
-    dialog.setContentText("Select your enemy")
-
-    val result: Optional[String] = dialog.showAndWait()
+    //Show Dialog to ask user for Single or Multiplayer gamePlayround
+    val result: Optional[String] = dialogHandler.askGameMode()
     if (result.isPresent) {
-      appendLog("Started new <" + result.get() + "> Game")
+      log.setText("Started new <" + result.get() + "> Game")
 
-      //Generate a random name for new game
+      //Generate a random name for new gamePlayround
       val gameName: String = createRandomBattleShipGameName()
 
-      //Start game according selection
+      //Start gamePlayround according selection
       result.get() match {
         case "Singleplayer" => {
-          //Ask for username
-          val nameDialog: TextInputDialog = new TextInputDialog
-          nameDialog.setTitle("Please enter your name")
-          nameDialog.setContentText("Please enter your name:")
-
-          val playerName: Optional[String] = nameDialog.showAndWait()
+          val playerName: Optional[String] = dialogHandler.askSinglePlayerName
           if (playerName.isPresent) {
-            val field = BattleField(10, 10, Fleet(FleetConfig.Standard))
-            val battlefields: Map[Player, BattleField] = Map()
-
-            val game = BattleShipGame(gameName,
-              battlefields.updated(Player(playerName.get(), "bg_playerA"), BattleField.placeRandomly(field)),
-              getCellWidth,
-              getCellHeight,
-              appendLog,
-              updateGUIAfterAction)
-
-            init(game, List())
+            val playGround = BattleShipGamePlayRound(
+              gameName,
+              Seq(createBattleShipGame(Player(playerName.get(), "bg_playerA"))),
+              Calendar.getInstance.getTime)
+            init(playGround)
           }
         }
         case "Multiplayer" => {
-          appendLog("Sorry, not implemented yet!")
 
-          /*TODO: Create a new Window(Dialog) Where user can edit the fleet and enter Name!
-          After confirming the ship positions. Player B can do that.
-          When both players confirmed the field. build game and start game*/
+          val result: Optional[(String, String)] = dialogHandler.askMultiplayerPlayerName()
+          if (result.isPresent) {
+            val (usernameA, usernameB) = result.get()
 
+            /*TODO: Create a new Window(Dialog) Where user can edit the fleet and enter Name!
+            After confirming the ship positions. Player B can do that.
+            When both players confirmed the field. build gamePlayround and start gamePlayround*/
+            val gamePlayerA = createBattleShipGame(Player(usernameA, "bg_playerA"))
+            val gamePlayerB = createBattleShipGame(Player(usernameB, "bg_playerB"))
 
-          val playerA: Player = Player("PlayerA","bg_playerA")
-          val playerAField = BattleField(10, 10, Fleet(FleetConfig.Standard))
-          val playerABattleField: BattleField = BattleField.placeRandomly(playerAField)
-
-          val playerB: Player = Player("PlayerB","bg_playerB")
-          val playerBField = BattleField(10, 10, Fleet(FleetConfig.Standard))
-          val playerBBattleField: BattleField =
-            BattleField.placeRandomly(playerAField)
-
-
-          var battlefields: Map[Player,BattleField] = Map()
-          battlefields = battlefields.updated(playerA,playerABattleField)
-          battlefields = battlefields.updated(playerB,playerBBattleField)
-
-          //Start game
-          val game = BattleShipGame(gameName,
-                                    battlefields,
-                                    getCellWidth,
-                                    getCellHeight,
-                                    appendLog,
-                                    updateGUIAfterAction)
-
-          init(game, List())
+            //Start gamePlayround
+            val playGround = BattleShipGamePlayRound(
+              gameName,
+              Seq(gamePlayerA, gamePlayerB),
+              Calendar.getInstance.getTime)
+            init(playGround)
+          }
         }
       }
 
@@ -122,8 +97,8 @@ class BattleShipFxController extends Initializable {
       var selectedFile: File = chooser.showSaveDialog(BattleShipFxApp.rootStage)
 
       if (selectedFile != null) {
-        //Save game state
-        val protoBattleShipGame = BattleShipProtocol.convert(game)
+        //Save gamePlayround state
+        val protoBattleShipGame = BattleShipProtocol.convert(gamePlayround)
         protoBattleShipGame.writeTo(
           Files.newOutputStream(Paths.get(selectedFile.getAbsolutePath)))
         appendLog("Saved Game-state: [" + selectedFile.getAbsolutePath + "]")
@@ -146,13 +121,10 @@ class BattleShipFxController extends Initializable {
 
       //Handle selected file
       var selectedFile: File = chooser.showOpenDialog(BattleShipFxApp.rootStage)
-      if (selectedFile != null) {
-        //Load game state
-        val (battleShipGame, clickedPos) = loadGame(
-          selectedFile.getAbsolutePath)
-        //Reset text area and init game
+      if (selectedFile != null) { //Reset text area and init gamePlayround
         log.setText("Load Game-state: [" + selectedFile.getAbsolutePath + "]")
-        init(battleShipGame, clickedPos)
+        val playRound = loadGame(selectedFile.getAbsolutePath)
+        init(playRound)
       }
     } catch {
       case e: Exception => appendLog("ERROR - Loading failed: " + e.getMessage)
@@ -172,8 +144,10 @@ class BattleShipFxController extends Initializable {
 
     //Current List of clicks to simulate
     //Reverse clickedPos List.. Take required list and reverse it again!
-    val simClickPos: List[(Player,BattlePos)] =
-      game.clickedPositions.takeRight(currVal).reverse
+    val simClickPos: List[BattlePos] =
+      gamePlayround.currentBattleShipGame.clickedPositions
+        .takeRight(currVal)
+        .reverse
 
     //Print some fancy output to user
     if (currVal == clickHistorySlider.getMax.toInt) {
@@ -184,7 +158,7 @@ class BattleShipFxController extends Initializable {
         In this case we add the clicks to the list, that means we would have them tice.
         Remove them here now - they get inserted with simulateClicks anyway...
        */
-      game.clickedPositions = List()
+      gamePlayround.currentBattleShipGame.clickedPositions = List()
     } else {
       appendLog("HISTORY VIEW ACTIVATED (" + simClickPos.size + ")")
       lbHeader.setText("Battleship (History)")
@@ -193,7 +167,7 @@ class BattleShipFxController extends Initializable {
 
     //If we are simulation mode, deactivate buttons
     battleGroundGridPane.getChildren.clear()
-    for (c <- game.getCells) {
+    for (c <- gamePlayround.currentBattleShipGame.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
       c.init()
       //Deactivate Buttons if we're in the history data!
@@ -202,7 +176,8 @@ class BattleShipFxController extends Initializable {
     }
 
     //Now simulate all already clicked positions
-    game.simulateClicksOnClickedPositions(simClickPos)
+    gamePlayround.currentBattleShipGame.simulateClicksOnClickedPositions(
+      simClickPos)
   }
 
   override def initialize(url: URL, rb: ResourceBundle): Unit = {
@@ -223,7 +198,7 @@ class BattleShipFxController extends Initializable {
   def appendLog(message: String): Unit = log.appendText(message + "\n")
 
   /**
-    * Create a new game.
+    * Create a new gamePlayround.
     *
     * This means
     *
@@ -231,105 +206,126 @@ class BattleShipFxController extends Initializable {
     * - placing your ships at random on the battleground
     *
     */
-  def init(g: BattleShipGame, simulateClicks: List[(Player,BattlePos)]): Unit = {
+  def init(g: BattleShipGamePlayRound): Unit = {
     //Initialize BattleShipGame
     //Required to save state!
-    game = g
-
-    battleGroundGridPane.getChildren.clear()
-    for (c <- g.getCells) {
-      battleGroundGridPane.add(c, c.pos.x, c.pos.y)
-    }
-    g.getCells.foreach(c => c.init())
-
-    //Reset all previous clicked positions
-    //simulate all already clicked positions and update GUI-Slider!
-    g.clickedPositions = List()
-    g.simulateClicksOnClickedPositions(simulateClicks)
-    updateSlider(simulateClicks.size)
+    gamePlayround = g
+    lbHeader.setText(gamePlayround.name)
 
     //Enable gaming Buttons
     btSaveGame.setDisable(false)
     battleGroundGridPane.setVisible(true)
 
     //Just show slider in SinglePlayer Mode
-    if (game.battlefields.size == 1) {
+    if (gamePlayround.games.size == 1) {
       clickHistorySlider.setVisible(true)
     } else {
       clickHistorySlider.setVisible(false)
     }
 
-    //Set name of game and Player
-    lbHeader.setText(g.gameName)
-    lbPlayerName.setText(g.currentPlayer.name)
+    //Initialize GridGame for Player 1
+    changeGameGridField(gamePlayround.games.head)
+    //Update Slider according clicked Size - Required when game was loaded!
+    updateSlider(gamePlayround.games.head.clickedPositions.size)
 
-    //Reset Background for game which handles multiplayer/singleplyer mode
+    //Reset Background for gamePlayround which handles multiplayer/singleplyer mode
     gameBackground.getStyleClass.remove("bg_playerA")
     gameBackground.getStyleClass.remove("bg_playerB")
     gameBackground.getStyleClass.add("bg_game")
   }
 
-  private def loadGame(filePath: String): (BattleShipGame, List[(Player,BattlePos)]) = {
+  /**
+    * Iniitialize Gamefield with given Game
+    * Used to switch between players in mutliplayer game
+    * @param game
+    */
+  private def changeGameGridField(game: BattleShipGame): Unit = {
+    lbPlayerName.setText(game.player.name)
+    battleGroundGridPane.getChildren.clear()
+    for (c <- game.getCells) {
+      battleGroundGridPane.add(c, c.pos.x, c.pos.y)
+    }
+    game.getCells.foreach(c => c.init(game.clickedPositions))
+
+    //Change Background according to style from user
+    gameBackground.getStyleClass.remove("bg_playerA")
+    gameBackground.getStyleClass.remove("bg_playerB")
+    gameBackground.getStyleClass.add(game.player.cssStyleClass)
+
+    //Set given game as current game
+    gamePlayround.currentBattleShipGame = game
+  }
+
+  private def loadGame(filePath: String): BattleShipGamePlayRound = {
     //Read Protobuf-Object
     val bsgIn =
-      at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame
+      at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipPlayRound
         .parseFrom(Files.newInputStream(Paths.get(filePath)))
 
     //Convert Protobuf-Object to a BattleShipGame Instance
-    val loadedBattleShipGame: BattleShipGame =
+    val loadBSGPR: BattleShipGamePlayRound =
       BattleShipProtocol.convert(bsgIn)
 
-    //Create new game-Event based on loaded Data
-    val battleShipGame = BattleShipGame(loadedBattleShipGame.gameName,
-                                        loadedBattleShipGame.battlefields,
-                                        getCellWidth,
-                                        getCellHeight,
-                                        appendLog,
-      updateGUIAfterAction)
+    loadBSGPR.games.head.clickedPositions
+    val games: Seq[BattleShipGame] = loadBSGPR.games.map(e =>
+      loadBattleShipGame(e)) // .foldLeft(Seq[BattleShipGame])((acc,e) => loadBattleShipGame(e) :: acc)
+    //Create new gamePlayround-Event based on loaded Data
+    val battleShipGamePlayRound =
+      BattleShipGamePlayRound(loadBSGPR.name, games, loadBSGPR.startDate)
 
-    battleShipGame.clickedPositions = List()
-
-    (battleShipGame, loadedBattleShipGame.clickedPositions)
+    battleShipGamePlayRound
   }
 
+  private def loadBattleShipGame(loadedGame: BattleShipGame): BattleShipGame = {
+    val newGame = BattleShipGame(loadedGame.player,
+                                 loadedGame.battleField,
+                                 getCellWidth,
+                                 getCellHeight,
+                                 appendLog,
+                                 updateGUIAfterAction)
+
+    newGame.clickedPositions = loadedGame.clickedPositions
+    newGame
+  }
+
+  /**
+    * Get executed after user pressed a field
+    * @param game
+    */
   def updateGUIAfterAction(game: BattleShipGame): Unit = {
 
+    //Resize Slider for history
     updateSlider(game.clickedPositions.size)
 
-    //Check if game is over!
+    //Check if gamePlayround is over!
     if (game.isGameOver)
       showGameOverDialog(game)
     else
+    //Switch game in multiplayer mode
+    if (gamePlayround.games.size > 1) {
 
-    /*Handling for Multiplayer game...
-        -> Change Background to visible that player to is ready to play
-    */
-    if (game.battlefields.size > 1) {
-      switchPlayer(game.currentPlayer)
+      val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
+      //Show Infodialog that other user is ready to play
+      battleGroundGridPane.setVisible(false)
+      dialogHandler.showPlayerChangeDialog(otherGame.player)
+      changeGameGridField(otherGame)
+      battleGroundGridPane.setVisible(true)
+
+
     }
-
   }
 
+  /**
+    * Increase slider positons after each click
+    * @param maxClicks
+    */
   private def updateSlider(maxClicks: Int): Unit = {
     clickHistorySlider.setMax(maxClicks)
     clickHistorySlider.setValue(maxClicks)
   }
 
-
-  private def switchPlayer(newPlayer: Player): Unit = {
-
-    //Set Playername
-    lbPlayerName.setText(newPlayer.name)
-
-    println(newPlayer.name + "-" + newPlayer.cssStyleClass)
-    //Change Background
-    gameBackground.getStyleClass.remove("bg_playerA")
-    gameBackground.getStyleClass.remove("bg_playerB")
-    gameBackground.getStyleClass.add(newPlayer.cssStyleClass)
-  }
-
   /**
-    * Creates a random Name for a new created battleship game according feature "Naming of battles"
+    * Creates a random Name for a new created battleship gamePlayround according feature "Naming of battles"
     * Name is build from 4 lists where words get randomly choosen.
     * @return Random generated Name for a new battleshipName
     */
@@ -342,27 +338,48 @@ class BattleShipFxController extends Initializable {
     val rGen: Random = new Random
 
     val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
-                       w2(rGen.nextInt(w2.size - 1)) + " " +
-                       w3(rGen.nextInt(w3.size - 1)) + " " +
-                       w4(rGen.nextInt(w4.size -1))
+      w2(rGen.nextInt(w2.size - 1)) + " " +
+      w3(rGen.nextInt(w3.size - 1)) + " " +
+      w4(rGen.nextInt(w4.size - 1))
 
     name
   }
 
-
+  /**
+    * Game is over - Show winner and store game for highscore!
+    * @param game
+    */
   private def showGameOverDialog(game: BattleShipGame): Unit = {
 
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("G A M E - O V E R")
     alert.setHeaderText("Game over!")
-    alert.setContentText("Player <" + game.currentPlayer.name + "> has won!")
+    alert.setContentText("Player <" + game.player.name + "> has won!")
     alert.show()
 
-    //Deactivate game field
+    //Deactivate gamePlayround field
     game.getCells.foreach(e => e.setDisable(true))
 
     //Deactiveate store button
     btSaveGame.setDisable(true)
+
+    //TODO: Store game internally for highscore
   }
 
+  /**
+    * Creates a new BattleShip game for given user
+    * @param player
+    * @return
+    */
+  private def createBattleShipGame(player: Player): BattleShipGame = {
+    val battlefield: BattleField =
+      BattleField(10, 10, Fleet(FleetConfig.Standard))
+
+    BattleShipGame(player,
+                   BattleField.placeRandomly(battlefield),
+                   getCellWidth,
+                   getCellHeight,
+                   appendLog,
+                   updateGUIAfterAction)
+  }
 }

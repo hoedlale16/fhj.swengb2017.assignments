@@ -6,7 +6,7 @@ option java_package         = "at.fhj.swengb.apps.battleship";
 option java_outer_classname = "BattleShipProtobuf";
 
 
-message BattleShipGame {
+message BattleShipPlayRound {
 
     enum VesselOrientation {
         Horizontal = 0;
@@ -18,19 +18,22 @@ message BattleShipGame {
         int32 y = 2;
     }
 
-    message ClickPos {
+    /*message ClickPos {
         Position clickedPos = 1;
         Player player= 2;
-    }
+    }*/
 
     message Player {
         string name = 1;
         string cssStyleClass = 2;
     }
 
-    message BattleField {
+    message BattleFieldGame {
         Player player = 1;
         repeated Vessel vessels = 2;
+        repeated Position clickedPositions= 3;
+        int32 fieldWidth = 4;
+        int32 fieldHeight = 5;
     }
 
     message Vessel {
@@ -41,9 +44,7 @@ message BattleShipGame {
     }
 
     string gameName = 1;
-    int32 fieldWidth = 2;
-    int32 fieldHeight = 3;
-    repeated BattleField battlefields = 4;
-    repeated ClickPos clickedPositions= 6; //Contains all clicks of game in a Tuple (Player,Position). Singleplyer: Only one...
+    repeated BattleFieldGame battlefieldsGames = 4;
+    string startdate = 5;
 
 }
