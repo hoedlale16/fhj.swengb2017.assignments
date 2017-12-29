@@ -32,9 +32,30 @@ case class BattleShipGamePlayRound(name: String,
     else {
       games.filter(p => !p.equals(currentBattleShipGame)).head
     }
+  }
 
+  /**
+    * Return Game which is next according the click list.
+    *
+    * @return game which has to play next.
+    */
+  def getBattleShipGameWithShorterClicks: BattleShipGame = {
+    val currGameClicks: Int = currentBattleShipGame.clickedPositions.size
+    val otherGameClicks: Int = getOtherBattleShipGame.clickedPositions.size
 
-
+    /*If Size of A is less of equal to B return A
+    * Example:
+    *    A-Clicks  B-clicks
+    *       0         0          => Nobody played yet => A is next(first)
+    *       1         0  [A<B]   => A played last => B is next
+    *       1         1  [A==B]   => B played last => A is next
+    *       2         1  [A>B]    => A played last => B is next
+    *       ...
+     */
+    if (currGameClicks <= otherGameClicks)
+      currentBattleShipGame
+    else
+      getOtherBattleShipGame
   }
 
 }

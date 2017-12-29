@@ -150,17 +150,16 @@ class BattleShipFxController extends Initializable {
     //Print some fancy output to user
     if (currVal == clickHistorySlider.getMax.toInt) {
       appendLog("HISTORY VIEW DEACTIVATED")
-      lbHeader.setText("Battleship")
+      lbHeader.setText(gamePlayround.name)
       simModeActive = false
       /*We are in the present now again, which means that the buttons get active again
         In this case we add the clicks to the list, that means we would have them tice.
         Remove them here now - they get inserted with simulateClicks anyway...
        */
       gamePlayround.currentBattleShipGame.clickedPositions = List()
-      println(simClickPos.size)
     } else {
       appendLog("HISTORY VIEW ACTIVATED (" + simClickPos.size + ")")
-      lbHeader.setText("Battleship (History)")
+      lbHeader.setText(gamePlayround.name + "(History)")
       simModeActive = true
     }
 
@@ -224,13 +223,14 @@ class BattleShipFxController extends Initializable {
       clickHistorySlider.setVisible(false)
     }
 
-    //Initialize GridGame for Player 1
-    changeGameGridField(gamePlayround.games.head)
-    //Update Slider according clicked Size - Required when game was loaded!
-    updateSlider(gamePlayround.games.head.clickedPositions.size)
+    //Set gridGame according last played button click
+    //The game with the longer "clickedPositions" list was the last one, which means the other game is next
+    val gameToInitialize: BattleShipGame = gamePlayround.getBattleShipGameWithShorterClicks
 
-    //Initialize list of all battleships
-    updateShipStatistic(gamePlayround.games.head)
+    //Initialize game: GridField, Slider and statistic
+    changeGameGridField(gameToInitialize)
+    updateSlider(gameToInitialize.clickedPositions.size)
+    updateShipStatistic(gameToInitialize)
 
     //Reset Background for gamePlayround which handles multiplayer/singleplyer mode
     gameBackground.getStyleClass.remove("bg_playerA")
@@ -278,9 +278,10 @@ class BattleShipFxController extends Initializable {
     val loadBSGPR: BattleShipGamePlayRound =
       BattleShipProtocol.convert(bsgIn)
 
-    loadBSGPR.games.head.clickedPositions
+    //Initilaize all games (Single/Multiplayer mode)
     val games: Seq[BattleShipGame] = loadBSGPR.games.map(e =>
       initBattleShipGame(e))
+
     //Create new gamePlayround-Event based on loaded Data
     val battleShipGamePlayRound =
       BattleShipGamePlayRound(loadBSGPR.name, games, loadBSGPR.startDate)
