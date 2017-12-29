@@ -71,6 +71,11 @@ case class BattleShipGame(player: Player,
   //Simulates click for all positions in list
   def simulateClicksOnClickedPositions(pos: List[BattlePos]): Unit = {
 
+    //Reset (filled via clicks again)
+     hits = Map()
+     sunkShips = Set()
+     isGameOver = false
+
     /*
     We have to iterate to get the correct sequence.
     We are not allowed to do this:

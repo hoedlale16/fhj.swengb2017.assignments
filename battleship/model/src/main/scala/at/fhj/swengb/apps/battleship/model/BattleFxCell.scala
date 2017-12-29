@@ -16,11 +16,16 @@ case class BattleFxCell(pos: BattlePos,
                         upClickedPos: BattlePos => Unit)
   extends Rectangle(width, height) {
 
+  /**
+    * Initialize BattleFxCell. If cell is in given list cell get colorized immediately(already clicked)
+    * If simulation mode is active, no further action is triggered
+    * @param clickedPos
+    */
   def init(clickedPos: Seq[BattlePos]): Unit = {
 
     //When given list contains position of cell assume that cell was already clicked
     if (clickedPos.contains(pos)) {
-      colorizedAfterClick
+      colorizedAfterClick()
     } else {
       init()
     }
@@ -44,6 +49,9 @@ case class BattleFxCell(pos: BattlePos,
   })
 
   def handleMouseClick(): Unit= {
+    //Color clicked field
+    colorizedAfterClick()
+
     /*IF Button is disabled, we are in simulation mode
     in this case we're not allowed to add position to clickedPos-List
     because click is already there...
@@ -53,18 +61,18 @@ case class BattleFxCell(pos: BattlePos,
     if(!isDisable)
       upClickedPos(pos)
 
-    colorizedAfterClick
   }
 
-  def colorizedAfterClick: Unit = {
+  def colorizedAfterClick(): Unit = {
     someVessel match {
       case None =>
-      log (game.player.name + ": Missed. Just hit water.")
-      setFill (Color.MEDIUMAQUAMARINE)
-      case Some (v) =>
-      // log(s"Hit an enemy vessel!")
-        upGameState (v, pos)
+        log(game.player.name + ": Missed. Just hit water.")
+        setFill(Color.MEDIUMAQUAMARINE)
+      case Some(v) =>
+        // log(s"Hit an enemy vessel!")
         setFill (Color.RED)
+        upGameState(v, pos)
+
     }
   }
 

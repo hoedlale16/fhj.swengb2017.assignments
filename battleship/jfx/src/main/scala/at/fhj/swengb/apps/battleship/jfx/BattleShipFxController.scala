@@ -6,11 +6,10 @@ import java.nio.file.{Files, Paths}
 import java.util.{Calendar, Optional, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{ChoiceDialog, _}
+import javafx.scene.control._
 import javafx.scene.layout.{BorderPane, GridPane}
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
-import javafx.util.Callback
 
 import at.fhj.swengb.apps.battleship.BattleShipProtocol
 import at.fhj.swengb.apps.battleship.model._
@@ -140,7 +139,7 @@ class BattleShipFxController extends Initializable {
     val currVal = clickHistorySlider.getValue.toInt
     var simModeActive: Boolean = true
 
-    //TODO: Add handling to switch between players!
+    //TODO: Add handling to switch between players on multiplayer!
 
     //Current List of clicks to simulate
     //Reverse clickedPos List.. Take required list and reverse it again!
@@ -176,8 +175,7 @@ class BattleShipFxController extends Initializable {
     }
 
     //Now simulate all already clicked positions
-    gamePlayround.currentBattleShipGame.simulateClicksOnClickedPositions(
-      simClickPos)
+    gamePlayround.currentBattleShipGame.simulateClicksOnClickedPositions(simClickPos)
   }
 
   override def initialize(url: URL, rb: ResourceBundle): Unit = {
@@ -303,11 +301,11 @@ class BattleShipFxController extends Initializable {
     else
     //Switch game in multiplayer mode
     if (gamePlayround.games.size > 1) {
-
-      val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
       //Show Infodialog that other user is ready to play
-      dialogHandler.showPlayerChangeDialog(otherGame.player)
-      changeGameGridField(otherGame)
+      val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
+      val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
+      if (result.isPresent)
+        changeGameGridField(otherGame)
     }
   }
 
