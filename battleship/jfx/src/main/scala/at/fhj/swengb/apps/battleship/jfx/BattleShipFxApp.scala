@@ -17,16 +17,16 @@ object BattleShipFxApp {
     Application.launch(classOf[BattleShipFxApp], args: _*)
   }
 
-  def loadMainScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
-  def loadGameScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipGamefx.fxml")
-  def loadHighscoreScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
-  def loadCreditsScene: Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipCreditsfx.fxml")
+  def loadMainScene(): Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
+  def loadGameScene(): Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipGamefx.fxml")
+  def loadHighscoreScene(): Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
+  def loadCreditsScene(): Unit = loadScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipCreditsfx.fxml")
 
   /**
     * Internal method to loadScene scene from given fxml
     * Scene
     *
-    * @param fxml
+    * @param fxml - Path to fxml to load
     */
   private def loadScene(fxml: String): Unit = {
     val stage: Stage = BattleShipFxApp.rootStage
@@ -42,6 +42,7 @@ object BattleShipFxApp {
         case Success(root) =>
           stage.setTitle("BattleshipGame by SC1G0 (SWENGB-IMA16)")
           stage.setScene(new Scene(root))
+          stage.setResizable(false)
 
           //Set CSS Style
           stage.getScene.getStylesheets.clear()

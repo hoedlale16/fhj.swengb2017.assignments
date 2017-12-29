@@ -42,4 +42,19 @@ The project is based on homework 4 assignment.
 | 2
 | Create protobuf functionality to safe single and multiplayer games.
 
+| hoedlale16
+| 27.12.2017
+| 4
+| 3
+| finalized  multiplayer backend.
+
+| hoedlale16
+| 27.12.2017
+| 1
+| 2
+| Implement game statistic and bugfixing.
+
+
+
+
 |===

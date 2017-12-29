@@ -19,7 +19,7 @@ case class BattleFxCell(pos: BattlePos,
   /**
     * Initialize BattleFxCell. If cell is in given list cell get colorized immediately(already clicked)
     * If simulation mode is active, no further action is triggered
-    * @param clickedPos
+    * @param clickedPos - List of all already clicked positions. Colorize this cell if given list contains it
     */
   def init(clickedPos: Seq[BattlePos]): Unit = {
 
@@ -36,11 +36,11 @@ case class BattleFxCell(pos: BattlePos,
     setFill(Color.DARKBLUE)
 
     //Just required for internal test mode
-    if (someVessel.isDefined) {
+    /*if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
       setFill(Color.DARKBLUE)
-    }
+    }*/
 
   }
 

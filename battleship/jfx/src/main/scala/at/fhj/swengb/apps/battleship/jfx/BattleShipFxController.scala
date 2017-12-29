@@ -7,7 +7,8 @@ import java.util.{Calendar, Optional, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
-import javafx.scene.layout.{BorderPane, GridPane}
+import javafx.scene.layout.{BorderPane, GridPane, VBox}
+import javafx.scene.paint.Color
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 
@@ -22,7 +23,7 @@ class BattleShipFxController extends Initializable {
   private var gamePlayround: BattleShipGamePlayRound = _
 
   //Object which handels all dialogs
-  private val dialogHandler: BattleShipFxDialogHandler = new BattleShipFxDialogHandler;
+  private val dialogHandler: BattleShipFxDialogHandler = new BattleShipFxDialogHandler
 
   @FXML private var gameBackground: BorderPane = _
   @FXML private var battleGroundGridPane: GridPane = _
@@ -30,11 +31,9 @@ class BattleShipFxController extends Initializable {
   @FXML private var lbHeader: Label = _
   @FXML private var btSaveGame: Button = _
   @FXML private var lbPlayerName: Label = _
-
-  /**
-    * A text area box to place the history of the gamePlayround
-    */
+  @FXML private var shipStatisticBox: VBox = _
   @FXML private var log: TextArea = _
+
 
   @FXML def newGame(): Unit = {
     //Show Dialog to ask user for Single or Multiplayer gamePlayround
@@ -48,7 +47,7 @@ class BattleShipFxController extends Initializable {
       //Start gamePlayround according selection
       result.get() match {
         case "Singleplayer" => {
-          val playerName: Optional[String] = dialogHandler.askSinglePlayerName
+          val playerName: Optional[String] = dialogHandler.askSinglePlayerName()
           if (playerName.isPresent) {
             val playGround = BattleShipGamePlayRound(
               gameName,
@@ -119,10 +118,10 @@ class BattleShipFxController extends Initializable {
       chooser.getExtensionFilters.add(extensionFilter)
 
       //Handle selected file
-      var selectedFile: File = chooser.showOpenDialog(BattleShipFxApp.rootStage)
+      val selectedFile: File = chooser.showOpenDialog(BattleShipFxApp.rootStage)
       if (selectedFile != null) { //Reset text area and init gamePlayround
         log.setText("Load Game-state: [" + selectedFile.getAbsolutePath + "]")
-        val playRound = loadGame(selectedFile.getAbsolutePath)
+        val playRound: BattleShipGamePlayRound = loadGame(selectedFile.getAbsolutePath)
         init(playRound)
       }
     } catch {
@@ -132,7 +131,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def returnToMain(): Unit = {
     //Abort and switch back to main
-    BattleShipFxApp.loadMainScene
+    BattleShipFxApp.loadMainScene()
   }
 
   @FXML def onSliderChanged(): Unit = {
@@ -158,6 +157,7 @@ class BattleShipFxController extends Initializable {
         Remove them here now - they get inserted with simulateClicks anyway...
        */
       gamePlayround.currentBattleShipGame.clickedPositions = List()
+      println(simClickPos.size)
     } else {
       appendLog("HISTORY VIEW ACTIVATED (" + simClickPos.size + ")")
       lbHeader.setText("Battleship (History)")
@@ -175,7 +175,10 @@ class BattleShipFxController extends Initializable {
     }
 
     //Now simulate all already clicked positions
+
     gamePlayround.currentBattleShipGame.simulateClicksOnClickedPositions(simClickPos)
+
+    updateShipStatistic(gamePlayround.currentBattleShipGame)
   }
 
   override def initialize(url: URL, rb: ResourceBundle): Unit = {
@@ -197,17 +200,17 @@ class BattleShipFxController extends Initializable {
 
   /**
     * Create a new gamePlayround.
-    *
     * This means
-    *
-    * - resetting all cells to 'empty' state
-    * - placing your ships at random on the battleground
-    *
+    *   - resetting all cells to 'empty' state
+    *   - placing your ships at random on the battleground
+    *   - enable gaming buttons
+    *   - init game field for player A (Single and Multiplayer)
+    * @param newPlayRound New playround to initialize
     */
-  def init(g: BattleShipGamePlayRound): Unit = {
+  def init(newPlayRound: BattleShipGamePlayRound): Unit = {
     //Initialize BattleShipGame
     //Required to save state!
-    gamePlayround = g
+    gamePlayround = newPlayRound
     lbHeader.setText(gamePlayround.name)
 
     //Enable gaming Buttons
@@ -226,6 +229,9 @@ class BattleShipFxController extends Initializable {
     //Update Slider according clicked Size - Required when game was loaded!
     updateSlider(gamePlayround.games.head.clickedPositions.size)
 
+    //Initialize list of all battleships
+    updateShipStatistic(gamePlayround.games.head)
+
     //Reset Background for gamePlayround which handles multiplayer/singleplyer mode
     gameBackground.getStyleClass.remove("bg_playerA")
     gameBackground.getStyleClass.remove("bg_playerB")
@@ -235,7 +241,7 @@ class BattleShipFxController extends Initializable {
   /**
     * Iniitialize Gamefield with given Game
     * Used to switch between players in mutliplayer game
-    * @param game
+    * @param game - Game to load
     */
   private def changeGameGridField(game: BattleShipGame): Unit = {
     lbPlayerName.setText(game.player.name)
@@ -252,8 +258,16 @@ class BattleShipFxController extends Initializable {
 
     //Set given game as current game
     gamePlayround.currentBattleShipGame = game
+
+    //Update Statistics for current user
+    updateShipStatistic(game)
   }
 
+  /**
+    * Load a new BattleShipGameRound from given filepath
+    * @param filePath - file to load
+    * @return loaded new BattleShipGameRound
+    */
   private def loadGame(filePath: String): BattleShipGamePlayRound = {
     //Read Protobuf-Object
     val bsgIn =
@@ -266,7 +280,7 @@ class BattleShipFxController extends Initializable {
 
     loadBSGPR.games.head.clickedPositions
     val games: Seq[BattleShipGame] = loadBSGPR.games.map(e =>
-      loadBattleShipGame(e)) // .foldLeft(Seq[BattleShipGame])((acc,e) => loadBattleShipGame(e) :: acc)
+      initBattleShipGame(e))
     //Create new gamePlayround-Event based on loaded Data
     val battleShipGamePlayRound =
       BattleShipGamePlayRound(loadBSGPR.name, games, loadBSGPR.startDate)
@@ -274,7 +288,12 @@ class BattleShipFxController extends Initializable {
     battleShipGamePlayRound
   }
 
-  private def loadBattleShipGame(loadedGame: BattleShipGame): BattleShipGame = {
+  /**
+    * Initialize new BattleShipGame with given loaded game. Set correct sized and log
+    * @param loadedGame - game where battlefield and player information is taken from
+    * @return new initialized BattleShipGame
+    */
+  private def initBattleShipGame(loadedGame: BattleShipGame): BattleShipGame = {
     val newGame = BattleShipGame(loadedGame.player,
                                  loadedGame.battleField,
                                  getCellWidth,
@@ -288,12 +307,15 @@ class BattleShipFxController extends Initializable {
 
   /**
     * Get executed after user pressed a field
-    * @param game
+    * @param game - current game to display
     */
   def updateGUIAfterAction(game: BattleShipGame): Unit = {
 
     //Resize Slider for history
     updateSlider(game.clickedPositions.size)
+
+    //Update Statistics
+    updateShipStatistic(game)
 
     //Check if gamePlayround is over!
     if (game.isGameOver)
@@ -311,7 +333,7 @@ class BattleShipFxController extends Initializable {
 
   /**
     * Increase slider positons after each click
-    * @param maxClicks
+    * @param maxClicks - maximum amount of already happend clicks
     */
   private def updateSlider(maxClicks: Int): Unit = {
     clickHistorySlider.setMax(maxClicks)
@@ -341,7 +363,7 @@ class BattleShipFxController extends Initializable {
 
   /**
     * Game is over - Show winner and store game for highscore!
-    * @param game
+    * @param game - game which has won
     */
   private def showGameOverDialog(game: BattleShipGame): Unit = {
 
@@ -349,7 +371,7 @@ class BattleShipFxController extends Initializable {
     alert.setTitle("G A M E - O V E R")
     alert.setHeaderText("Game over!")
     alert.setContentText("Player <" + game.player.name + "> has won!")
-    alert.show()
+    val result = alert.showAndWait()
 
     //Deactivate gamePlayround field
     game.getCells.foreach(e => e.setDisable(true))
@@ -362,7 +384,7 @@ class BattleShipFxController extends Initializable {
 
   /**
     * Creates a new BattleShip game for given user
-    * @param player
+    * @param player - Create game for given player
     * @return
     */
   private def createBattleShipGame(player: Player): BattleShipGame = {
@@ -375,5 +397,23 @@ class BattleShipFxController extends Initializable {
                    getCellHeight,
                    appendLog,
                    updateGUIAfterAction)
+  }
+
+  /**
+    * Updates Ship statistic according given game
+    * @param game - game to read ship statistic from
+    */
+  private def updateShipStatistic(game: BattleShipGame): Unit = {
+    shipStatisticBox.getChildren.clear()
+    for(v <- game.battleField.fleet.vessels) {
+      val label: Label = new Label(v.name.value)
+      if (game.sunkShips.contains(v)) {
+        label.setTextFill(Color.RED)
+      } else {
+        label.setTextFill(Color.GREEN)
+      }
+
+      shipStatisticBox.getChildren.add(label)
+    }
   }
 }
