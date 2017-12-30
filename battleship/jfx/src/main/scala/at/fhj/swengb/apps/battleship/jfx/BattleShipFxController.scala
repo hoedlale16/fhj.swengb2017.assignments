@@ -83,8 +83,8 @@ class BattleShipFxController extends Initializable {
              */
 
             //TODO: Replace with Standard-Fleet
-            val battlefieldPlayerA: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
-            val battlefieldPlayerB: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
+            val battlefieldPlayerA: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.Standard)))
+            val battlefieldPlayerB: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.Standard)))
 
             //Start gamePlayround
             val playGround = BattleShipGamePlayRound(playerA,
@@ -313,7 +313,7 @@ class BattleShipFxController extends Initializable {
         //Deactivate save button
         btSaveGame.setDisable(true)
 
-        //TODO: Store game internally for highscore
+        //Store game internally for highscore
         HighScore().addRoundToHighScore(gamePlayround)
       } else {
         appendLog("ERROR: Unexpected End of game!")

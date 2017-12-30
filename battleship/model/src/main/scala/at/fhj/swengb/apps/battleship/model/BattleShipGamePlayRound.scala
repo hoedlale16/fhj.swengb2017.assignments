@@ -130,7 +130,7 @@ object BattleShipGamePlayRound {
 
     //TODO: Just testing! - Reset back to Standard-Fleet
     val battlefield: BattleField =
-      BattleField(10, 10, Fleet(FleetConfig.OneShip))
+      BattleField(10, 10, Fleet(FleetConfig.Standard))
 
     BattleShipGame(player,
       BattleField.placeRandomly(battlefield),

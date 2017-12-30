@@ -15,7 +15,7 @@ class BattleShipHighscoreFxController extends Initializable {
   @FXML private var tbHighscore: TableView[BattleShipGamePlayRound] = _
 
   override def initialize(location: URL, resources: ResourceBundle) = {
-    //TODO Display Highscore
+    //TODO Display Highscore in a table
     val highscore: Seq[BattleShipGamePlayRound] = HighScore().getSortedHighScore()
 
     val outHighScore: Seq[String] = highscore.map(e => formatOutput(e))
