@@ -4,11 +4,27 @@ import java.text.{DateFormat, SimpleDateFormat}
 import java.util.{Calendar, Date}
 
 import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipPlayRound.{Position, Vessel, VesselOrientation}
+import at.fhj.swengb.apps.battleship.BattleShipProtobuf.HighScore
 import at.fhj.swengb.apps.battleship.model._
 
 import scala.collection.JavaConverters._
 
 object BattleShipProtocol {
+
+  def convert(protoHighScore: HighScore): Seq[BattleShipGamePlayRound] = {
+    val highScore: Seq[BattleShipGamePlayRound] = protoHighScore.getPlayedPlayRoundsList.asScala.map(e => convert(e))
+    highScore
+  }
+
+  def convert(highScore: Seq[BattleShipGamePlayRound]): BattleShipProtobuf.HighScore = {
+
+    //Convert all highscore-Entries
+    val protoHighScoreEntries: Seq[BattleShipProtobuf.BattleShipPlayRound] = highScore.map(e => convert(e))
+
+    //Add Entries to protHighScore
+    val protoHighScore: HighScore.Builder = protoHighScoreEntries.foldLeft(HighScore.newBuilder())((acc,e) =>acc.addPlayedPlayRounds(e))
+    protoHighScore.build()
+  }
 
   def convert(g: BattleShipGamePlayRound): BattleShipProtobuf.BattleShipPlayRound = {
     //Create Protobuf Battlefield
@@ -24,6 +40,11 @@ object BattleShipProtocol {
 
     //If change on format is required change reverse-convert function as well!!
     protoPlayRound.setStartdate(new SimpleDateFormat("yyyy/MM/dd").format(g.startDate))
+
+    //Set winner if set. (HighScore)
+    if (! g.getWinner.isEmpty) {
+      protoPlayRound.setWinner(convert(g.getWinner.get))
+    }
 
     //Build battlefield and write to file
     protoPlayRound.build()
@@ -45,15 +66,18 @@ object BattleShipProtocol {
     val playRound = BattleShipGamePlayRound(gameName,
                               battleFieldGames,startDate)
 
+    //Set Winner of round if set (Highscore data)
+    if (protoPlayGround.hasWinner) {
+      playRound.setWinner(convert(protoPlayGround.getWinner))
+    }
 
     //return game
     playRound
   }
   
-  
-  def convert(game: BattleShipGame): BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame = {
+    def convert(game: BattleShipGame): BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame = {
     val protoGame = BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame.newBuilder()
-    
+
     protoGame.setPlayer(convert(game.player))
     protoGame.setFieldWidth(game.battleField.width)
     protoGame.setFieldHeight(game.battleField.height)

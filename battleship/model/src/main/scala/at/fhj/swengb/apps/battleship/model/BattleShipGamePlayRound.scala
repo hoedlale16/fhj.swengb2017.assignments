@@ -127,8 +127,10 @@ object BattleShipGamePlayRound {
                                    getCellHeight: Int => Double,
                                    log: String => Unit,
                                    updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+
+    //TODO: Just testing! - Reset back to Standard-Fleet
     val battlefield: BattleField =
-      BattleField(10, 10, Fleet(FleetConfig.Standard))
+      BattleField(10, 10, Fleet(FleetConfig.OneShip))
 
     BattleShipGame(player,
       BattleField.placeRandomly(battlefield),
@@ -154,9 +156,6 @@ object BattleShipGamePlayRound {
                                    getCellHeight: Int => Double,
                                    log: String => Unit,
                                    updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
-    val battlefield: BattleField =
-      BattleField(10, 10, Fleet(FleetConfig.Standard))
-
     BattleShipGame(player,
       battlefield,
       getCellWidth,
@@ -207,6 +206,21 @@ case class BattleShipGamePlayRound(name: String,
   //Current battleshipGame in multiplayer mode...
   //Default(Init) => Player1
   var currentBattleShipGame: BattleShipGame = games.head
+
+  //Return total amount of moves in play round
+  def getTotalAmountOfMoves(): Int = games.foldLeft(0)((acc,game) => acc + game.clickedPositions.size)
+
+  //Holds winner of play round
+  private var winner: Player = null;
+
+  /**
+    * Set given player as winner of the game
+    * @param player
+    */
+  def setWinner(player: Player): Unit = winner = player
+
+  def getWinner: Option[Player] = Option(winner)
+
 
   /**
     * Return BattleShipGame of other player

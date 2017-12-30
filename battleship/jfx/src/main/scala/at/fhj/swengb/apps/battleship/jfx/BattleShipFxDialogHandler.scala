@@ -5,7 +5,7 @@ import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.GridPane
 
-import at.fhj.swengb.apps.battleship.model.Player
+import at.fhj.swengb.apps.battleship.model.{BattleShipGame, BattleShipGamePlayRound, Player}
 
 class BattleShipFxDialogHandler {
 
@@ -62,6 +62,27 @@ class BattleShipFxDialogHandler {
     alert.setTitle("Multiplayer-Mode")
     alert.setHeaderText("Next player: " + newPlayer.name)
     alert.showAndWait()
+  }
+
+  /**
+    * Game is over - Show winner and store game for highscore!
+    * @param gamePlayround - Current played round
+    */
+  def showGameOverDialog(gamePlayround: BattleShipGamePlayRound): Optional[ButtonType] = {
+    //Deactivate gamePlayround field
+    gamePlayround.currentBattleShipGame.getCells.foreach(e => e.setDisable(true))
+
+    //Show dialog according
+    gamePlayround.getWinner match {
+      case None => Optional.empty() //When this happens, game ended without winner!
+      case Some(winner) => {
+        val alert = new Alert(AlertType.INFORMATION)
+        alert.setTitle("G A M E - O V E R")
+        alert.setHeaderText("Game over!")
+        alert.setContentText("Player <" + gamePlayround.getWinner + "> has won!")
+        alert.showAndWait()
+      }
+    }
   }
 
 }
