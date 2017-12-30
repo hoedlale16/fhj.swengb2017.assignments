@@ -1,6 +1,197 @@
 package at.fhj.swengb.apps.battleship.model
 
+import java.io.{File, InputStream}
+import java.nio.file.{Files, Paths}
 import java.util.{Calendar, Date}
+
+import at.fhj.swengb.apps.battleship.{BattleShipProtobuf, BattleShipProtocol}
+
+import scala.util.Random
+
+object BattleShipGamePlayRound {
+
+  /**
+    * Create A BattleShipPlayRound for Singleplayer-Mode
+    * @param player - Player to create play round for
+    * @param getCellWidth - function which defines width of cell
+    * @param getCellHeight - function which defines height of cell
+    * @param log - function to write log
+    * @param updateGUIAfterAction - function which get called after click on a cell
+    * @return a singleplayerMode Play round
+    */
+  def apply(player: Player,
+            getCellWidth: Int => Double,
+            getCellHeight: Int => Double,
+            log: String => Unit,
+            updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
+    BattleShipGamePlayRound(
+      createRandomPlayRoumdName,
+      Seq(createBattleShipGame(player,getCellWidth,getCellHeight,log,updateGUIAfterAction)),
+      Calendar.getInstance.getTime)
+  }
+
+  /**
+    * Create A BattleShipPlayRound for Multiplayer-Mode
+    * @param playerA - First player to create play round for
+    * @param playerB - Second player to create play round for
+    * @param battlefieldPlayerA - Battlefield of player A - Field which plays player B
+    * @param battlefieldPlayerB - Battlefield of player B - Field which plays player A
+    * @param getCellWidth - function which defines width of cell
+    * @param getCellHeight - function which defines height of cell
+    * @param log - function to write log
+    * @param updateGUIAfterAction - function which get called after click on a cell
+    * @return a multiplayermode Play round
+    */
+  def apply(playerA: Player,
+            battlefieldPlayerA: BattleField,
+            playerB: Player,
+            battlefieldPlayerB: BattleField,
+            getCellWidth: Int => Double,
+            getCellHeight: Int => Double,
+            log: String => Unit,
+            updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
+
+    //Create Games for each player. Battlefield is field of enemy
+    val gamePlayerA: BattleShipGame = createBattleShipGame(playerA,battlefieldPlayerB,getCellWidth,getCellHeight,log,updateGUIAfterAction)
+    val gamePlayerB: BattleShipGame = createBattleShipGame(playerB,battlefieldPlayerA,getCellWidth,getCellHeight,log,updateGUIAfterAction)
+
+    BattleShipGamePlayRound(
+      createRandomPlayRoumdName,
+      Seq(gamePlayerA,gamePlayerB),
+      Calendar.getInstance.getTime)
+  }
+
+  /**
+    * Create BattleShipGamePlayRound from given protobuf file (load functionality)
+    * @param file -File to read play round from
+    * @param parse - Function used to parse given file
+    * @param getCellWidth - function which defines width of cell
+    * @param getCellHeight - function which defines height of cell
+    * @param log - function to write log
+    * @param updateGUIAfterAction - function which get called after click on a cell
+    * @return a loaded Play round
+    */
+  def apply(file:File,
+            parse: InputStream => BattleShipProtobuf.BattleShipPlayRound,
+            getCellWidth: Int => Double,
+            getCellHeight: Int => Double,
+            log: String => Unit,
+            updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
+
+    //Read Protobuf-Object and convert it to a BattleShipGamePlayRound-Instance
+    val protoBattleShipGamePlayRound: BattleShipProtobuf.BattleShipPlayRound = parse(Files.newInputStream(Paths.get(file.getAbsolutePath)))
+    val loadedBattleShipGamePlayRound: BattleShipGamePlayRound = BattleShipProtocol.convert(protoBattleShipGamePlayRound)
+
+    //Initialize all games (Single/Multiplayer mode)
+    val games: Seq[BattleShipGame] =
+      loadedBattleShipGamePlayRound.games.map(e => createBattleShipGame(e, getCellWidth, getCellHeight, log, updateGUIAfterAction))
+
+    //Create new gamePlayround-Event based on loaded Data
+    BattleShipGamePlayRound(loadedBattleShipGamePlayRound.name, games, loadedBattleShipGamePlayRound.startDate)
+  }
+
+
+
+  /**
+    * Creates a random Name for a new created battleship gamePlayround according feature "Naming of battles"
+    * Name is build from 4 lists where words get randomly choosen.
+    * @return Random generated Name for a new battleshipName
+    */
+  private def createRandomPlayRoumdName(): String = {
+    val w1: Seq[String] = Seq("The", "Holy", "Deadly")
+    val w2: Seq[String] = Seq("battle", "fight", "encounter")
+    val w3: Seq[String] = Seq("of", "from", "since")
+    val w4: Seq[String] = Seq("Graz", "Eggenberg", "1908")
+
+    val rGen: Random = new Random
+
+    val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
+      w2(rGen.nextInt(w2.size - 1)) + " " +
+      w3(rGen.nextInt(w3.size - 1)) + " " +
+      w4(rGen.nextInt(w4.size - 1))
+
+    name
+  }
+
+  /**
+    * * Creates a new BattleShip game for given user
+    * @param player - Create game for given player
+    * @param getCellWidth - Function which defines the width of each cell
+    * @param getCellHeight - Function which defines the height of each cell
+    * @param log - Function to write log
+    * @param updateGUIAfterAction - Function which get called after click
+    * @return a new BattleShipGame
+    */
+  private def createBattleShipGame(player: Player,
+                                   getCellWidth: Int => Double,
+                                   getCellHeight: Int => Double,
+                                   log: String => Unit,
+                                   updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+    val battlefield: BattleField =
+      BattleField(10, 10, Fleet(FleetConfig.Standard))
+
+    BattleShipGame(player,
+      BattleField.placeRandomly(battlefield),
+      getCellWidth,
+      getCellHeight,
+      log,
+      updateGUIAfterAction)
+  }
+
+  /**
+    * * Creates a new BattleShip game for given user
+    * @param player - Create game for given player
+    * @param battlefield - Battlefield for this game.
+    * @param getCellWidth - Function which defines the width of each cell
+    * @param getCellHeight - Function which defines the height of each cell
+    * @param log - Function to write log
+    * @param updateGUIAfterAction - Function which get called after click
+    * @return a new BattleShipGame
+    */
+  private def createBattleShipGame(player: Player,
+                                   battlefield: BattleField,
+                                   getCellWidth: Int => Double,
+                                   getCellHeight: Int => Double,
+                                   log: String => Unit,
+                                   updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+    val battlefield: BattleField =
+      BattleField(10, 10, Fleet(FleetConfig.Standard))
+
+    BattleShipGame(player,
+      battlefield,
+      getCellWidth,
+      getCellHeight,
+      log,
+      updateGUIAfterAction)
+  }
+
+
+
+  /**
+    * Creates a new BattleShipGame but take player and field information from given game.(loading functionality).
+    * @param loadedGame - game where battlefield and player information is taken from
+    * @param getCellWidth - Function which defines the width of each cell
+    * @param getCellHeight - Function which defines the height of each cell
+    * @param log - Function to write log
+    * @param updateGUIAfterAction - Function which get called after click
+    * @return new initialized BattleShipGame
+    */
+  private def createBattleShipGame(loadedGame: BattleShipGame,
+                                   getCellWidth: Int => Double,
+                                   getCellHeight: Int => Double,
+                                   log: String => Unit,
+                                   updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+    val newGame: BattleShipGame = BattleShipGame(loadedGame.player,
+      loadedGame.battleField,
+      getCellWidth,
+      getCellHeight,
+      log,
+      updateGUIAfterAction)
+
+    newGame.clickedPositions = loadedGame.clickedPositions
+    newGame
+  }
+}
 
 case class BattleShipGamePlayRound(name: String,
                               games: Seq[BattleShipGame],

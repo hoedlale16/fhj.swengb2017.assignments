@@ -37,7 +37,6 @@ object BattleShipProtocol {
     //Read BattleShipGameName from Protobuf!
 
     val gameName: String = protoPlayGround.getGameName
-    println("Read name: " + gameName)
 
     //If change on format is required change reverse-convert function as well!!
     val startDate: Date = new SimpleDateFormat("yyyy/MM/dd").parse(protoPlayGround.getStartdate)
