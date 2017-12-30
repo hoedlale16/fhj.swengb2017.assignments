@@ -81,8 +81,10 @@ class BattleShipFxController extends Initializable {
              * After confirming the ship positions. Player B can do that.
              * When both players confirmed the field. build gamePlayround and start gamePlayround
              */
-            val battlefieldPlayerA: BattleField = BattleField(10, 10, Fleet(FleetConfig.Standard))
-            val battlefieldPlayerB: BattleField = BattleField(10, 10, Fleet(FleetConfig.Standard))
+
+            //TODO: Replace with Standard-Fleet
+            val battlefieldPlayerA: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
+            val battlefieldPlayerB: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
 
             //Start gamePlayround
             val playGround = BattleShipGamePlayRound(playerA,
@@ -301,16 +303,30 @@ class BattleShipFxController extends Initializable {
     updateShipStatistic(game)
 
     //Check if gamePlayround is over!
-    if (game.isGameOver)
-      showGameOverDialog(game)
-    else
-    //Switch game in multiplayer mode
-    if (gamePlayround.games.size > 1) {
-      //Show Infodialog that other user is ready to play
-      val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
-      val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
-      if (result.isPresent)
-        switchGameGridField(otherGame)
+    if (game.isGameOver) {
+      //Set winner
+      gamePlayround.setWinner(game.player)
+
+      //Show Game over dialog
+      val result = dialogHandler.showGameOverDialog(gamePlayround)
+      if (result.isPresent) {
+        //Deactivate save button
+        btSaveGame.setDisable(true)
+
+        //TODO: Store game internally for highscore
+        HighScore().addRoundToHighScore(gamePlayround)
+      } else {
+        appendLog("ERROR: Unexpected End of game!")
+      }
+    } else {
+      //Switch game in multiplayer mode
+      if (gamePlayround.games.size > 1) {
+        //Show Infodialog that other user is ready to play
+        val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
+        val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
+        if (result.isPresent)
+          switchGameGridField(otherGame)
+      }
     }
   }
 
@@ -339,26 +355,5 @@ class BattleShipFxController extends Initializable {
 
       shipStatisticBox.getChildren.add(label)
     }
-  }
-
-  /**
-    * Game is over - Show winner and store game for highscore!
-    * @param game - game which has won
-    */
-  private def showGameOverDialog(game: BattleShipGame): Unit = {
-
-    val alert = new Alert(AlertType.INFORMATION)
-    alert.setTitle("G A M E - O V E R")
-    alert.setHeaderText("Game over!")
-    alert.setContentText("Player <" + game.player.name + "> has won!")
-    val result = alert.showAndWait()
-
-    //Deactivate gamePlayround field
-    game.getCells.foreach(e => e.setDisable(true))
-
-    //Deactiveate store button
-    btSaveGame.setDisable(true)
-
-    //TODO: Store game internally for highscore
   }
 }
