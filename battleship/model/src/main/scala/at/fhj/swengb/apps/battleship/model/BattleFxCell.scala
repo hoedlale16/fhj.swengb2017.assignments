@@ -36,11 +36,11 @@ case class BattleFxCell(pos: BattlePos,
     setFill(Color.DARKBLUE)
 
     //Just required for internal test mode
-    /*if (someVessel.isDefined) {
+    if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
       setFill(Color.DARKBLUE)
-    }*/
+    }
 
   }
 
