@@ -26,9 +26,42 @@ case class HighScore() {
     //Read unsorted Highscore
     val unsortedHighScore: Seq[BattleShipGamePlayRound] = readHighScoreFromFile(highScoreFile)
 
-    //TODO: Sort Highscore according number of moves
-    unsortedHighScore
+    def mergeSort(list: List[BattleShipGamePlayRound]): List[BattleShipGamePlayRound] = {
+
+      /**
+        * Helper to sort
+        * @param left left half to sort
+        * @param right right half to sort
+        * @return a sorted list combinend of left and right
+        */
+      def merge(left: List[BattleShipGamePlayRound], right: List[BattleShipGamePlayRound]): List[BattleShipGamePlayRound] =
+        (left, right) match {
+          case (_, Nil) => left
+          case (Nil, _) => right
+          case (leftHead :: leftTail, rightHead :: rightTail) =>
+            //Sort according Moves
+            if (leftHead.getTotalAmountOfMoves() >= rightHead.getTotalAmountOfMoves())
+              leftHead +: merge(leftTail, right)
+            else
+              rightHead +: merge(left, rightTail)
+      }
+
+      //Split given list and sort with merge-sort algorithm
+      list.size match {
+        case 0 => list //List with no elements
+        case 1 => list //List with one element
+        case _ => {
+          val (left, right) = list.splitAt(list.size / 2)
+          merge(mergeSort(left), mergeSort(right))
+        }
+      }
+    }
+
+    //Return sorted list
+    val sortedHighScore: Seq[BattleShipGamePlayRound] = mergeSort(unsortedHighScore.toList)
+    sortedHighScore
   }
+
 
   /**
     * read already stored highscore data from protobuf file
@@ -69,3 +102,6 @@ case class HighScore() {
     }
   }
 }
+
+
+

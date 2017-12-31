@@ -54,6 +54,13 @@ The project is based on homework 4 assignment.
 | 2
 | Implement game statistic and bugfixing.
 
+| hoedlale16
+| 31.12.2017
+| 3
+| 6
+| Implement highscore.
+
+
 
 
 

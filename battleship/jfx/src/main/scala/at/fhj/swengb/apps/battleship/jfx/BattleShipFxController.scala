@@ -3,9 +3,8 @@ package at.fhj.swengb.apps.battleship.jfx
 import java.io.File
 import java.net.URL
 import java.nio.file.{Files, Paths}
-import java.util.{Calendar, Optional, ResourceBundle}
+import java.util.{Optional, ResourceBundle}
 import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{BorderPane, GridPane, VBox}
 import javafx.scene.paint.Color
