@@ -2,6 +2,7 @@ package at.fhj.swengb.apps.battleship.model
 
 import java.io.{File, InputStream}
 import java.nio.file.{Files, Paths}
+import java.text.SimpleDateFormat
 import java.util.{Calendar, Date}
 
 import at.fhj.swengb.apps.battleship.{BattleShipProtobuf, BattleShipProtocol}
@@ -130,7 +131,7 @@ object BattleShipGamePlayRound {
 
     //TODO: Just testing! - Reset back to Standard-Fleet
     val battlefield: BattleField =
-      BattleField(10, 10, Fleet(FleetConfig.Standard))
+      BattleField(10, 10, Fleet(FleetConfig.OneShip))
 
     BattleShipGame(player,
       BattleField.placeRandomly(battlefield),
@@ -219,7 +220,21 @@ case class BattleShipGamePlayRound(name: String,
     */
   def setWinner(player: Player): Unit = winner = player
 
+
   def getWinner: Option[Player] = Option(winner)
+  def getWinnerName: String = {
+    getWinner match {
+      case None => "???"
+      case Some(w) => w.name
+    }
+  }
+
+  def getFormatedStartDate: String = {
+    new SimpleDateFormat("yyyy/MM/dd").format(startDate)
+  }
+
+
+  def getPlayRoundName: String = name
 
 
   /**
