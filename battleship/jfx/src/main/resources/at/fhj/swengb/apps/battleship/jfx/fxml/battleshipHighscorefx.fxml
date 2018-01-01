@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="540.0" prefWidth="752.0" styleClass="bg_game" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhj.swengb.apps.battleship.jfx.BattleShipHighscoreFxController">
@@ -23,15 +24,20 @@
     </top>
    <bottom>
       <BorderPane prefHeight="51.0" prefWidth="752.0" BorderPane.alignment="CENTER">
-         <right>
-            <Button id="button" fx:id="btReturnToMain" onAction="#returnToMain" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Return to Main" BorderPane.alignment="CENTER" />
-         </right>
          <left>
             <Button fx:id="btReplay" mnemonicParsing="false" onAction="#onReplayGame" styleClass="buttons" text="Replay Game" BorderPane.alignment="CENTER" />
          </left>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
+         <right>
+            <HBox spacing="30.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button id="button" fx:id="btClearHighscore" onAction="#resetHighscore" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Clear Highscore" />
+                  <Button id="button" fx:id="btReturnToMain" layoutX="10.0" layoutY="10.0" onAction="#returnToMain" prefHeight="27.0" prefWidth="142.0" styleClass="buttons" text="Return to Main" />
+               </children>
+            </HBox>
+         </right>
       </BorderPane>
    </bottom>
    <center>

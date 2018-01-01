@@ -10,6 +10,7 @@ case class HighScore() {
   private val highScoreFile: File = new File(System.getProperty("user.home")+ "/BattleShipGame/highscore.bin")
 
 
+
   def addRoundToHighScore(playRound: BattleShipGamePlayRound): Unit = {
     //read alread stored information
     val oldHighScore: Seq[BattleShipGamePlayRound] = readHighScoreFromFile(highScoreFile)
@@ -20,6 +21,11 @@ case class HighScore() {
     //store new HighScore
     writeHighScoreToFile(newHighScore,highScoreFile)
 
+  }
+
+  def clearHighscore(): Unit = {
+    //store new empty HighScore
+    writeHighScoreToFile(Seq(),highScoreFile)
   }
 
   def getSortedHighScore(): Seq[BattleShipGamePlayRound] = {

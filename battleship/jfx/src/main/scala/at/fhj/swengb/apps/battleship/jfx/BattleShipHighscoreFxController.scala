@@ -24,6 +24,34 @@ class BattleShipHighscoreFxController extends Initializable {
 
 
   /**
+    * Show and reply selected highscore game
+    */
+  @FXML def onReplayGame(): Unit = {
+    //TODO: Replay for selected game
+    val selectedEntry: HighScoreEntry = tbHighscore.getSelectionModel.getSelectedItem
+
+    //Check if entry is selected
+    if (!(selectedEntry == null)) {
+      //Open dialog to show history game
+      val selectedBattleShipPlayRound = selectedEntry.getBattleShipPlayRound()
+      (new BattleShipFxDialogHandler).showHigschoreGameDialog(selectedBattleShipPlayRound)
+    }
+  }
+
+  /**
+    * Ask user again if Highscore should cleared and if confirmed clear it
+    */
+  @FXML def resetHighscore(): Unit = {
+
+    val deleteHighscore: Boolean = (new BattleShipFxDialogHandler).askResetHighscoreDialog()
+    if (deleteHighscore == true) {
+      HighScore().clearHighscore()
+      initData
+    }
+
+  }
+
+  /**
     * Go back to main Scene
     */
   @FXML def returnToMain(): Unit = {
@@ -32,36 +60,26 @@ class BattleShipHighscoreFxController extends Initializable {
   }
 
 
-  @FXML def onReplayGame(): Unit = {
-    //TODO: Replay for selected game
-    val selectedEntry: HighScoreEntry = tbHighscore.getSelectionModel.getSelectedItem
-
-    //Check if entry is selected
-    if ( ! (selectedEntry == null)) {
-      println("Replay selected game")
-    }
-
-
-
-  }
-
   override def initialize(location: URL, resources: ResourceBundle) = {
-    //Load and prepare data
-   val tableData: ObservableList[HighScoreEntry] = convertToObservableList( HighScore().getSortedHighScore())
-
     //Init table columns
     initTableViewColumn[String](colDate,_.formatedDate)
     initTableViewColumn[String](colWinner,_.winnerName)
     initTableViewColumn[String](colGameName,_.playroundName)
     initTableViewColumn[Int](colClickAmount,_.clickAmount)
 
-    //Display Content
-    tbHighscore.setItems(tableData)
-    tbHighscore.setFixedCellSize(25)
-
-    //Set correct selection mode
+    //Set correct table (selection mode,CellSize, ...)
     tbHighscore.getSelectionModel.setSelectionMode(SelectionMode.SINGLE)
     tbHighscore.getSelectionModel.setCellSelectionEnabled(false)
+    tbHighscore.setFixedCellSize(25)
+
+    //Show data
+    initData
+  }
+
+  private def initData(): Unit = {
+    //Load highscore and display
+    val tableData: ObservableList[HighScoreEntry] = convertToObservableList( HighScore().getSortedHighScore())
+    tbHighscore.setItems(tableData)
   }
 
   private def convertToObservableList(highScore: Seq[BattleShipGamePlayRound]): ObservableList[HighScoreEntry] = {
@@ -85,12 +103,14 @@ class BattleShipHighscoreFxController extends Initializable {
   def initTableViewColumn[T]: (TableColumn[HighScoreEntry, T], (HighScoreEntry) => Any) => Unit =
     initTableViewColumnCellValueFactory[HighScoreEntry, T]
 
-  def initTableViewColumnCellValueFactory[HighScoreEntry, T](tc: TableColumn[HighScoreEntry, T], f: HighScoreEntry => Any): Unit = {
-    tc.setCellValueFactory(mkCellValueFactory(cdf => f(cdf.getValue).asInstanceOf[ObservableValue[T]]))
+  def initTableViewColumnCellValueFactory[HighScoreEntry, T](column: TableColumn[HighScoreEntry, T], function: HighScoreEntry => Any): Unit = {
+    column.setCellValueFactory(createCellValueFactory(cell => function(cell.getValue).asInstanceOf[ObservableValue[T]]))
   }
 
-  private def mkCellValueFactory[HighScoreEntry, T](fn: TableColumn.CellDataFeatures[HighScoreEntry, T] => ObservableValue[T]):
+  private def createCellValueFactory[HighScoreEntry, T](fn: TableColumn.CellDataFeatures[HighScoreEntry, T] => ObservableValue[T]):
        Callback[TableColumn.CellDataFeatures[HighScoreEntry, T], ObservableValue[T]] = {
+
+
     (cdf: TableColumn.CellDataFeatures[HighScoreEntry, T]) => fn(cdf)
   }
   /** END EXTERNAL HELP **/
@@ -118,7 +138,7 @@ class HighScoreEntry {
     playRound = roundToReplay
   }
 
-  def getBatleShipPlayRound(): BattleShipGamePlayRound = playRound
+  def getBattleShipPlayRound(): BattleShipGamePlayRound = playRound
 }
 
 object HighScoreEntry {

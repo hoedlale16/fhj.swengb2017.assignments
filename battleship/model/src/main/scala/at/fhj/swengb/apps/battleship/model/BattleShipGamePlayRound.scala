@@ -93,6 +93,24 @@ object BattleShipGamePlayRound {
 
 
 
+  def apply(highScorePlayround: BattleShipGamePlayRound,
+            getCellWidth: Int => Double,
+            getCellHeight: Int => Double,
+            log: String => Unit,
+            updateGUIAfterAction: BattleShipGame => Unit,
+            unused1: Int => Int,
+            unused2: Int => Int): BattleShipGamePlayRound = {
+
+
+    val games: Seq[BattleShipGame] = highScorePlayround.games.map(g => createBattleShipGame(g,getCellWidth,getCellHeight,log,updateGUIAfterAction))
+
+    val newPR = BattleShipGamePlayRound(highScorePlayround.name,games,highScorePlayround.startDate)
+    newPR.winner = highScorePlayround.winner
+    newPR
+  }
+
+
+
   /**
     * Creates a random Name for a new created battleship gamePlayround according feature "Naming of battles"
     * Name is build from 4 lists where words get randomly choosen.
@@ -210,6 +228,45 @@ case class BattleShipGamePlayRound(name: String,
 
   //Return total amount of moves in play round
   def getTotalAmountOfMoves(): Int = games.foldLeft(0)((acc,game) => acc + game.clickedPositions.size)
+
+  def getMergedClickedPositions(): Seq[BattlePos] = {
+    if ( games.size == 1)
+      games.head.clickedPositions
+    else {
+      var clicksGame1: Seq[BattlePos] = games.head.clickedPositions
+      var clicksGame2: Seq[BattlePos] = games.last.clickedPositions
+
+      var mergedList: Seq[BattlePos] = Seq()
+      var takeFromFirst: Boolean = true
+
+      def takeHeadAndAddtoMergeList(list: Seq[BattlePos]): Seq[BattlePos] =
+        list match {
+          case Nil => Nil
+          case head :: Nil => {
+            mergedList = head +: mergedList
+            Nil
+          }
+          case head :: tail => {
+            mergedList = head +: mergedList
+            tail
+          }
+        }
+
+      while(clicksGame1.isEmpty && clicksGame2.isEmpty) {
+        if (takeFromFirst) {
+          clicksGame1 = takeHeadAndAddtoMergeList(clicksGame1)
+          takeFromFirst = false
+        } else {
+          clicksGame2 = takeHeadAndAddtoMergeList(clicksGame2)
+          takeFromFirst = true
+        }
+      }
+
+      //Return lists
+      mergedList
+    }
+  }
+
 
   //Holds winner of play round
   private var winner: Player = null;

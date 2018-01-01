@@ -82,8 +82,8 @@ class BattleShipFxController extends Initializable {
              */
 
             //TODO: Replace with Standard-Fleet
-            val battlefieldPlayerA: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.Standard)))
-            val battlefieldPlayerB: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.Standard)))
+            val battlefieldPlayerA: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
+            val battlefieldPlayerB: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
 
             //Start gamePlayround
             val playGround = BattleShipGamePlayRound(playerA,
@@ -163,8 +163,6 @@ class BattleShipFxController extends Initializable {
   @FXML def onSliderChanged(): Unit = {
     val currVal = clickHistorySlider.getValue.toInt
     var simModeActive: Boolean = true
-
-    //TODO: Add handling to switch between players on multiplayer!
 
     //Current List of clicks to simulate
     //Reverse clickedPos List.. Take required list and reverse it again!
