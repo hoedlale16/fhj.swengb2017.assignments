@@ -52,33 +52,6 @@
     -fx-padding: 10 20 10 20;
 }
 
-
-
-/*
-Just required if BattleFxCellBUTTON is used!
-*/
-.btGame {
-  -fx-background-image: url(pics/meerButton.jpg);
-  -fx-background-size: 32px;
-  -fx-background-repeat: no-repeat;
-  -fx-background-position: 100%;
-}
-
-.btGameExpWater {
-  -fx-background-image: url(pics/waterExplosion.jpg);
-  -fx-background-size: 32px;
-  -fx-background-repeat: no-repeat;
-  -fx-background-position: 100%;
-}
-
-.btGameExpShip {
-  -fx-background-image: url(pics/shipExplosion.jpg);
-  -fx-background-size: 32px;
-  -fx-background-repeat: no-repeat;
-  -fx-background-position: 100%;
-}
-/* END */
-
 .slider .axis { 
   -fx-pref-width: 300px;
   -fx-tick-label-fill: #ffffff; 
