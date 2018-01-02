@@ -1,5 +1,8 @@
 == Time expenditure: battleship assignment
 
+=== Notes:
+The project is based on homework 4 assignment.
+
 [cols="1,1,1, 1,4", options="header"]
 .Time expenditure
 |===
@@ -9,53 +12,62 @@
 | Actual Hours
 | Description
 
-| hoedlale16,fernbach16
-| 14.12.17
+| hoedlale16
+| 20.12.17
 | 1
 | 1
-| Design Protobuf-Concept
+| Create environment(branch) and initial setup)
 
-| hoedlale16,fernbach16
-| 15.12.2017
+| hoedlale16
+| 20.12.2017
 | 3
-| 2.5
-| Implement Unit-Test generator BattleShipGen.
-
-| hoedlale16,fernbach16
-| 15.12.2017
 | 2
-| 2
-| Implementation of previous created Concept for Protobuf. 
+| GUI-Framework: Swtich between sceens
 
 | hoedlale16
-| 16.12.2017
-| 1
-| 1
-| Implement functionality for save(Buttonclick,Filechooser,...)
-
-| hoedlale16
-| 16.12.2017
-| 1
-| 1
-| Implement functionality for loading (Buttonclick,Filechooser,...)
-
-| hoedlale16
-| 16.12.2017
+| 22.12.2017
 | 2
 | 2
-| Design/CSS Style to make Game look pretty
+| Initial framework to start Single/Multiplayer games
 
 | hoedlale16
-| 19.12.2017
+| 26.12.2017
+| 1
+| 1
+| Create functionality to name games randomly (Feature 'Naming of games')
+
+| hoedlale16
+| 26.12.2017
 | 3
+| 2
+| Create protobuf functionality to safe single and multiplayer games.
+
+| hoedlale16
+| 27.12.2017
 | 4
-| React on Slider and update game state on load
-
-| fernbach16
-| 19.12.2017
 | 3
+| finalized  multiplayer backend.
+
+| hoedlale16
+| 27.12.2017
+| 1
 | 2
-| Game testing
+| Implement game statistic and bugfixing.
+
+| hoedlale16
+| 31.12.2017
+| 3
+| 6
+| Implement highscore.
+
+| hoedlale16
+| 1.1.2018
+| 4
+| 4
+| Implement Highscore replay functionality.
+
+
+
 
 | hoedlale16
 | 22.12.2017

@@ -2,12 +2,19 @@ package at.fhj.swengb.apps.battleship.model
 
 /**
   * Contains all information about a battleship game.
+  * @param player       => Player which plays this game
+  * @param battleField  => Represebts battlefiled of this gmae
+  * @param getCellWidth  => Size of Cell
+  * @param getCellHeight => Size of Cell
+  * @param log           => Function where to write the log
+  * @param updateGUI     => Function to update GUI after Click action (e.g. update Slider for history)
   */
-case class BattleShipGame(battleField: BattleField,
+case class BattleShipGame(player: Player,
+                          battleField: BattleField,
                           getCellWidth: Int => Double,
                           getCellHeight: Int => Double,
                           log: String => Unit,
-                          updateSlider: Int => Unit) {
+                          updateGUI: BattleShipGame => Unit) {
 
   /**
     * remembers which vessel was hit at which position
@@ -16,20 +23,21 @@ case class BattleShipGame(battleField: BattleField,
     **/
   var hits: Map[Vessel, Set[BattlePos]] = Map()
 
-  /**
-    * contains all vessels which are destroyed
-    */
+  /*
+  * contains all vessels which are destroyed
+  */
   var sunkShips: Set[Vessel] = Set()
 
-  /**
-    * Contains all already clicked positions.
-    * Array keeps sorting...
-    */
-  var clickedPositions: List[BattlePos] = List();
+  /*
+  * Contains all already clicked positions.
+  */
+  var clickedPositions: List[BattlePos] = List()
 
-  /**
-    * We don't ever change cells, they should be initialized only once.
-    */
+
+  //Flag if game is over and all ships in sunkShips
+  var isGameOver: Boolean = false
+
+  //We don't ever change cells, they should be initialized only once.
   private val cells: Seq[BattleFxCell] = for {
     x <- 0 until battleField.width
     y <- 0 until battleField.height
@@ -38,25 +46,37 @@ case class BattleShipGame(battleField: BattleField,
     BattleFxCell(BattlePos(x, y),
                  getCellWidth(x),
                  getCellHeight(y),
+                 this,
                  log,
                  battleField.fleet.findByPos(pos),
                  updateGameState,
                  updateClickedPositions)
   }
 
-  def getCells(): Seq[BattleFxCell] = cells
+  def getCells: Seq[BattleFxCell] = cells
 
-  //Adds a new Position to clicked set
+  /**
+    * Adds a new Position to clicked set
+    * @param pos  Position which was clicked and is requested to add to list
+    */
   def updateClickedPositions(pos: BattlePos): Unit = {
     //We keep already clicked positions awell!
     clickedPositions = pos :: clickedPositions
 
-    //Update Slider aswell
-    updateSlider(clickedPositions.size)
+    //Update GUI after click. On Multiplayermode switch player/games!
+    updateGUI(this)
   }
 
-  //Simulates click for all positions in list
+  /**
+    * Simulates click for all positions in list
+    * @param pos List of positions to simulate clicks for
+    */
   def simulateClicksOnClickedPositions(pos: List[BattlePos]): Unit = {
+
+    //Reset (filled via clicks again)
+     hits = Map()
+     sunkShips = Set()
+     isGameOver = false
 
     /*
     We have to iterate to get the correct sequence.
@@ -65,37 +85,27 @@ case class BattleShipGame(battleField: BattleField,
         relevantCells.map(e => e.handleMouseClick())
     because filter is unsorted and would destroy the sequence
      */
-    for (p <- pos) {
-      //There is just one, we take the risc
-      val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(p)).head
+    for ((clickedPos) <- pos) {
+      //All Cells in 'cells' are unique. So we know that there is just one and need to exception handling
+      val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(clickedPos)).head
       fxCell.handleMouseClick()
     }
   }
 
+  /**
+    * Called function after click and hit a vessel.
+    * @param vessel - hit vessel
+    * @param pos - position which was hit
+    */
   def updateGameState(vessel: Vessel, pos: BattlePos): Unit = {
-    log("Vessel " + vessel.name.value + " was hit at position " + pos)
+    log(player.name + ": Vessel " + vessel.name.value + " was hit at position " + pos)
 
     if (hits.contains(vessel)) {
-      // this code is executed if vessel was already hit at least once
-
-      // pos
-      // vessel
-      // map (hits)
-
-      // we want to update the hits map
-      // the map should be updated if
-      // we hit a vessel which is already contained
-      // in the 'hits' map, and it's values (
-      // the set of BattlePos) should be added
-      // the current pos
       val oldPos: Set[BattlePos] = hits(vessel)
-
       hits = hits.updated(vessel, oldPos + pos)
 
-      hits(vessel).foreach(p => log(p.toString))
-
       if (oldPos.contains(pos)) {
-        log("Position was triggered two times.")
+        log(player.name + ": Position was triggered two times.")
       }
 
       if (vessel.occupiedPos == hits(vessel)) {
@@ -103,7 +113,8 @@ case class BattleShipGame(battleField: BattleField,
         sunkShips = sunkShips + vessel
 
         if (battleField.fleet.vessels == sunkShips) {
-          log("G A M E   totally  O V E R")
+          log(player.name + ": G A M E   totally  O V E R")
+          isGameOver = true
         }
       }
 

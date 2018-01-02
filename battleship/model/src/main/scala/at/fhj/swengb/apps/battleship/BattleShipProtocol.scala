@@ -1,63 +1,124 @@
 package at.fhj.swengb.apps.battleship
 
-import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipGame.{
-  Position,
-  Vessel,
-  VesselOrientation
-}
+import java.text.{DateFormat, SimpleDateFormat}
+import java.util.{Calendar, Date}
+
+import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipPlayRound.{Position, Vessel, VesselOrientation}
+import at.fhj.swengb.apps.battleship.BattleShipProtobuf.HighScore
 import at.fhj.swengb.apps.battleship.model._
+
 import scala.collection.JavaConverters._
 
 object BattleShipProtocol {
 
-  def convert(g: BattleShipGame): BattleShipProtobuf.BattleShipGame = {
+  def convert(protoHighScore: HighScore): Seq[BattleShipGamePlayRound] = {
+    val highScore: Seq[BattleShipGamePlayRound] = protoHighScore.getPlayedPlayRoundsList.asScala.map(e => convert(e))
+    highScore
+  }
+
+  def convert(highScore: Seq[BattleShipGamePlayRound]): BattleShipProtobuf.HighScore = {
+
+    //Convert all highscore-Entries
+    val protoHighScoreEntries: Seq[BattleShipProtobuf.BattleShipPlayRound] = highScore.map(e => convert(e))
+
+    //Add Entries to protHighScore
+    val protoHighScore: HighScore.Builder = protoHighScoreEntries.foldLeft(HighScore.newBuilder())((acc,e) =>acc.addPlayedPlayRounds(e))
+    protoHighScore.build()
+  }
+
+  def convert(g: BattleShipGamePlayRound): BattleShipProtobuf.BattleShipPlayRound = {
     //Create Protobuf Battlefield
-    val protoBattleField = BattleShipProtobuf.BattleShipGame
+    val protoPlayRound = BattleShipProtobuf.BattleShipPlayRound
       .newBuilder()
-      .setFieldWidth(g.battleField.width)
-      .setFieldHeight(g.battleField.height)
+      .setGameName(g.name)
 
-    //Convert vessesls to protobuf-Vessels and add it
-    val fleetProtobuf: Set[Vessel] =
-      g.battleField.fleet.vessels.map(e => convert(e))
-    fleetProtobuf.foreach(e => protoBattleField.addVessels(e))
+     //Add all Instances of BattleshipGames
+      //Singleplayer => max 1
+      //Multiplayer => max 2
+     val protoGames = g.games.map(e => convert(e))
+     protoGames.foreach(e => protoPlayRound.addBattlefieldsGames(e))
 
-    //Convert set of BattleBos to Protobuf clicked positions add add it
-    val clickedPos =
-      g.clickedPositions.map(e => convert(e))
-    clickedPos.foreach(e => protoBattleField.addClickedPositions(e))
+    //If change on format is required change reverse-convert function as well!!
+    protoPlayRound.setStartdate(new SimpleDateFormat("yyyy/MM/dd").format(g.startDate))
+
+    //Set winner if set. (HighScore)
+    if (! g.getWinner.isEmpty) {
+      protoPlayRound.setWinner(convert(g.getWinner.get))
+    }
 
     //Build battlefield and write to file
-    protoBattleField.build()
+    protoPlayRound.build()
   }
 
-  def convert(g: BattleShipProtobuf.BattleShipGame): BattleShipGame = {
-    //Create data for BattleField
-    val fleet: Fleet = Fleet(
-      g.getVesselsList.asScala.map(e => convert(e)).toSet)
+  def convert(protoPlayGround: BattleShipProtobuf.BattleShipPlayRound): BattleShipGamePlayRound = {
 
-    val battleField = BattleField(g.getFieldWidth, g.getFieldHeight, fleet)
+    //Create all Battlefields stored (at least one)
+    val battleFieldGames: Seq[BattleShipGame] = protoPlayGround.getBattlefieldsGamesList.asScala.map(e => convert(e)).toList
 
-    //Create set of alread clicked positions
-    val clickedPos: List[BattlePos] =
-      g.getClickedPositionsList.asScala.map(e => convert(e)).toList
+    //Read BattleShipGameName from Protobuf!
+
+    val gameName: String = protoPlayGround.getGameName
+
+    //If change on format is required change reverse-convert function as well!!
+    val startDate: Date = new SimpleDateFormat("yyyy/MM/dd").parse(protoPlayGround.getStartdate)
 
     //Create BattleshipGame and set aready clicked positions
-    val game = BattleShipGame(battleField,
-                              (e => e.toDouble),
-                              (e => e.toDouble),
-                              (e => ()),
-                              (e => ()))
-    game.clickedPositions = clickedPos
+    val playRound = BattleShipGamePlayRound(gameName,
+                              battleFieldGames,startDate)
+
+    //Set Winner of round if set (Highscore data)
+    if (protoPlayGround.hasWinner) {
+      playRound.setWinner(convert(protoPlayGround.getWinner))
+    }
 
     //return game
+    playRound
+  }
+  
+    def convert(game: BattleShipGame): BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame = {
+    val protoGame = BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame.newBuilder()
+
+    protoGame.setPlayer(convert(game.player))
+    protoGame.setFieldWidth(game.battleField.width)
+    protoGame.setFieldHeight(game.battleField.height)
+
+    //Add Fleet of Game instance
+    val protoFleet: Set[Vessel] = game.battleField.fleet.vessels.map(e => convert(e))
+    protoFleet.foreach(e => protoGame.addVessels(e))
+
+    //Add all clicked positions of game instance
+    val protoClickedPos: List[BattleShipProtobuf.BattleShipPlayRound.Position] = game.clickedPositions.map(e => convert(e))
+    protoClickedPos.foreach(e => protoGame.addClickedPositions(e))
+
+    protoGame.build()
+  }
+
+  def convert(protoGame: BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame): BattleShipGame = {
+
+    val fleet = Fleet(protoGame.getVesselsList.asScala.map(e => convert(e)).toSet)
+
+    val field: BattleField = BattleField(protoGame.getFieldWidth,
+                                         protoGame.getFieldHeight, fleet)
+
+
+    val game: BattleShipGame = BattleShipGame(convert(protoGame.getPlayer),
+                                              field,
+                                              x => x.toDouble,
+                                              x => x.toDouble,
+                                              x => (),
+                                              x => ())
+
+    game.clickedPositions = protoGame.getClickedPositionsList.asScala.map(e => convert(e)).toList
+
+    //Return game
     game
   }
+  
 
   /**
     * Convertes a given Battleship-Game Vessel to an Protobuf Vessel to store
     *
-    * @param vessel
+    * @param vessel Vessel from BattleShipGame which become converted
     * @return
     */
   // Previous convertVesseltoProtobufVessel
@@ -89,7 +150,7 @@ object BattleShipProtocol {
   /**
     * Convert a Protobuf Vessel to a BattleShipGame Vessel
     *
-    * @param vessel
+    * @param vessel Vessel to convert to protobuf vessel
     * @return
     */
   //Previous convertProtobufVesseltoVessel
@@ -102,7 +163,7 @@ object BattleShipProtocol {
     val direction: Direction = vessel.getOrientation match {
       case VesselOrientation.Horizontal => Horizontal
       case VesselOrientation.Vertical   => Vertical
-      case _                            => ???
+      case _                            => ??? //When this happens, some crazy shit is going on...
     }
 
     //Create Battleship Vessel and return it.
@@ -112,7 +173,7 @@ object BattleShipProtocol {
   /**
     * Generates a Protobuf Position from given BattlePos possiton
     *
-    * @param battlePos
+    * @param battlePos battlepos convert to protobuf positon
     * @return
     */
   //Previous convertBattlePosToProtobufPosition
@@ -124,9 +185,10 @@ object BattleShipProtocol {
       .build()
   }
 
+
   /** Converts a Protobuf Position to a BattleShipGame BattlePos
     *
-    * @param position
+    * @param position protobuf position to convert to BattlePos
     * @return
     */
   //previous convertProtoBufPositionToBattlePos
@@ -134,4 +196,14 @@ object BattleShipProtocol {
     BattlePos(position.getX, position.getY)
   }
 
+  private def convert(player: Player): BattleShipProtobuf.BattleShipPlayRound.Player = {
+    BattleShipProtobuf.BattleShipPlayRound.Player.newBuilder()
+      .setName(player.name)
+      .setCssStyleClass(player.cssStyleClass)
+      .build()
+  }
+
+  private def convert(player: BattleShipProtobuf.BattleShipPlayRound.Player): Player = {
+    Player(player.getName,player.getCssStyleClass)
+  }
 }
