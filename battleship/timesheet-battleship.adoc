@@ -31,6 +31,12 @@ The project is based on homework 4 assignment.
 | Initial framework to start Single/Multiplayer games
 
 | hoedlale16
+| 22.12.2017
+| 1
+| 1
+| Refactor JFileChooser to FileChooser
+
+| hoedlale16
 | 26.12.2017
 | 1
 | 1
@@ -66,13 +72,9 @@ The project is based on homework 4 assignment.
 | 4
 | Implement Highscore replay functionality.
 
-
-
-
 | hoedlale16
-| 22.12.2017
+| 2.1.2017
 | 1
-| 1
-| Refactor JFileChooser to FileChooser
-
+| 1.5
+| Implemet credit dialog 
 |===
