@@ -77,4 +77,10 @@ The project is based on homework 4 assignment.
 | 1
 | 1.5
 | Implemet credit dialog 
+
+| hoedlale16
+| 3.1.2017
+| 10
+| 8
+| Backend implementation of Editor dialog (Multiplayer)
 |===
