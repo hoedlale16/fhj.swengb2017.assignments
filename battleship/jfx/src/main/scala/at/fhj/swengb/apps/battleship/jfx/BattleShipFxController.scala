@@ -39,7 +39,8 @@ class BattleShipFxController extends Initializable {
 
       /**
         * Internal function to create a new Player
-        * @param name Name for player. if null replaced with 'Unkown'
+        *
+        * @param name     Name for player. if null replaced with 'Unkown'
         * @param cssStyle Used css style for player-gui
         * @return new created player
         */
@@ -68,37 +69,31 @@ class BattleShipFxController extends Initializable {
           }
         }
         case "Multiplayer" => {
-          val result: Optional[(String, String)] = dialogHandler.askMultiplayerPlayerName()
-          if (result.isPresent) {
 
-            //Create player for multiplayer game
-            val (playerNameA, playerNameB) = result.get()
-            val playerA: Player = createPlayer(playerNameA, "bg_playerA")
-            val playerB: Player = createPlayer(playerNameB, "bg_playerB")
-
-            /*TODO: Create a new Window(Dialog) Where user can edit the fleet
-             * After confirming the ship positions. Player B can do that.
-             * When both players confirmed the field. build gamePlayround and start gamePlayround
-             */
-
-            //TODO: Replace with Standard-Fleet
-            val battlefieldPlayerA: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
-            val battlefieldPlayerB: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet(FleetConfig.OneShip)))
-
-            //Start gamePlayround
-            val playGround = BattleShipGamePlayRound(playerA,
-                                                     battlefieldPlayerA,
-                                                     playerB,
-                                                     battlefieldPlayerB,
-                                                     getCellWidth,
-                                                     getCellHeight,
-                                                     appendLog,
-                                                     updateGUIAfterAction)
-            init(playGround)
+          //Initialize playerA
+          dialogHandler.initMultiPlayer(1) match {
+            case (null, null) => //userA aborts
+            case (playerA, bfPlayerA) => {
+              //Initialize playerB
+              dialogHandler.initMultiPlayer(2) match {
+                case (null, null) => //userB aborts
+                case (playerB, bfPlayerB) => {
+                  //Start gamePlayround if both user are initialized
+                  val playGround = BattleShipGamePlayRound(playerA,
+                    bfPlayerA,
+                    playerB,
+                    bfPlayerB,
+                    getCellWidth,
+                    getCellHeight,
+                    appendLog,
+                    updateGUIAfterAction)
+                  init(playGround)
+                }
+              }
+            }
           }
         }
       }
-
     }
   }
 

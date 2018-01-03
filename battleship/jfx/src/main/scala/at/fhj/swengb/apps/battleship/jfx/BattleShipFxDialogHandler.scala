@@ -11,7 +11,7 @@ import javafx.scene.layout.{BorderPane, GridPane}
 import javafx.stage.{Modality, Stage, StageStyle, Window}
 
 import at.fhj.swengb.apps.battleship.jfx.BattleShipFxApp.{getClass, loadScene}
-import at.fhj.swengb.apps.battleship.model.{BattleShipGame, BattleShipGamePlayRound, Player}
+import at.fhj.swengb.apps.battleship.model.{BattleField, BattleShipGame, BattleShipGamePlayRound, Player}
 
 import scala.util.{Failure, Success, Try}
 
@@ -63,6 +63,54 @@ class BattleShipFxDialogHandler {
     }
 
     dialog.showAndWait()
+  }
+
+  def initMultiPlayer(playerNr: Int): (Player,BattleField) = {
+    val fxml: String = "/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMutiplayerEditDialog.fxml"
+    val fxmlLoader: FXMLLoader = new FXMLLoader()
+
+    //Set play round to controller and controller for dialog
+    val controller: BattleShipMutliplayerEditFxController= new BattleShipMutliplayerEditFxController()
+    controller.initPlayerNr = playerNr
+
+    fxmlLoader.setController(controller)
+    var triedScene = Try(fxmlLoader.load[Parent](getClass.getResource(fxml).openStream()))
+
+    triedScene match {
+      case Success(root) =>
+        val dialog = new Stage
+        dialog.initStyle(StageStyle.UTILITY)
+
+        dialog.setTitle("Initialize Multiplayer")
+        val scene: Scene = new Scene(root)
+        dialog.setScene(scene)
+        dialog.setResizable(false)
+
+        //Set CSS Style
+        dialog.getScene.getStylesheets.clear()
+        val css = "/at/fhj/swengb/apps/battleship/jfx/battleshipfx.css"
+        dialog.getScene.getStylesheets.add(css)
+
+        //Set Icon and Display stage...
+        dialog.getIcons().add(new Image(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/logo.jpg").toString))
+        dialog.showAndWait()
+
+        //return result
+        controller.getResult match {
+          case Some(result) => {
+            if (controller.closedRegularly)
+              result
+            else
+              (null,null)
+          }
+          case None => (null,null) //Abort - return empty
+        }
+
+      case Failure(e) => {
+        e.printStackTrace()
+        (null,null) //If we are here, some crazy shit was going on!
+      }
+    }
   }
 
   def askResetHighscoreDialog(): Boolean = {

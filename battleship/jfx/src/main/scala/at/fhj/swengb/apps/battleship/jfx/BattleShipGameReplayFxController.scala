@@ -88,10 +88,8 @@ class BattleShipGameReplayFxController extends Initializable {
         case 1 => {
           //Remove second pane
           splitPane.getItems.remove(borderGameField2)
-
         }
         case 2 => {
-          println("blu")
           game2 = selectedPlayRound.games.last
           lbPlayer2.setText(game2.player.name)
           initGameField(game2,Seq(),battleGroundGridPane2)
