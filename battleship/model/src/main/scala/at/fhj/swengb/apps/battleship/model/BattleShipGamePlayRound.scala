@@ -147,9 +147,9 @@ object BattleShipGamePlayRound {
                                    log: String => Unit,
                                    updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
 
-    //TODO: Just testing! - Reset back to Standard-Fleet
+    //TODO: For Singleplayergame-Tests set here to OneShip is required
     val battlefield: BattleField =
-      BattleField(10, 10, Fleet(FleetConfig.OneShip))
+      BattleField(10, 10, Fleet(FleetConfig.Standard))
 
     BattleShipGame(player,
       BattleField.placeRandomly(battlefield),

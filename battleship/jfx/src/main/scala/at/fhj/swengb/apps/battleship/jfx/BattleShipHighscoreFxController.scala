@@ -27,7 +27,6 @@ class BattleShipHighscoreFxController extends Initializable {
     * Show and reply selected highscore game
     */
   @FXML def onReplayGame(): Unit = {
-    //TODO: Replay for selected game
     val selectedEntry: HighScoreEntry = tbHighscore.getSelectionModel.getSelectedItem
 
     //Check if entry is selected

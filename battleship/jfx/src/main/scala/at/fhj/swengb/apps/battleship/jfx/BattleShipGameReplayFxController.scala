@@ -106,8 +106,9 @@ class BattleShipGameReplayFxController extends Initializable {
     BattleShipGamePlayRound(givenPlayRound,getCellWidth,getCellHeight,log,updateGUIAfterAction,x=>x,x=>x)
   }
 
-  //TODO: I gues we do not have to do here anything1
-  private def updateGUIAfterAction(battleShipGame: BattleShipGame): Unit = ()
+  private def updateGUIAfterAction(battleShipGame: BattleShipGame): Unit = {
+    //Here can added a special handling but nothing required at the moment!
+  }
 
   private def initGameField(game: BattleShipGame,showClicks: Seq[BattlePos], battleGroundGridPane: GridPane): Unit = {
     battleGroundGridPane.getChildren.clear()
