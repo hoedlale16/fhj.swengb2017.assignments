@@ -29,7 +29,7 @@ class BattleShipGameReplayFxController extends Initializable {
   @FXML def onSliderChanged(): Unit = {
 
     //List starts with 0, not with 1
-    val newSliderPosition = clickHistorySlider.getValue.toInt -1
+    val newSliderPosition: Int = clickHistorySlider.getValue.toInt -1
 
     selectedPlayRound.games.size match {
       case 1 => {
@@ -48,7 +48,7 @@ class BattleShipGameReplayFxController extends Initializable {
           val takeClickedElements: Int = (newSliderPosition / 2) + 1
 
           Math.floorMod(newSliderPosition, 2) match {
-            //straight clicks => This was player 1
+            //even clicks => This was player 1
             case 0 => {
               initGameField(game1, game1.clickedPositions.takeRight(takeClickedElements), battleGroundGridPane1)
               initGameField(game2, game2.clickedPositions.takeRight(takeClickedElements - 1), battleGroundGridPane2)
@@ -115,7 +115,7 @@ class BattleShipGameReplayFxController extends Initializable {
     for (c <- game.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
       c.setDisable(true)
+      c.init(showClicks)
     }
-    game.getCells.foreach(c => c.init(showClicks))
   }
 }

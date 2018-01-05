@@ -70,7 +70,7 @@ class BattleShipFxApp extends Application {
     //Assign main root stage to allow to set differenct sceens in this frame
     BattleShipFxApp.rootStage = stage
     //Load MAIN scene for start
-    BattleShipFxApp.loadMainScene
+      BattleShipFxApp.loadMainScene
 
     //TODO: Play some background music
   }

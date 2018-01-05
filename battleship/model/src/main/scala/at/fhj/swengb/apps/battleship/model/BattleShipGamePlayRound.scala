@@ -26,7 +26,7 @@ object BattleShipGamePlayRound {
             log: String => Unit,
             updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
     BattleShipGamePlayRound(
-      createRandomPlayRoumdName,
+      createRandomPlayRoundName,
       Seq(createBattleShipGame(player,getCellWidth,getCellHeight,log,updateGUIAfterAction)),
       Calendar.getInstance.getTime)
   }
@@ -57,7 +57,7 @@ object BattleShipGamePlayRound {
     val gamePlayerB: BattleShipGame = createBattleShipGame(playerB,battlefieldPlayerA,getCellWidth,getCellHeight,log,updateGUIAfterAction)
 
     BattleShipGamePlayRound(
-      createRandomPlayRoumdName,
+      createRandomPlayRoundName,
       Seq(gamePlayerA,gamePlayerB),
       Calendar.getInstance.getTime)
   }
@@ -116,7 +116,7 @@ object BattleShipGamePlayRound {
     * Name is build from 4 lists where words get randomly choosen.
     * @return Random generated Name for a new battleshipName
     */
-  private def createRandomPlayRoumdName(): String = {
+  private def createRandomPlayRoundName(): String = {
     val w1: Seq[String] = Seq("The", "Holy", "Deadly")
     val w2: Seq[String] = Seq("battle", "fight", "encounter")
     val w3: Seq[String] = Seq("of", "from", "since")

@@ -240,6 +240,10 @@ class BattleShipFxController extends Initializable {
     lbPlayerHeader.setVisible(true)
     log.setVisible(true)
 
+    //Reset Background for gamePlayround which handles multiplayer/singleplyer mode
+    gameBackground.getStyleClass.remove("bg_playerA")
+    gameBackground.getStyleClass.remove("bg_playerB")
+    gameBackground.getStyleClass.add("bg_game")
 
     //Set gridGame according last played button click
     //The game with the longer "clickedPositions" list was the last one, which means the other game is next
@@ -248,7 +252,6 @@ class BattleShipFxController extends Initializable {
 
     //Initialize game: GridField, Slider and statistic
     switchGameGridField(gameToInitialize)
-    updateShipStatistic(gameToInitialize)
 
     //Just show slider in SinglePlayer Mode
     if (gamePlayround.games.size == 1) {
@@ -257,11 +260,6 @@ class BattleShipFxController extends Initializable {
     } else {
       clickHistorySlider.setVisible(false)
     }
-
-    //Reset Background for gamePlayround which handles multiplayer/singleplyer mode
-    gameBackground.getStyleClass.remove("bg_playerA")
-    gameBackground.getStyleClass.remove("bg_playerB")
-    gameBackground.getStyleClass.add("bg_game")
   }
 
   /**
