@@ -8,6 +8,7 @@ import javafx.collections.{FXCollections, ObservableList}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control._
 import javafx.scene.layout.GridPane
+import javafx.scene.paint.Color
 import javafx.stage.Stage
 
 import at.fhj.swengb.apps.battleship.model.{BattleShip, _}
@@ -21,7 +22,7 @@ class BattleShipMutliplayerEditFxController extends Initializable {
   @FXML private var battleGroundGridPane: GridPane = _
   @FXML private var btInitialize: Button = _
 
-  //TODO: For Multiplayergame-Tests set here to OneShip is required
+  //TODO: Testing: For Multiplayergame-Tests set here to OneShip is required
   private val usedFleetConfig: FleetConfig = FleetConfig.Standard
   private var gameField: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet.Empty))
 
@@ -79,8 +80,8 @@ class BattleShipMutliplayerEditFxController extends Initializable {
 
       //Enable posibitlty to cklick
       if (ship != null && direction != null) {
-        //TODO: Just enable buttons where ship is allowed to be positoned
-        disableButtons(false)
+        //TODO: Multiplayer-Editor: Just enable buttons where ship is allowed to be positoned
+        disableAllButons(false)
       }
     }
   }
@@ -141,7 +142,7 @@ class BattleShipMutliplayerEditFxController extends Initializable {
     //Refresh UI and disable Buttons
     refreshGameField(gameField)
     refreshFleetList(gameField.fleet.vessels)
-    disableButtons(true)
+    disableAllButons(true)
     checkEnableInitButton
   }
 
@@ -169,15 +170,26 @@ class BattleShipMutliplayerEditFxController extends Initializable {
       c.init()
     }
 
-    disableButtons(true)
+    disableAllButons(true)
   }
 
   /**
-    * Disable or enable gamefield
+    * Disable or enable all buttons of gamefield.
+    * Vessel-positions are disabled at any time!
     * @param disable
     */
-  private def disableButtons(disable: Boolean): Unit = {
-    battleGroundGridPane.getChildren().forEach(e => e.setDisable(disable))
+  private def disableAllButons(disable: Boolean): Unit = {
+
+    battleGroundGridPane.getChildren().forEach(e => {
+      val cell: EditorFxCell = e.asInstanceOf[EditorFxCell]
+      cell.someVessel match {
+        case Some(v) => {
+          //Vesselposiitons are disabled at any time!
+          cell.setDisable(true)
+        }
+        case None => cell.setDisable(disable)
+      }
+    })
   }
 
   /**

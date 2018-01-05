@@ -67,7 +67,7 @@
                     <VBox spacing="5.0" styleClass="bg_gray" BorderPane.alignment="CENTER">
                         <children>
                             <Button id="button" fx:id="btInitialize" cancelButton="true" disable="true" maxWidth="200.0" onAction="#onInitialize" styleClass="buttons" text="Initialize" />
-                        <Button id="button" fx:id="btSetRandomFleet" maxWidth="200.0" onAction="#onSetRandomFleet" styleClass="buttons" text="Set fleet random" />
+                        <Button id="button" fx:id="btSetRandomFleet" maxWidth="200.0" onAction="#onSetRandomFleet" styleClass="buttons" text="Set fleet randomly" />
                         <Button id="button" fx:id="btClearFleet" maxWidth="200.0" onAction="#onClearFleet" prefHeight="27.0" styleClass="buttons" text="Clear fleet" />
                         </children>
                      <padding>

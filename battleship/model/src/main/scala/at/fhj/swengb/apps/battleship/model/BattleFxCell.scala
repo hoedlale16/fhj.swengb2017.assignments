@@ -35,12 +35,13 @@ case class BattleFxCell(pos: BattlePos,
 
     setFill(Color.DARKBLUE)
 
-    //Just required for internal test mode
+    //TODO: Just enable for internal test mode. Shows ships during game
+    /*
     if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
       setFill(Color.DARKBLUE)
-    }
+    }*/
 
   }
 

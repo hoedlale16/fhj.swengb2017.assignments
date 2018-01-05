@@ -67,7 +67,7 @@
          <top>
             <HBox prefHeight="28.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label styleClass="lb_player" text="Player: " />
+                  <Label fx:id="lbPlayerHeader" styleClass="lb_player" text="Player: " />
                   <Label fx:id="lbPlayerName" styleClass="lb_player" />
                </children>
             </HBox>

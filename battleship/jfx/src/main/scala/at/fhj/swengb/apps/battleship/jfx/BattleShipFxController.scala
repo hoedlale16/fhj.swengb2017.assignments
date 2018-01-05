@@ -28,6 +28,8 @@ class BattleShipFxController extends Initializable {
   @FXML private var lbHeader: Label = _
   @FXML private var btSaveGame: Button = _
   @FXML private var lbPlayerName: Label = _
+  @FXML private var lbStatisticHeader: Label = _
+  @FXML private var lbPlayerHeader: Label = _
   @FXML private var shipStatisticBox: VBox = _
   @FXML private var log: TextArea = _
 
@@ -207,6 +209,9 @@ class BattleShipFxController extends Initializable {
     btSaveGame.setDisable(true)
     battleGroundGridPane.setVisible(false)
     clickHistorySlider.setVisible(false)
+    lbStatisticHeader.setVisible(false)
+    lbPlayerHeader.setVisible(false)
+    log.setVisible(false)
   }
 
   private def getCellHeight(y: Int): Double = battleGroundGridPane.getRowConstraints.get(y).getPrefHeight
@@ -228,10 +233,12 @@ class BattleShipFxController extends Initializable {
     gamePlayround = newPlayRound
     lbHeader.setText(gamePlayround.name)
 
-    //Enable gaming Buttons
+    //Enable gaming Buttons and labels
     btSaveGame.setDisable(false)
     battleGroundGridPane.setVisible(true)
-
+    lbStatisticHeader.setVisible(true)
+    lbPlayerHeader.setVisible(true)
+    log.setVisible(true)
 
 
     //Set gridGame according last played button click
