@@ -14,6 +14,8 @@ object BattleShipFxApp {
   var rootStage: Stage = _; //If this stays null, some crazy shit is going on...
 
   def main(args: Array[String]): Unit = {
+    //TODO: Splash-Screen: Implement Splashscreen while loading project
+
     Application.launch(classOf[BattleShipFxApp], args: _*)
   }
 
@@ -41,8 +43,6 @@ object BattleShipFxApp {
       val triedScene = Try(FXMLLoader.load[Parent](getClass.getResource(fxml)))
       triedScene match {
         case Success(root) =>
-          //TODO: Splash-Screen: Implement Splashscreen while loading project
-
           stage.setTitle("BattleshipGame by SC1G0 (SWENGB-IMA16)")
           stage.setScene(new Scene(root))
           stage.setResizable(false)
@@ -71,5 +71,7 @@ class BattleShipFxApp extends Application {
     BattleShipFxApp.rootStage = stage
     //Load MAIN scene for start
     BattleShipFxApp.loadMainScene
+
+    //TODO: Play some background music
   }
 }
