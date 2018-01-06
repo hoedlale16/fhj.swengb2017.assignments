@@ -8,7 +8,7 @@ import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control._
 import javafx.scene.layout.{BorderPane, GridPane, VBox}
 import javafx.scene.paint.Color
-import javafx.stage.FileChooser
+import javafx.stage.{FileChooser, Stage}
 import javafx.stage.FileChooser.ExtensionFilter
 
 import at.fhj.swengb.apps.battleship.{BattleShipProtobuf, BattleShipProtocol}
@@ -110,7 +110,7 @@ class BattleShipFxController extends Initializable {
       chooser.getExtensionFilters.add(extensionFilter)
 
       //Handle selected file
-      var selectedFile: File = chooser.showSaveDialog(BattleShipFxApp.rootStage)
+      var selectedFile: File = chooser.showSaveDialog(null)
 
       if (selectedFile != null) {
         //Save gamePlayround state
@@ -136,7 +136,7 @@ class BattleShipFxController extends Initializable {
       chooser.getExtensionFilters.add(extensionFilter)
 
       //Handle selected file
-      val selectedFile: File = chooser.showOpenDialog(BattleShipFxApp.rootStage)
+      val selectedFile: File = chooser.showOpenDialog(null)
       if (selectedFile != null) { //Reset text area and init gamePlayround
         log.setText("Load Game-state: [" + selectedFile.getAbsolutePath + "]")
         val playRound: BattleShipGamePlayRound = BattleShipGamePlayRound(
