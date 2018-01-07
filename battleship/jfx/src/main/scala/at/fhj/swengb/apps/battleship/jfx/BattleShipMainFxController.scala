@@ -17,7 +17,7 @@ class BattleShipMainFxController extends Initializable {
     */
   @FXML def onStartGame(): Unit = {
     val scene: Scene = BattleShipFxApp.getGameScene
-    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage)
   }
 
   /**
@@ -25,7 +25,7 @@ class BattleShipMainFxController extends Initializable {
     */
   @FXML def onShowHighscore(): Unit = {
     val scene: Scene = BattleShipFxApp.getHighscoreScene
-    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage)
 
   }
 
@@ -34,7 +34,7 @@ class BattleShipMainFxController extends Initializable {
     */
   @FXML def onShowCredits(): Unit = {
     val scene: Scene = BattleShipFxApp.getCreditsScene
-    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage)
   }
 
 }

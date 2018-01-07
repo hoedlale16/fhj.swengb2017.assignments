@@ -66,7 +66,8 @@ class BattleShipFxController extends Initializable {
               getCellWidth,
               getCellHeight,
               appendLog,
-              updateGUIAfterAction)
+              updateGUIAfterAction,
+              BattleShipFxApp.getBattleShipJukeBox)
             init(playGround)
           }
         }
@@ -88,7 +89,8 @@ class BattleShipFxController extends Initializable {
                     getCellWidth,
                     getCellHeight,
                     appendLog,
-                    updateGUIAfterAction)
+                    updateGUIAfterAction,
+                    BattleShipFxApp.getBattleShipJukeBox)
                   init(playGround)
                 }
               }
@@ -145,7 +147,8 @@ class BattleShipFxController extends Initializable {
           getCellWidth,
           getCellHeight,
           appendLog,
-          updateGUIAfterAction)
+          updateGUIAfterAction,
+          BattleShipFxApp.getBattleShipJukeBox)
 
 
         init(playRound)
@@ -155,7 +158,7 @@ class BattleShipFxController extends Initializable {
     }
   }
 
-  @FXML def returnToMain(): Unit = BattleShipFxApp.loadScene(BattleShipFxApp.getMainScene,BattleShipFxApp.getRootStage())
+  @FXML def returnToMain(): Unit = BattleShipFxApp.loadScene(BattleShipFxApp.getMainScene,BattleShipFxApp.getRootStage)
 
 
   @FXML def onSliderChanged(): Unit = {
@@ -174,11 +177,6 @@ class BattleShipFxController extends Initializable {
       appendLog("HISTORY VIEW DEACTIVATED")
       lbHeader.setText(gamePlayround.name)
       simModeActive = false
-      /*We are in the present now again, which means that the buttons get active again
-        In this case we add the clicks to the list, that means we would have them tice.
-        Remove them here now - they get inserted with simulateClicks anyway...
-       */
-      gamePlayround.currentBattleShipGame.clickedPositions = List()
     } else {
       appendLog("HISTORY VIEW ACTIVATED (" + simClickPos.size + ")")
       lbHeader.setText(gamePlayround.name + "(History)")
@@ -189,16 +187,11 @@ class BattleShipFxController extends Initializable {
     battleGroundGridPane.getChildren.clear()
     for (c <- gamePlayround.currentBattleShipGame.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
-      c.init()
+      c.init(simClickPos)
       //Deactivate Buttons if we're in the history data!
       //History is not changeable, we just can learn from history!
       c.setDisable(simModeActive)
     }
-
-    //Now simulate all already clicked positions
-
-    gamePlayround.currentBattleShipGame.simulateClicksOnClickedPositions(
-      simClickPos)
 
     updateShipStatistic(gamePlayround.currentBattleShipGame)
   }
@@ -321,8 +314,8 @@ class BattleShipFxController extends Initializable {
       if (gamePlayround.games.size > 1) {
         //Show Infodialog that other user is ready to play
         val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
-        val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
-        if (result.isPresent)
+        //val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
+        //if (result.isPresent)
           switchGameGridField(otherGame)
       }
     }

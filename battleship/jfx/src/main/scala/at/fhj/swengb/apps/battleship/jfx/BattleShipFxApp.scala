@@ -6,33 +6,32 @@ import javafx.fxml.{FXML, FXMLLoader}
 import javafx.scene.control.ProgressBar
 import javafx.scene.image.{Image, ImageView}
 import javafx.scene.layout.BorderPane
+import javafx.scene.media.{Media, MediaPlayer}
 import javafx.scene.{Parent, Scene}
 import javafx.stage.{Stage, StageStyle}
 
 import at.fhj.swengb.apps.battleship.jfx.BattleShipFxApp.getClass
+import at.fhj.swengb.apps.battleship.model.BattleShipJukeBox
 import com.sun.javafx.application.LauncherImpl
 
 import scala.util.{Failure, Success, Try}
 
 object BattleShipFxApp {
   //Becomes initialized when GUI starts
-  private var rootStage: Stage = _; //If this stays null, some crazy shit is going on...
+  private var rootStage: Stage = _
+  private var jukeBox: BattleShipJukeBox = _
 
   /**
     * Returns the RootStage of Application. This Stage get initialized once whenn the application starts
     * @return root-Stage of application
     */
-  def getRootStage(): Stage = rootStage
-
-  def main(args: Array[String]): Unit = {
-    LauncherImpl.launchApplication(classOf[BattleShipFxApp], classOf[BattleShipFxSlashScreen], args)
-  }
+  def getRootStage: Stage = rootStage
+  def getBattleShipJukeBox: BattleShipJukeBox = jukeBox;
 
   def getMainScene: Scene = getScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
   def getGameScene: Scene = getScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipGamefx.fxml")
   def getHighscoreScene: Scene = getScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
   def getCreditsScene: Scene = getScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipCreditsfx.fxml")
-
 
   /**
     * Method to create a Scene from given FXML and returns is
@@ -40,7 +39,7 @@ object BattleShipFxApp {
     *
     * @param fxml - Path to fxml to load
     */
-  def getScene(fxml: String): Scene = {
+  private def getScene(fxml: String): Scene = {
     val triedScene = Try(FXMLLoader.load[Parent](getClass.getResource(fxml)))
     triedScene match {
       case Success(root) =>
@@ -70,6 +69,12 @@ object BattleShipFxApp {
       stage.show()
     }
   }
+
+  def main(args: Array[String]): Unit = {
+    LauncherImpl.launchApplication(classOf[BattleShipFxApp], classOf[BattleShipFxSlashScreen], args)
+  }
+
+
 }
 
 /*
@@ -79,6 +84,8 @@ get loaded
 class BattleShipFxApp extends Application {
 
   private var mainScene: Scene = _
+  private var mainMedia: Media = _
+
 
     override def start(stage: Stage): Unit = {
 
@@ -94,14 +101,28 @@ class BattleShipFxApp extends Application {
       //Show main scene
       BattleShipFxApp.loadScene(mainScene,stage)
 
-    //TODO: Play some background music
+      //Play some background music in a seperate thread
+      val musicThread: Thread = new Thread {
+        override def run {
+          val player: MediaPlayer = new MediaPlayer(mainMedia)
+          player.setCycleCount(MediaPlayer.INDEFINITE)
+          player.play()
+        }
+      }
+      musicThread.run()
+
   }
 
   override def init(): Unit = {
-    //Load FXML for main GUI
+    //Load FXML for main GUI and background music
     mainScene = BattleShipFxApp.getMainScene
+    mainMedia = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/MainMusic.mp3").toExternalForm)
 
-    //TODO: Load music which starts when application starts
+    //Load music which is required during the game
+    val shipHitMedia: Media = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/ShipHit.mp3").toExternalForm)
+    val waterHitMedia: Media = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/WaterHit.mp3").toExternalForm)
+
+    BattleShipFxApp.jukeBox = BattleShipJukeBox(shipHitMedia,waterHitMedia)
   }
 }
 

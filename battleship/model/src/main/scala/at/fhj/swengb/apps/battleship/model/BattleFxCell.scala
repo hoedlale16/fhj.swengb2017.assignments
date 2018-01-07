@@ -13,7 +13,8 @@ case class BattleFxCell(pos: BattlePos,
                         log: String => Unit,
                         someVessel: Option[Vessel] = None,
                         upGameState: (Vessel, BattlePos) => Unit,
-                        upClickedPos: BattlePos => Unit)
+                        upClickedPos: BattlePos => Unit,
+                        jukeBox: BattleShipJukeBox)
   extends Rectangle(width, height) {
 
   /**
@@ -36,8 +37,7 @@ case class BattleFxCell(pos: BattlePos,
     setFill(Color.DARKBLUE)
 
     //TODO: Testing: Just enable for internal test mode. Shows ships during game
-    /*
-    if (someVessel.isDefined) {
+    /*if (someVessel.isDefined) {
       setFill(Color.YELLOWGREEN)
     } else {
       setFill(Color.DARKBLUE)
@@ -46,22 +46,22 @@ case class BattleFxCell(pos: BattlePos,
   }
 
   setOnMouseClicked(e => {
-    handleMouseClick()
-  })
-
-  def handleMouseClick(): Unit= {
     //Color clicked field
     colorizedAfterClick()
 
-    /*IF Button is disabled, we are in simulation mode
-    in this case we're not allowed to add position to clickedPos-List
-    because click is already there...
+    //Just play music on a phyiscal click!
+    playMusicAfterClick()
 
-    Otherwhise, add click to position Lits
-     */
-    if(!isDisable)
-      upClickedPos(pos)
+    //Add click to clicked list
+    upClickedPos(pos)
+  })
 
+
+  def playMusicAfterClick(): Unit = {
+    someVessel match {
+      case None => jukeBox.hitWater()
+      case Some(v) => jukeBox.hitShip()
+    }
   }
 
   def colorizedAfterClick(): Unit = {

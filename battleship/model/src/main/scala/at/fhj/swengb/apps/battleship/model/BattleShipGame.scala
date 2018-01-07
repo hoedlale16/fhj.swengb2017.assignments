@@ -14,7 +14,8 @@ case class BattleShipGame(player: Player,
                           getCellWidth: Int => Double,
                           getCellHeight: Int => Double,
                           log: String => Unit,
-                          updateGUI: BattleShipGame => Unit) {
+                          updateGUI: BattleShipGame => Unit,
+                          jukeBox: BattleShipJukeBox) {
 
   /**
     * remembers which vessel was hit at which position
@@ -50,7 +51,8 @@ case class BattleShipGame(player: Player,
                  log,
                  battleField.fleet.findByPos(pos),
                  updateGameState,
-                 updateClickedPositions)
+                 updateClickedPositions,
+                 jukeBox)
   }
 
   def getCells: Seq[BattleFxCell] = cells
@@ -65,31 +67,6 @@ case class BattleShipGame(player: Player,
 
     //Update GUI after click. On Multiplayermode switch player/games!
     updateGUI(this)
-  }
-
-  /**
-    * Simulates click for all positions in list
-    * @param pos List of positions to simulate clicks for
-    */
-  def simulateClicksOnClickedPositions(pos: List[BattlePos]): Unit = {
-
-    //Reset (filled via clicks again)
-     hits = Map()
-     sunkShips = Set()
-     isGameOver = false
-
-    /*
-    We have to iterate to get the correct sequence.
-    We are not allowed to do this:
-        val relevantCells: Seq[BattleFxCell] = cells.filter(c => pos.contains(c.pos))
-        relevantCells.map(e => e.handleMouseClick())
-    because filter is unsorted and would destroy the sequence
-     */
-    for ((clickedPos) <- pos) {
-      //All Cells in 'cells' are unique. So we know that there is just one and need to exception handling
-      val fxCell: BattleFxCell = cells.filter(e => e.pos.equals(clickedPos)).head
-      fxCell.handleMouseClick()
-    }
   }
 
   /**

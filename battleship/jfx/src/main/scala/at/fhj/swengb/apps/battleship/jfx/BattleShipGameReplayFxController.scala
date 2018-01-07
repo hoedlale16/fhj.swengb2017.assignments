@@ -103,7 +103,7 @@ class BattleShipGameReplayFxController extends Initializable {
 
   private def initPlayRound(givenPlayRound: BattleShipGamePlayRound): BattleShipGamePlayRound = {
     def log(x: String) = ()
-    BattleShipGamePlayRound(givenPlayRound,getCellWidth,getCellHeight,log,updateGUIAfterAction,x=>x,x=>x)
+    BattleShipGamePlayRound(givenPlayRound,getCellWidth,getCellHeight,log,updateGUIAfterAction,BattleShipFxApp.getBattleShipJukeBox,x=>x,x=>x)
   }
 
   private def updateGUIAfterAction(battleShipGame: BattleShipGame): Unit = {

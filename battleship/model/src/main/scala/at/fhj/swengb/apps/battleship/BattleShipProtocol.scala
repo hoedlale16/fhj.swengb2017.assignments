@@ -106,7 +106,8 @@ object BattleShipProtocol {
                                               x => x.toDouble,
                                               x => x.toDouble,
                                               x => (),
-                                              x => ())
+                                              x => (),
+                                              null)
 
     game.clickedPositions = protoGame.getClickedPositionsList.asScala.map(e => convert(e)).toList
 

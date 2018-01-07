@@ -46,7 +46,8 @@ object BattleshipGamePlayGroundGen {
                               x => x.toDouble,
                               x => x.toDouble,
                               x => (),
-                              x => ())
+                              x => (),
+                              null)
     game.clickedPositions = clickedPos
     game
   }

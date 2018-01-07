@@ -42,7 +42,7 @@ class BattleShipCreditsFxController extends Initializable {
   @FXML def returnToMain(): Unit = {
     //Abort and switch back to main
     val scene: Scene = BattleShipFxApp.getMainScene
-    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage)
   }
 
 }

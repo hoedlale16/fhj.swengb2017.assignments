@@ -18,16 +18,18 @@ object BattleShipGamePlayRound {
     * @param getCellHeight - function which defines height of cell
     * @param log - function to write log
     * @param updateGUIAfterAction - function which get called after click on a cell
+    * @param jukeBox - Instance which plays music during game
     * @return a singleplayerMode Play round
     */
   def apply(player: Player,
             getCellWidth: Int => Double,
             getCellHeight: Int => Double,
             log: String => Unit,
-            updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
+            updateGUIAfterAction: BattleShipGame => Unit,
+            jukeBox: BattleShipJukeBox): BattleShipGamePlayRound = {
     BattleShipGamePlayRound(
       createRandomPlayRoundName,
-      Seq(createBattleShipGame(player,getCellWidth,getCellHeight,log,updateGUIAfterAction)),
+      Seq(createBattleShipGame(player,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox)),
       Calendar.getInstance.getTime)
   }
 
@@ -41,6 +43,7 @@ object BattleShipGamePlayRound {
     * @param getCellHeight - function which defines height of cell
     * @param log - function to write log
     * @param updateGUIAfterAction - function which get called after click on a cell
+    * @param jukeBox - Instance which plays music during game
     * @return a multiplayermode Play round
     */
   def apply(playerA: Player,
@@ -50,11 +53,12 @@ object BattleShipGamePlayRound {
             getCellWidth: Int => Double,
             getCellHeight: Int => Double,
             log: String => Unit,
-            updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
+            updateGUIAfterAction: BattleShipGame => Unit,
+            jukeBox: BattleShipJukeBox): BattleShipGamePlayRound = {
 
     //Create Games for each player. Battlefield is field of enemy
-    val gamePlayerA: BattleShipGame = createBattleShipGame(playerA,battlefieldPlayerB,getCellWidth,getCellHeight,log,updateGUIAfterAction)
-    val gamePlayerB: BattleShipGame = createBattleShipGame(playerB,battlefieldPlayerA,getCellWidth,getCellHeight,log,updateGUIAfterAction)
+    val gamePlayerA: BattleShipGame = createBattleShipGame(playerA,battlefieldPlayerB,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox)
+    val gamePlayerB: BattleShipGame = createBattleShipGame(playerB,battlefieldPlayerA,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox)
 
     BattleShipGamePlayRound(
       createRandomPlayRoundName,
@@ -77,7 +81,8 @@ object BattleShipGamePlayRound {
             getCellWidth: Int => Double,
             getCellHeight: Int => Double,
             log: String => Unit,
-            updateGUIAfterAction: BattleShipGame => Unit): BattleShipGamePlayRound = {
+            updateGUIAfterAction: BattleShipGame => Unit,
+            jukeBox: BattleShipJukeBox): BattleShipGamePlayRound = {
 
     //Read Protobuf-Object and convert it to a BattleShipGamePlayRound-Instance
     val protoBattleShipGamePlayRound: BattleShipProtobuf.BattleShipPlayRound = parse(Files.newInputStream(Paths.get(file.getAbsolutePath)))
@@ -85,7 +90,7 @@ object BattleShipGamePlayRound {
 
     //Initialize all games (Single/Multiplayer mode)
     val games: Seq[BattleShipGame] =
-      loadedBattleShipGamePlayRound.games.map(e => createBattleShipGame(e, getCellWidth, getCellHeight, log, updateGUIAfterAction))
+      loadedBattleShipGamePlayRound.games.map(e => createBattleShipGame(e, getCellWidth, getCellHeight, log, updateGUIAfterAction,jukeBox))
 
     //Create new gamePlayround-Event based on loaded Data
     BattleShipGamePlayRound(loadedBattleShipGamePlayRound.name, games, loadedBattleShipGamePlayRound.startDate)
@@ -98,11 +103,12 @@ object BattleShipGamePlayRound {
             getCellHeight: Int => Double,
             log: String => Unit,
             updateGUIAfterAction: BattleShipGame => Unit,
+            jukeBox: BattleShipJukeBox,
             unused1: Int => Int,
             unused2: Int => Int): BattleShipGamePlayRound = {
 
 
-    val games: Seq[BattleShipGame] = highScorePlayround.games.map(g => createBattleShipGame(g,getCellWidth,getCellHeight,log,updateGUIAfterAction))
+    val games: Seq[BattleShipGame] = highScorePlayround.games.map(g => createBattleShipGame(g,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox))
 
     val newPR = BattleShipGamePlayRound(highScorePlayround.name,games,highScorePlayround.startDate)
     newPR.winner = highScorePlayround.winner
@@ -145,7 +151,8 @@ object BattleShipGamePlayRound {
                                    getCellWidth: Int => Double,
                                    getCellHeight: Int => Double,
                                    log: String => Unit,
-                                   updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+                                   updateGUIAfterAction: BattleShipGame => Unit,
+                                   jukeBox: BattleShipJukeBox): BattleShipGame = {
 
     //TODO: Testing: For Singleplayergame-Tests set here to OneShip is required
     val battlefield: BattleField =
@@ -156,7 +163,8 @@ object BattleShipGamePlayRound {
       getCellWidth,
       getCellHeight,
       log,
-      updateGUIAfterAction)
+      updateGUIAfterAction,
+      jukeBox)
   }
 
   /**
@@ -174,13 +182,15 @@ object BattleShipGamePlayRound {
                                    getCellWidth: Int => Double,
                                    getCellHeight: Int => Double,
                                    log: String => Unit,
-                                   updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+                                   updateGUIAfterAction: BattleShipGame => Unit,
+                                   jukeBox: BattleShipJukeBox): BattleShipGame = {
     BattleShipGame(player,
       battlefield,
       getCellWidth,
       getCellHeight,
       log,
-      updateGUIAfterAction)
+      updateGUIAfterAction,
+      jukeBox)
   }
 
 
@@ -198,13 +208,15 @@ object BattleShipGamePlayRound {
                                    getCellWidth: Int => Double,
                                    getCellHeight: Int => Double,
                                    log: String => Unit,
-                                   updateGUIAfterAction: BattleShipGame => Unit): BattleShipGame = {
+                                   updateGUIAfterAction: BattleShipGame => Unit,
+                                   jukeBox: BattleShipJukeBox): BattleShipGame = {
     val newGame: BattleShipGame = BattleShipGame(loadedGame.player,
       loadedGame.battleField,
       getCellWidth,
       getCellHeight,
       log,
-      updateGUIAfterAction)
+      updateGUIAfterAction,
+      jukeBox)
 
     newGame.clickedPositions = loadedGame.clickedPositions
     newGame
