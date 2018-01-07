@@ -24,8 +24,15 @@ class BattleShipCreditsFxController extends Initializable {
                                   "<li>https://pixabay.com/p-1283475/?no_redirect</li>" +
                                   "<li>http://wallpaperpulse.com/wallpaper/4028691</li>" +
                                   "<li>https://www.flickr.com/photos/verfain/6388934159/</li>" +
+                                  "<li>https://www.iconfinder.com/icons/42343/mute_sound_icon#size=32</li>" +
+                                  "<li>https://www.iconfinder.com/icons/42341/audio_editing_sound_speaker_volume_icon#size=32</li>" +
+                                "</ul>" +
+                                "All music comes from following websites: <br>"+
+                                "<ul>" +
+                                  "<li>http://freemusicarchive.org/music/Dee_Yan-Key/Killing_Mozart/06--Dee_Yan-Key-Italian_Nightmare</li>" +
+                                  "<li> http://soundbible.com/1986-Bomb-Exploding.html</li>" +
+                                  "<li>http://soundbible.com/1463-Water-Balloon.html</li>" +
                                 "</ul>"
-
 
 
   override def initialize(location: URL, resources: ResourceBundle) = {

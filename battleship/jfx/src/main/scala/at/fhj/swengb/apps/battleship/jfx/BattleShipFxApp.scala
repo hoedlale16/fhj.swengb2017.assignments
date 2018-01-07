@@ -10,7 +10,6 @@ import javafx.scene.media.{Media, MediaPlayer}
 import javafx.scene.{Parent, Scene}
 import javafx.stage.{Stage, StageStyle}
 
-import at.fhj.swengb.apps.battleship.jfx.BattleShipFxApp.getClass
 import at.fhj.swengb.apps.battleship.model.BattleShipJukeBox
 import com.sun.javafx.application.LauncherImpl
 
@@ -26,6 +25,11 @@ object BattleShipFxApp {
     * @return root-Stage of application
     */
   def getRootStage: Stage = rootStage
+
+  /**
+    * Returns the initialized jukebox, which plays all sound of the game.
+    * @return
+    */
   def getBattleShipJukeBox: BattleShipJukeBox = jukeBox;
 
   def getMainScene: Scene = getScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
@@ -70,6 +74,7 @@ object BattleShipFxApp {
     }
   }
 
+
   def main(args: Array[String]): Unit = {
     LauncherImpl.launchApplication(classOf[BattleShipFxApp], classOf[BattleShipFxSlashScreen], args)
   }
@@ -84,7 +89,6 @@ get loaded
 class BattleShipFxApp extends Application {
 
   private var mainScene: Scene = _
-  private var mainMedia: Media = _
 
 
     override def start(stage: Stage): Unit = {
@@ -102,27 +106,20 @@ class BattleShipFxApp extends Application {
       BattleShipFxApp.loadScene(mainScene,stage)
 
       //Play some background music in a seperate thread
-      val musicThread: Thread = new Thread {
-        override def run {
-          val player: MediaPlayer = new MediaPlayer(mainMedia)
-          player.setCycleCount(MediaPlayer.INDEFINITE)
-          player.play()
-        }
-      }
-      musicThread.run()
-
+      BattleShipFxApp.jukeBox.playBackgroundMusic
   }
 
   override def init(): Unit = {
     //Load FXML for main GUI and background music
     mainScene = BattleShipFxApp.getMainScene
-    mainMedia = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/MainMusic.mp3").toExternalForm)
+
 
     //Load music which is required during the game
+    val backgroundMedia: Media = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/MainMusic.mp3").toExternalForm)
     val shipHitMedia: Media = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/ShipHit.mp3").toExternalForm)
     val waterHitMedia: Media = new Media(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/music/WaterHit.mp3").toExternalForm)
 
-    BattleShipFxApp.jukeBox = BattleShipJukeBox(shipHitMedia,waterHitMedia)
+    BattleShipFxApp.jukeBox = BattleShipJukeBox(backgroundMedia,shipHitMedia,waterHitMedia)
   }
 }
 

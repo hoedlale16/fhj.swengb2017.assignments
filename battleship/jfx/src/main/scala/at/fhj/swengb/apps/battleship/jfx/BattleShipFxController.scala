@@ -314,8 +314,8 @@ class BattleShipFxController extends Initializable {
       if (gamePlayround.games.size > 1) {
         //Show Infodialog that other user is ready to play
         val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
-        //val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
-        //if (result.isPresent)
+        val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
+        if (result.isPresent)
           switchGameGridField(otherGame)
       }
     }
