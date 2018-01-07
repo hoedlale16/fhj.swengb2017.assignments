@@ -53,10 +53,7 @@ class BattleShipHighscoreFxController extends Initializable {
   /**
     * Go back to main Scene
     */
-  @FXML def returnToMain(): Unit = {
-    //Abort and switch back to main
-    BattleShipFxApp.loadMainScene
-  }
+  @FXML def returnToMain(): Unit = BattleShipFxApp.loadScene(BattleShipFxApp.getMainScene,BattleShipFxApp.getRootStage())
 
 
   override def initialize(location: URL, resources: ResourceBundle) = {

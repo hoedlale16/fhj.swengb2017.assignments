@@ -8,7 +8,7 @@ import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control._
 import javafx.scene.layout.{BorderPane, GridPane, VBox}
 import javafx.scene.paint.Color
-import javafx.stage.{FileChooser, Stage}
+import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 
 import at.fhj.swengb.apps.battleship.{BattleShipProtobuf, BattleShipProtocol}
@@ -155,7 +155,8 @@ class BattleShipFxController extends Initializable {
     }
   }
 
-  @FXML def returnToMain(): Unit = BattleShipFxApp.loadMainScene()
+  @FXML def returnToMain(): Unit = BattleShipFxApp.loadScene(BattleShipFxApp.getMainScene,BattleShipFxApp.getRootStage())
+
 
   @FXML def onSliderChanged(): Unit = {
     val currVal = clickHistorySlider.getValue.toInt

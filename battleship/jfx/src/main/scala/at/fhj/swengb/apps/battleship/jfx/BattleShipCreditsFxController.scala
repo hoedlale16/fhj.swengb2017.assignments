@@ -3,6 +3,7 @@ package at.fhj.swengb.apps.battleship.jfx
 import java.net.URL
 import java.util.ResourceBundle
 import javafx.fxml.{FXML, Initializable}
+import javafx.scene.Scene
 import javafx.scene.web.WebView
 
 class BattleShipCreditsFxController extends Initializable {
@@ -40,7 +41,8 @@ class BattleShipCreditsFxController extends Initializable {
     */
   @FXML def returnToMain(): Unit = {
     //Abort and switch back to main
-    BattleShipFxApp.loadMainScene
+    val scene: Scene = BattleShipFxApp.getMainScene
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
   }
 
 }

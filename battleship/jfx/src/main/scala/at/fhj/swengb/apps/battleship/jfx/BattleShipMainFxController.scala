@@ -1,16 +1,9 @@
 package at.fhj.swengb.apps.battleship.jfx
 
-import java.io.File
 import java.net.URL
-import java.nio.file.{Files, Paths}
 import java.util.ResourceBundle
-import javafx.fxml.{FXML, FXMLLoader, Initializable}
-import javafx.scene.Parent
-import javafx.stage.FileChooser.ExtensionFilter
-import javafx.stage.{FileChooser, Modality, Stage}
-
-import at.fhj.swengb.apps.battleship.BattleShipProtocol
-import at.fhj.swengb.apps.battleship.model.{BattlePos, BattleShipGame}
+import javafx.fxml.{FXML, Initializable}
+import javafx.scene.Scene
 
 class BattleShipMainFxController extends Initializable {
 
@@ -23,21 +16,25 @@ class BattleShipMainFxController extends Initializable {
     * Change Scene to Game scene
     */
   @FXML def onStartGame(): Unit = {
-    BattleShipFxApp.loadGameScene
+    val scene: Scene = BattleShipFxApp.getGameScene
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
   }
 
   /**
     * Change Scene to Game scene
     */
   @FXML def onShowHighscore(): Unit = {
-    BattleShipFxApp.loadHighscoreScene
+    val scene: Scene = BattleShipFxApp.getHighscoreScene
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
+
   }
 
   /**
     * Change Scene to Game scene
     */
   @FXML def onShowCredits(): Unit = {
-    BattleShipFxApp.loadCreditsScene
+    val scene: Scene = BattleShipFxApp.getCreditsScene
+    BattleShipFxApp.loadScene(scene,BattleShipFxApp.getRootStage())
   }
 
 }
