@@ -14,6 +14,7 @@ class BattleShipMainFxController extends Initializable {
 
 
   override def initialize(location: URL, resources: ResourceBundle) = {
+
   }
 
   /**
@@ -43,20 +44,15 @@ class BattleShipMainFxController extends Initializable {
 
 
   @FXML def onSwitchSoundSetting(): Unit = {
-
     val jukeBox: BattleShipJukeBox =  BattleShipFxApp.getBattleShipJukeBox
+    //Set opponent value of current mute state on button click
+    jukeBox.setMute(! jukeBox.isMute)
 
-
+    //Set corret style accoring new state
     btSound.getStyleClass.clear
-    //Is jukebos is currently mute, enable sound
-    if (jukeBox.isMute) {
-      //Enable sound
-      btSound.getStyleClass.add("buttonSoundOn")
-      jukeBox.setMute(false)
-    } else {
-      //Disable sound
-      btSound.getStyleClass.add("buttonSoundOff")
-      jukeBox.setMute(true)
+    BattleShipFxApp.getBattleShipJukeBox.isMute match {
+      case true => btSound.getStyleClass.add("buttonSoundOff")
+      case false => btSound.getStyleClass.add("buttonSoundOn")
     }
   }
 
