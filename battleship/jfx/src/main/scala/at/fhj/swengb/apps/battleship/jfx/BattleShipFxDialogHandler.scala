@@ -10,7 +10,7 @@ import javafx.scene.image.Image
 import javafx.scene.layout.{BorderPane, GridPane}
 import javafx.stage.{Modality, Stage, StageStyle, Window}
 
-import at.fhj.swengb.apps.battleship.jfx.BattleShipFxApp.{getClass, loadScene}
+import at.fhj.swengb.apps.battleship.jfx.BattleShipFxApp.{getClass, showScene}
 import at.fhj.swengb.apps.battleship.model.{BattleField, BattleShipGame, BattleShipGamePlayRound, Player}
 
 import scala.util.{Failure, Success, Try}

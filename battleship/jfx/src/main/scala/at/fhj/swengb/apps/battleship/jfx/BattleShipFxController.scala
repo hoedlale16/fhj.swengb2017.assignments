@@ -158,7 +158,7 @@ class BattleShipFxController extends Initializable {
     }
   }
 
-  @FXML def returnToMain(): Unit = BattleShipFxApp.loadScene(BattleShipFxApp.getMainScene,BattleShipFxApp.getRootStage)
+  @FXML def returnToMain(): Unit = BattleShipFxApp.showScene(BattleShipFxApp.getWelcomeScene,BattleShipFxApp.getRootStage)
 
 
   @FXML def onSliderChanged(): Unit = {
