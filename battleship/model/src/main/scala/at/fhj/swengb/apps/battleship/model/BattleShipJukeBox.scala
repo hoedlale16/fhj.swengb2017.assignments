@@ -5,6 +5,8 @@ import javafx.scene.media.{Media, MediaPlayer}
 case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterHitMedia: Media) {
 
   private var mute: Boolean = false;
+
+
   private val backgroundMusicPlayer: MediaPlayer = {
     val player: MediaPlayer = new MediaPlayer (backgroundMusic)
     player.setCycleCount (MediaPlayer.INDEFINITE)
@@ -26,12 +28,18 @@ case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterH
   def isMute = mute
 
   def hitShip(): Unit = {
-    if(! mute)
+    if(! mute) {
+      backgroundMusicPlayer.stop()
       initMediaPlayer(shipHitMedia).play()
+      backgroundMusicPlayer.play()
+    }
   }
   def hitWater(): Unit = {
-    if (! mute)
+    if (! mute) {
+      backgroundMusicPlayer.stop()
       initMediaPlayer(waterHitMedia).play()
+      backgroundMusicPlayer.play()
+    }
   }
 
 

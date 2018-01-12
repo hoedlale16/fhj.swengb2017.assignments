@@ -23,6 +23,7 @@ object BattleShipFxApp {
   private var welcomeScreen: Scene = _
   private var gameScreen: Scene = _
   private var highscoreScreen: Scene = _
+  private var creditScreen: Scene = _
 
   /**
     * Returns the RootStage of Application. This Stage get initialized once whenn the application starts

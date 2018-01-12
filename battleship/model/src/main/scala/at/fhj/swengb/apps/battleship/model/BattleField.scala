@@ -12,7 +12,6 @@ object BattleField {
         val v = vesselsToPlace.head
         loop(vesselsToPlace.tail, workingBattleField.addAtRandomPosition(v))
       }
-
     }
 
     loop(bf.fleet.vessels, bf.copy(fleet = bf.fleet.copy(vessels = Set())))
