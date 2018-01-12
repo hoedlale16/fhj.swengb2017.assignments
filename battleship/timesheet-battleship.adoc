@@ -191,13 +191,13 @@ The project is based on homework 4 assignment.
 //| 20.01.18
 //| 4
 //| ???
-//| WP1.2: Write User-Manual for game flow
+//| WP2.2: Write User-Manual for game flow
 
 //| qerimiar16
 //| 20.01.18
 //| 2
 //| ???
-//| WP1.2: Write User-Manual for features
+//| WP2.3: Write User-Manual for features
 
 //| weilands16
 //| 22.01.18
