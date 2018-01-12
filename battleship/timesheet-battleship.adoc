@@ -79,146 +79,146 @@ The project is based on homework 4 assignment.
 | WP2.8: Backend functionality for Game-Handling (Single/Multiplayer)
 
 | hoedlale16
-| 1.1.18
+| 01.01.18
 | 8
 | 5
 | WP2.7: Backend functionality for Game-Handling (Single/Multiplayer)
 
 | weilands16
-| 2.1.18
+| 02.01.18
 | 6
 | 8
 | WP2.5: Splash-Screen functionality (PreLoader)
 
 | qerimiar16
-| 2.1.18
+| 02.01.18
 | 6
 | 5
 | WP2.6: Handling to start Single/Multiplayer games
 
 | fernbach16
-| 3.1.18
+| 03.01.18
 | 4
 | 4.5
 | WP2.7: Safe/Load game data
 
 | hoedlale16
-| 3.1.18
+| 03.01.18
 | 8
 | 6
 | WP2.8: Backend functionality for multiplayer game (BattleShipPlayRound - Game Over - Switching)
 
 | hoedlale16
-| 4.1.18
+| 04.01.18
 | 1
 | 1.5
 | WP2.8: Backend functionality for multiplayer game (BattleShipPlayRound - Game Over - Switching)
 
 | qerimiar16
-| 4.1.18
+| 04.01.18
 | 3
 | 2.5
 | WP2.4: fine-grained design of GUI
 
 | hoedlale16
-| 5.1.18
+| 05.01.18
 | 2
 | 1
 | WP2.5: Refactore Splash-Screen Handling - Split loading fxml <-> display scene
 
 | weilands16
-| 5.1.18
+| 05.01.18
 | 2
 | 3
 | WP2.9: Show ship status in game
 
 | fernbach16
-| 6.1.18
+| 06.01.18
 | 8
 | 10
 | WP2.10: High score handling and persistance - Display in table
 
 | hoedlale16
-| 6.1.18
+| 06.01.18
 | 8
 | 2
 | WP2.10: High score handling and persistance - Display in table [Support]
 
 | hoedlale16
-| 6.1.18
+| 06.01.18
 | 6
 | 5
 | WP2.11: Replay functionality for Highscore Entries (Single/Multiplayer)
 
 | hoedlale16
-| 8.1.18
+| 08.01.18
 | 10
 | 8
 | WP2.12: Initialize Multiplayers with Edit-Dialog
 
 | weilands16
-| 12.1.18
+| 12.01.18
 | 2.5
 | 2.5
 | WP3.1: Unit-Tests for Game flow
 
 | fernbach16
-| 12.1.18
+| 12.01.18
 | 2
 | 2
 | WP1.2: Design Mockup screens
 
 | fernbach16
-| 12.1.18
+| 12.01.18
 | 1.5
 | 1.5
 | WP1.1: Fine grained project planning and Time estimation
 
 
 | hoedlale16
-| 12.1.18
+| 12.01.18
 | 2.5
 | 2.5
 | WP1.1: Update timesheet-battleship.adoc -> Estimated and real working time
 
 | fernbach16
-| 17.1.18
+| 17.01.18
 | 2
 | ???
 | WP2.1: Write User-Manual to start application
 
 | weilands16
-| 20.1.18
+| 20.01.18
 | 4
 | ???
 | WP1.2: Write User-Manual for game flow
 
 | qerimiar16
-| 20.1.18
+| 20.01.18
 | 2
 | ???
 | WP1.2: Write User-Manual for features
 
 | weilands16
-| 22.1.18
+| 22.01.18
 | 4
 | ???
 | WP3.1: Testing application
 
 | fernbach16
-| 22.1.18
+| 22.01.18
 | 3
 | ???
 | WP3.2: Create presentation slides
 
 | hoedlale16
-| 22.1.18
+| 22.01.18
 | 2
 | ???
 | WP3.3: Final preparation of application
 
 | qerimiar16
-| 22.1.18
+| 22.01.18
 | 3
 | ???
 | WP3.1: prepare presentation
