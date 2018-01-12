@@ -169,7 +169,7 @@ The project is based on homework 4 assignment.
 | WP1.2: Design Mockup screens
 
 | fernbach16
-| 29.12.17
+| 12.1.18
 | 1.5
 | 1.5
 | WP1.1: Fine grained project planning and Time estimation
@@ -184,43 +184,43 @@ The project is based on homework 4 assignment.
 | fernbach16
 | 17.1.18
 | 2
-| 0
+| ???
 | WP2.1: Write User-Manual to start application
 
 | weilands16
 | 20.1.18
 | 4
-| 0
+| ???
 | WP1.2: Write User-Manual for game flow
 
 | qerimiar16
 | 20.1.18
 | 2
-| 0
+| ???
 | WP1.2: Write User-Manual for features
 
 | weilands16
 | 22.1.18
 | 4
-| 0
+| ???
 | WP3.1: Testing application
 
 | fernbach16
 | 22.1.18
 | 3
-| 0
+| ???
 | WP3.2: Create presentation slides
 
 | hoedlale16
 | 22.1.18
 | 2
-| 0
+| ???
 | WP3.3: Final preparation of application
 
 | qerimiar16
 | 22.1.18
 | 3
-| 0
+| ???
 | WP3.1: prepare presentation
 
 |===+-
