@@ -135,8 +135,15 @@ class BattleShipMutliplayerEditFxController extends Initializable {
         case _ => ??? /*Can't happen */
       }
 
-      val newShips: Seq[Vessel] = newVessel +: gameField.fleet.vessels.toSeq
-      gameField = BattleField(10,10,new Fleet(newShips.toSet))
+      //Check if all positions of new ship are Ok or it would overlap with another or be out of battle-range
+      val illegalePos: Set[BattlePos] = newVessel.occupiedPos.diff(gameField.availablePos)
+      if (illegalePos.nonEmpty ) {
+        //Show error dialog
+        BattleShipFxDialogHandler().showIllegalShipPlacementDialog(newVessel,illegalePos)
+      } else {
+        val newShips: Seq[Vessel] = newVessel +: gameField.fleet.vessels.toSeq
+        gameField = BattleField(10, 10, new Fleet(newShips.toSet))
+      }
      }
 
     //Refresh UI and disable Buttons

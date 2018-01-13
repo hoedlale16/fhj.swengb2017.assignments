@@ -19,9 +19,6 @@ class BattleShipFxController extends Initializable {
   //Current play round: Initialized in method 'init'
   private var gamePlayround: BattleShipGamePlayRound = _
 
-  //Instance to handle dialogas
-  private val dialogHandler: BattleShipFxDialogHandler = new BattleShipFxDialogHandler
-
   @FXML private var gameBackground: BorderPane = _
   @FXML private var battleGroundGridPane: GridPane = _
   @FXML private var clickHistorySlider: Slider = _
@@ -35,7 +32,7 @@ class BattleShipFxController extends Initializable {
 
   @FXML def newGame(): Unit = {
     //Show Dialog to ask user for Single or Multiplayer gamePlayround
-    val result: Optional[String] = dialogHandler.askGameMode()
+    val result: Optional[String] = BattleShipFxDialogHandler().askGameMode()
     if (result.isPresent) {
       log.setText("Started new <" + result.get() + "> Game")
 
@@ -57,7 +54,7 @@ class BattleShipFxController extends Initializable {
       result.get() match {
         case "Singleplayer" => {
           var playerNameA: Optional[String] =
-            dialogHandler.askSinglePlayerName()
+            BattleShipFxDialogHandler().askSinglePlayerName()
           if (playerNameA.isPresent) {
             //Create Singleplayer game
             val playerA: Player = createPlayer(playerNameA.get(), "bg_playerA")
@@ -74,11 +71,11 @@ class BattleShipFxController extends Initializable {
         case "Multiplayer" => {
 
           //Initialize playerA
-          dialogHandler.initMultiPlayer(1) match {
+          BattleShipFxDialogHandler().initMultiPlayer(1) match {
             case (null, null) => //userA aborts
             case (playerA, bfPlayerA) => {
               //Initialize playerB
-              dialogHandler.initMultiPlayer(2) match {
+              BattleShipFxDialogHandler().initMultiPlayer(2) match {
                 case (null, null) => //userB aborts
                 case (playerB, bfPlayerB) => {
                   //Start gamePlayround if both user are initialized
@@ -299,7 +296,7 @@ class BattleShipFxController extends Initializable {
       gamePlayround.setWinner(game.player)
 
       //Show Game over dialog
-      val result = dialogHandler.showGameOverDialog(gamePlayround)
+      val result = BattleShipFxDialogHandler().showGameOverDialog(gamePlayround)
       if (result.isPresent) {
         //Deactivate save button
         btSaveGame.setDisable(true)
@@ -314,7 +311,7 @@ class BattleShipFxController extends Initializable {
       if (gamePlayround.games.size > 1) {
         //Show Infodialog that other user is ready to play
         val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
-        val result = dialogHandler.showPlayerChangeDialog(otherGame.player)
+        val result = BattleShipFxDialogHandler().showPlayerChangeDialog(otherGame.player)
         if (result.isPresent)
           switchGameGridField(otherGame)
       }

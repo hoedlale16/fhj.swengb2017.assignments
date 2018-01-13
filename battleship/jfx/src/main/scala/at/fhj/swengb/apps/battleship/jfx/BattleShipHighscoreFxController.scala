@@ -33,7 +33,7 @@ class BattleShipHighscoreFxController extends Initializable {
     if (!(selectedEntry == null)) {
       //Open dialog to show history game
       val selectedBattleShipPlayRound = selectedEntry.getBattleShipPlayRound()
-      (new BattleShipFxDialogHandler).showHigschoreGameDialog(selectedBattleShipPlayRound)
+      BattleShipFxDialogHandler().showHigschoreGameDialog(selectedBattleShipPlayRound)
     }
   }
 
@@ -42,7 +42,7 @@ class BattleShipHighscoreFxController extends Initializable {
     */
   @FXML def resetHighscore(): Unit = {
 
-    val deleteHighscore: Boolean = (new BattleShipFxDialogHandler).askResetHighscoreDialog()
+    val deleteHighscore: Boolean = BattleShipFxDialogHandler().askResetHighscoreDialog()
     if (deleteHighscore == true) {
       HighScore().clearHighscore()
       initData
