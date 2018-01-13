@@ -80,7 +80,6 @@ class BattleShipMutliplayerEditFxController extends Initializable {
 
       //Enable posibitlty to cklick
       if (ship != null && direction != null) {
-        //TODO: Multiplayer-Editor: Just enable buttons where ship is allowed to be positoned
         disableAllButons(false)
       }
     }
