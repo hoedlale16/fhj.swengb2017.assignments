@@ -69,8 +69,16 @@ case class BattleShipGameCredits() {
     appendTeamMembers(credits)
     appendTeamRoles(credits)
     appendExternalSources(credits)
+    appendLicense(credits)
 
     credits.toString()
+  }
+
+  private def appendLicense(builder: StringBuilder): StringBuilder = {
+    val cc: File = new File(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/by-nc-sa.png").getFile)
+    builder.append("<h1>License</h1>")
+      .append("This program is licensed under CC BY-NC-SA 4.0")
+      .append("<br><center><img src=\"" + cc.toURI + "\" width='300'></center><br>")
   }
 
 }
