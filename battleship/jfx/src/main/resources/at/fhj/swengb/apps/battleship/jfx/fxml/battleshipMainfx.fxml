@@ -44,6 +44,7 @@
                </padding>
                <children>
                   <Button fx:id="btSound" mnemonicParsing="false" onAction="#onSwitchSoundSetting" styleClass="buttonSoundOn" />
+                  <Button fx:id="btSettings" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#onChangeApplicationSettings" styleClass="buttonSettings" />
                </children>
             </HBox>
          </left>

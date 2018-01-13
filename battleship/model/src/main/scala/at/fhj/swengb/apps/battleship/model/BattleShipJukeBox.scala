@@ -4,7 +4,8 @@ import javafx.scene.media.{Media, MediaPlayer}
 
 case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterHitMedia: Media) {
 
-  private var mute: Boolean = false;
+  private var muteBackground: Boolean = false
+  private var muteSoundEffect: Boolean = false
 
 
   private val backgroundMusicPlayer: MediaPlayer = {
@@ -19,23 +20,36 @@ case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterH
     player
   }
 
-  def setMute(state: Boolean) = {
-    mute = state
-    //refresh background
+  def setTotalMute(state: Boolean) = {
+    muteBackground = state
+    muteSoundEffect = state
+
+    //refresh background music
     playBackgroundMusic()
   }
 
-  def isMute = mute
+  def playMusic(background: Boolean, effect: Boolean) = {
+    muteBackground = ! background
+    muteSoundEffect = ! effect
+
+    //refresh background music
+    playBackgroundMusic()
+  }
+
+  def isTotalMute = muteBackground && muteBackground
+
+  def isBackGroundMusicMute= muteBackground
+  def isSoundEffectsMute = muteSoundEffect
 
   def hitShip(): Unit = {
-    if(! mute) {
+    if(! muteSoundEffect) {
       backgroundMusicPlayer.stop()
       initMediaPlayer(shipHitMedia).play()
       backgroundMusicPlayer.play()
     }
   }
   def hitWater(): Unit = {
-    if (! mute) {
+    if (! muteSoundEffect) {
       backgroundMusicPlayer.stop()
       initMediaPlayer(waterHitMedia).play()
       backgroundMusicPlayer.play()
@@ -44,7 +58,7 @@ case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterH
 
 
   def playBackgroundMusic(): Unit = {
-    if(! mute)
+    if(! muteBackground)
       backgroundMusicPlayer.play()
     else
       backgroundMusicPlayer.pause()

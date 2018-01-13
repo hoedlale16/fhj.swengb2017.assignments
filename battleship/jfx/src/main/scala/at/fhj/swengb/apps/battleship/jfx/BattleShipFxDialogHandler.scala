@@ -6,6 +6,7 @@ import javafx.scene.{Parent, Scene}
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.image.Image
+import javafx.scene.layout.GridPane
 import javafx.stage.{Stage, StageStyle}
 
 import at.fhj.swengb.apps.battleship.model._
@@ -181,6 +182,42 @@ case class BattleShipFxDialogHandler() {
 
     alert.setContentText(context)
     alert.showAndWait()
+  }
+
+
+
+  def showApplicationSettingDialog(): Optional[(Boolean,Boolean)] = {
+    val jukeBox = BattleShipFxApp.getBattleShipJukeBox
+    val dialog = new Dialog[(Boolean, Boolean)]
+
+    dialog.setTitle("Sound Settings:")
+    dialog.getDialogPane.getButtonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
+
+    // Create labels for settings Dialog
+    val grid: GridPane = new GridPane
+    grid.setHgap(10)
+    grid.setVgap(10)
+
+    val backgroundCheckBox: CheckBox = new CheckBox()
+    backgroundCheckBox.setSelected(!jukeBox.isBackGroundMusicMute)
+
+    val effectCheckBox: CheckBox = new CheckBox()
+    effectCheckBox.setSelected(!jukeBox.isSoundEffectsMute)
+
+    grid.add(new Label("Play Backgroundmusic:"),0,0)
+    grid.add(backgroundCheckBox, 1, 0)
+
+    grid.add(new Label("Play SoundEffects:"),0,1)
+    grid.add(effectCheckBox, 1, 1)
+
+    dialog.getDialogPane.setContent(grid)
+
+    dialog.setResultConverter {
+      case ButtonType.OK     => (backgroundCheckBox.isSelected, effectCheckBox.isSelected)
+      case ButtonType.CANCEL => null
+    }
+
+    dialog.showAndWait()
   }
 
 }
