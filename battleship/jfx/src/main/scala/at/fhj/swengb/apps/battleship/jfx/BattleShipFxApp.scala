@@ -35,7 +35,7 @@ object BattleShipFxApp {
     * Returns the initialized jukebox, which plays all sound of the game.
     * @return
     */
-  def getBattleShipJukeBox: BattleShipJukeBox = jukeBox;
+  def getBattleShipJukeBox: BattleShipJukeBox = jukeBox
 
   def getWelcomeScene: Scene = welcomeScreen
   def getGameScene: Scene = gameScreen
@@ -49,6 +49,7 @@ object BattleShipFxApp {
     welcomeScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
     gameScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipGamefx.fxml")
     highscoreScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
+    //creditScreen not possible to load here because WebView requireds a javaFx-Thread and not a javaImpl-Thread
   }
 
   /**
