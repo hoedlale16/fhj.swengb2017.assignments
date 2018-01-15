@@ -45,14 +45,14 @@ case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterH
     if(! muteSoundEffect) {
       backgroundMusicPlayer.stop()
       initMediaPlayer(shipHitMedia).play()
-      backgroundMusicPlayer.play()
+      playBackgroundMusic
     }
   }
   def hitWater(): Unit = {
     if (! muteSoundEffect) {
       backgroundMusicPlayer.stop()
       initMediaPlayer(waterHitMedia).play()
-      backgroundMusicPlayer.play()
+      playBackgroundMusic
     }
   }
 
