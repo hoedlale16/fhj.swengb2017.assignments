@@ -1,6 +1,9 @@
 package at.fhj.swengb.apps.battleship.model
 
-import java.io.File
+import java.io._
+import java.nio.file.{Files,  Paths}
+import java.util.Base64
+
 
 case class BattleShipGameCredits() {
 
@@ -10,8 +13,23 @@ case class BattleShipGameCredits() {
            .append("It was created for the subject \"Software Engineering Basics (SWENGB)\"\n." )
            .append("This subject is part of the bachelor program Information Management held by the UAS JOANNEUM in the third semester.")
 
-    val imaLogo: File = new File(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/FH_IMA_Logo.jpg").getFile)
-    builder.append("<br><center><img src=\""+imaLogo.toURI+"\" width='300' /></center><br>")
+    /**
+      * Tja genug herumgeschissen bei dem Dreck: Orcale wirds schon irgendwann fixen:
+      *   -- https://bugs.openjdk.java.net/browse/JDK-8123283
+      *   -- https://bugs.openjdk.java.net/browse/JDK-8089600
+      *   -- https://stackoverflow.com/questions/676097/java-resource-as-file
+      *
+      * Funktioniert im jar weder mit InputStream noch mit an simle File über URI... den Pfad frisst er einfach nicht...
+      * Hier ist die Versuchsvariante via Stream - Bei den Lizenzen die eigentlich logische Variante mit URI.
+      * Im Intelligj gehts im sbt nicht
+      */
+    val fhAsStream: InputStream = getClass.getResourceAsStream("/at/fhj/swengb/apps/battleship/jfx/pics/FH_IMA_Logo.jpg")
+    val buffer = new Array[Byte](fhAsStream.available)
+    fhAsStream.read(buffer)
+
+    //https://bugs.openjdk.java.net/browse/JDK-8089600
+    val imgAsBase64 = Base64.getEncoder.encodeToString(buffer)
+    builder.append("<br><center><img src=\"data:image/jpg;base64," + imgAsBase64 + "\" width='300' /></center><br>")
 
   }
 
@@ -61,7 +79,7 @@ case class BattleShipGameCredits() {
     * Returns Credits as a string
     * @return
     */
-  def getCreditText: String = {
+  def getCreditText(): String = {
     val credits: StringBuilder = new StringBuilder("<body bgcolor=\"#61380B\">")
 
     //Append text modules
@@ -76,9 +94,9 @@ case class BattleShipGameCredits() {
 
   private def appendLicense(builder: StringBuilder): StringBuilder = {
     val cc: File = new File(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/by-nc-sa.png").getFile)
+
     builder.append("<h1>License</h1>")
       .append("This program is licensed under CC BY-NC-SA 4.0")
       .append("<br><center><img src=\"" + cc.toURI + "\" width='300'></center><br>")
   }
-
 }
