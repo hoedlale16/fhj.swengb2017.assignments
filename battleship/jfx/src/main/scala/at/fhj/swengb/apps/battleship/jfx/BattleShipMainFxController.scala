@@ -6,12 +6,11 @@ import javafx.fxml.{FXML, Initializable}
 import javafx.scene.Scene
 import javafx.scene.control.Button
 
-import at.fhj.swengb.apps.battleship.model.BattleShipJukeBox
+import at.fhj.swengb.apps.battleship.model.{BattleShipJukeBox, FleetConfig}
 
 class BattleShipMainFxController extends Initializable {
 
   @FXML var btSound: Button = _
-
 
   override def initialize(location: URL, resources: ResourceBundle) = {
     setSoundButtonLayout
@@ -61,13 +60,16 @@ class BattleShipMainFxController extends Initializable {
 
 
   @FXML def onChangeApplicationSettings(): Unit = {
-    val result: Optional[(Boolean,Boolean)] = BattleShipFxDialogHandler().showApplicationSettingDialog()
+    val result: Optional[(Boolean, Boolean,FleetConfig)] = BattleShipFxDialogHandler().showApplicationSettingDialog()
     if(result.isPresent) {
       result.get() match {
-        case (background, effects) => {
-          BattleShipFxApp.getBattleShipJukeBox.playMusic(background, effects)
+        case (music, soundEffects, fleetConfig) => {
+          BattleShipFxApp.getBattleShipJukeBox.playMusic(music,soundEffects)
           //Refresh in the case that user disabled both
           setSoundButtonLayout()
+
+          //Set FleetConfig
+          BattleShipFxApp.setUsedFleetConfig(fleetConfig)
         }
       }
     }

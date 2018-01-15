@@ -2,15 +2,15 @@ package at.fhj.swengb.apps.battleship.jfx
 
 import javafx.application.Preloader.StateChangeNotification
 import javafx.application.{Application, Preloader}
-import javafx.fxml.{FXML, FXMLLoader}
+import javafx.fxml.{FXMLLoader}
 import javafx.scene.control.ProgressBar
 import javafx.scene.image.{Image, ImageView}
 import javafx.scene.layout.BorderPane
-import javafx.scene.media.{Media, MediaPlayer}
+import javafx.scene.media.{Media}
 import javafx.scene.{Parent, Scene}
 import javafx.stage.{Stage, StageStyle}
 
-import at.fhj.swengb.apps.battleship.model.BattleShipJukeBox
+import at.fhj.swengb.apps.battleship.model.{BattleShipJukeBox, FleetConfig}
 import com.sun.javafx.application.LauncherImpl
 
 import scala.util.{Failure, Success, Try}
@@ -19,6 +19,7 @@ object BattleShipFxApp {
   //Becomes initialized when GUI starts
   private var rootStage: Stage = _
   private var jukeBox: BattleShipJukeBox = _
+  private var usedFleetConfig: FleetConfig = FleetConfig.Standard
 
   private var welcomeScreen: Scene = _
   private var gameScreen: Scene = _
@@ -39,8 +40,13 @@ object BattleShipFxApp {
 
   def getWelcomeScene: Scene = welcomeScreen
   def getGameScene: Scene = gameScreen
-  def getHighscoreScene: Scene = highscoreScreen
+  def getHighscoreScene: Scene = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
   def getCreditsScene: Scene = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipCreditsfx.fxml")
+
+  def getUsedFleetConfig: FleetConfig = usedFleetConfig
+  def setUsedFleetConfig(newFleetConfig: FleetConfig): Unit = {
+    usedFleetConfig = newFleetConfig
+  }
 
   /**
     * Parses and initailiaze all main scenes
@@ -48,7 +54,9 @@ object BattleShipFxApp {
   def initializeScenes(): Unit = {
     welcomeScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMainfx.fxml")
     gameScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipGamefx.fxml")
-    highscoreScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
+    //Highscorescreen not possible to load once becase we need played games during this session as well in highscore table
+    //This is caused because we do not persist highscore in memory during game. We keep them in file on hdd and read it wen required
+    //highscoreScreen = parseScene("/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscorefx.fxml")
     //creditScreen not possible to load here because WebView requireds a javaFx-Thread and not a javaImpl-Thread
   }
 

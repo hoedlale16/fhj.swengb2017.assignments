@@ -19,6 +19,7 @@ object BattleShipGamePlayRound {
     * @param log - function to write log
     * @param updateGUIAfterAction - function which get called after click on a cell
     * @param jukeBox - Instance which plays music during game
+    * @param fleetConfig - Used Fleetconfig for game
     * @return a singleplayerMode Play round
     */
   def apply(player: Player,
@@ -26,10 +27,11 @@ object BattleShipGamePlayRound {
             getCellHeight: Int => Double,
             log: String => Unit,
             updateGUIAfterAction: BattleShipGame => Unit,
-            jukeBox: BattleShipJukeBox): BattleShipGamePlayRound = {
+            jukeBox: BattleShipJukeBox,
+            fleetConfig: FleetConfig): BattleShipGamePlayRound = {
     BattleShipGamePlayRound(
       createRandomPlayRoundName,
-      Seq(createBattleShipGame(player,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox)),
+      Seq(createBattleShipGame(player,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox,fleetConfig)),
       Calendar.getInstance.getTime)
   }
 
@@ -82,7 +84,8 @@ object BattleShipGamePlayRound {
             getCellHeight: Int => Double,
             log: String => Unit,
             updateGUIAfterAction: BattleShipGame => Unit,
-            jukeBox: BattleShipJukeBox): BattleShipGamePlayRound = {
+            jukeBox: BattleShipJukeBox,
+            unused: Int => Int): BattleShipGamePlayRound = {
 
     //Read Protobuf-Object and convert it to a BattleShipGamePlayRound-Instance
     val protoBattleShipGamePlayRound: BattleShipProtobuf.BattleShipPlayRound = parse(Files.newInputStream(Paths.get(file.getAbsolutePath)))
@@ -103,9 +106,7 @@ object BattleShipGamePlayRound {
             getCellHeight: Int => Double,
             log: String => Unit,
             updateGUIAfterAction: BattleShipGame => Unit,
-            jukeBox: BattleShipJukeBox,
-            unused1: Int => Int,
-            unused2: Int => Int): BattleShipGamePlayRound = {
+            jukeBox: BattleShipJukeBox): BattleShipGamePlayRound = {
 
 
     val games: Seq[BattleShipGame] = highScorePlayround.games.map(g => createBattleShipGame(g,getCellWidth,getCellHeight,log,updateGUIAfterAction,jukeBox))
@@ -152,11 +153,11 @@ object BattleShipGamePlayRound {
                                    getCellHeight: Int => Double,
                                    log: String => Unit,
                                    updateGUIAfterAction: BattleShipGame => Unit,
-                                   jukeBox: BattleShipJukeBox): BattleShipGame = {
+                                   jukeBox: BattleShipJukeBox,
+                                   fleetConfig: FleetConfig): BattleShipGame = {
 
-    //TODO: Testing: For Singleplayergame-Tests set here to OneShip is required
     val battlefield: BattleField =
-      BattleField(10, 10, Fleet(FleetConfig.Standard))
+      BattleField(10, 10, Fleet(fleetConfig))
 
     BattleShipGame(player,
       BattleField.placeRandomly(battlefield),

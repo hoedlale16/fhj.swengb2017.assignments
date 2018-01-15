@@ -186,9 +186,10 @@ case class BattleShipFxDialogHandler() {
 
 
 
-  def showApplicationSettingDialog(): Optional[(Boolean,Boolean)] = {
+  def showApplicationSettingDialog(): Optional[(Boolean,Boolean,FleetConfig)] = {
+
     val jukeBox = BattleShipFxApp.getBattleShipJukeBox
-    val dialog = new Dialog[(Boolean, Boolean)]
+    val dialog = new Dialog[(Boolean,Boolean,FleetConfig)]
 
     dialog.setTitle("Sound Settings:")
     dialog.getDialogPane.getButtonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
@@ -204,16 +205,39 @@ case class BattleShipFxDialogHandler() {
     val effectCheckBox: CheckBox = new CheckBox()
     effectCheckBox.setSelected(!jukeBox.isSoundEffectsMute)
 
+    val fleetListView: ListView[String] = new ListView[String]()
+    fleetListView.getItems.add("Standard")
+    fleetListView.getItems.add("TwoShips")
+    fleetListView.getItems.add("OneShip")
+    fleetListView.setPrefHeight(75)
+
+    fleetListView.getSelectionModel.setSelectionMode(SelectionMode.SINGLE)
+    fleetListView.getSelectionModel.selectFirst()
+
+
+
     grid.add(new Label("Play Backgroundmusic:"),0,0)
     grid.add(backgroundCheckBox, 1, 0)
 
     grid.add(new Label("Play SoundEffects:"),0,1)
     grid.add(effectCheckBox, 1, 1)
 
+    grid.add(new Label("Battle fleet size:"),0,2)
+    grid.add(fleetListView,1,2)
+
     dialog.getDialogPane.setContent(grid)
 
     dialog.setResultConverter {
-      case ButtonType.OK     => (backgroundCheckBox.isSelected, effectCheckBox.isSelected)
+      case ButtonType.OK     => {
+
+        val fleetConfig: FleetConfig = fleetListView.getSelectionModel.getSelectedItem match {
+          case "Standard" => FleetConfig.Standard
+          case "TwoShips" => FleetConfig.TwoShips
+          case "OneShip"  => FleetConfig.OneShip
+        }
+
+        (backgroundCheckBox.isSelected,effectCheckBox.isSelected,fleetConfig)
+      }
       case ButtonType.CANCEL => null
     }
 

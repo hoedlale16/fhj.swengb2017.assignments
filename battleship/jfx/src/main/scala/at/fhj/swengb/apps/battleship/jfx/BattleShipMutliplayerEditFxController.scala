@@ -22,8 +22,7 @@ class BattleShipMutliplayerEditFxController extends Initializable {
   @FXML private var battleGroundGridPane: GridPane = _
   @FXML private var btInitialize: Button = _
 
-  //TODO: Testing: For Multiplayergame-Tests set here to OneShip is required
-  private val usedFleetConfig: FleetConfig = FleetConfig.Standard
+  private val usedFleetConfig: FleetConfig = BattleShipFxApp.getUsedFleetConfig
   private var gameField: BattleField = BattleField.placeRandomly(BattleField(10, 10, Fleet.Empty))
 
   var initPlayerNr: Int = 1

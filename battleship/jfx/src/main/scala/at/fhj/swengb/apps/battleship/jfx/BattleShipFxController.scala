@@ -64,7 +64,8 @@ class BattleShipFxController extends Initializable {
               getCellHeight,
               appendLog,
               updateGUIAfterAction,
-              BattleShipFxApp.getBattleShipJukeBox)
+              BattleShipFxApp.getBattleShipJukeBox,
+              BattleShipFxApp.getUsedFleetConfig)
             init(playGround)
           }
         }
@@ -145,7 +146,8 @@ class BattleShipFxController extends Initializable {
           getCellHeight,
           appendLog,
           updateGUIAfterAction,
-          BattleShipFxApp.getBattleShipJukeBox)
+          BattleShipFxApp.getBattleShipJukeBox,
+          x=>x)
 
 
         init(playRound)
