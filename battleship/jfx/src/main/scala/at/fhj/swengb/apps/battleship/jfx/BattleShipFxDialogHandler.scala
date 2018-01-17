@@ -28,7 +28,8 @@ case class BattleShipFxDialogHandler() {
   def askSinglePlayerName(): Optional[String] = {
     //Ask for username
     val dialog: TextInputDialog = new TextInputDialog
-    dialog.setTitle("Enter names:")
+    dialog.setTitle("Enter name")
+    dialog.setHeaderText("Captain, please enter your name!")
     dialog.setContentText("Please enter your name:")
 
     dialog.showAndWait()
