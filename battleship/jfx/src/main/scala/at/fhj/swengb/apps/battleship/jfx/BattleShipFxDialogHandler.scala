@@ -86,7 +86,7 @@ case class BattleShipFxDialogHandler() {
     val alert = new Alert(AlertType.CONFIRMATION)
     alert.setTitle("Clear Highscore")
     alert.setHeaderText("Are you shure to delete this Highscore?")
-    alert.setContentText("All Entries get deleted.?")
+    alert.setContentText("All Entries will be deleted?")
 
     val result = alert.showAndWait
     result.get() match {
