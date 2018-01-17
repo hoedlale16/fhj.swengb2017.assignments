@@ -181,29 +181,29 @@ The project is based on homework 4 assignment.
 | 2.5
 | WP1.1: Update timesheet-battleship.adoc -> Estimated and real working time
 
-//| fernbach16
-//| 17.01.18
-//| 2
-//| ???
-//| WP2.1: Write User-Manual to start application
+| fernbach16
+| 17.01.18
+| 2
+| 3
+| WP2.1: Write User-Manual to start application
 
-//| weilands16
-//| 20.01.18
-//| 4
-//| ???
-//| WP2.2: Write User-Manual for game flow
+| weilands16
+| 20.01.18
+| 4
+| 4
+| WP2.2: Write User-Manual for game flow
 
-//| qerimiar16
-//| 20.01.18
-//| 2
-//| ???
-//| WP2.3: Write User-Manual for features
+| qerimiar16
+| 20.01.18
+| 2
+| 2
+| WP2.3: Write User-Manual for features
 
-//| weilands16
-//| 22.01.18
-//| 4
-//| ???
-//| WP3.1: Testing application
+| weilands16
+| 22.01.18
+| 4
+| 1.5
+| WP3.1: Testing application
 
 | fernbach16
 | 22.01.18
