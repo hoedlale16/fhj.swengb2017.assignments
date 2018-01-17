@@ -205,21 +205,21 @@ The project is based on homework 4 assignment.
 //| ???
 //| WP3.1: Testing application
 
-//| fernbach16
-//| 22.01.18
-//| 3
-//| ???
-//| WP3.2: Create presentation slides
+| fernbach16
+| 22.01.18
+| 3
+| 3
+| WP3.2: Create presentation slides
 
-//| hoedlale16
-//| 22.01.18
-//| 2
-//| ???
-//| WP3.3: Final preparation of application
+| hoedlale16
+| 22.01.18
+| 2
+| 1.5
+| WP3.3: Final preparation of application
 
-//| qerimiar16
-//| 22.01.18
-//| 3
-//| ???
-//| WP3.1: prepare presentation
+| qerimiar16
+| 22.01.18
+| 3
+| 3
+| WP3.1: prepare presentation
 |===+-
