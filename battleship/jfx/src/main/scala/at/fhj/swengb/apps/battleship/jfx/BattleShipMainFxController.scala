@@ -12,8 +12,8 @@ class BattleShipMainFxController extends Initializable {
 
   @FXML var btSound: Button = _
 
-  override def initialize(location: URL, resources: ResourceBundle) = {
-    setSoundButtonLayout
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {
+    setSoundButtonLayout()
   }
 
   /**
@@ -21,7 +21,7 @@ class BattleShipMainFxController extends Initializable {
     */
   @FXML def onStartGame(): Unit = {
     val scene: Scene = BattleShipFxApp.getGameScene
-    BattleShipFxApp.showScene(scene,BattleShipFxApp.getRootStage)
+    BattleShipFxApp.showScene(scene, BattleShipFxApp.getRootStage)
   }
 
   /**
@@ -29,7 +29,7 @@ class BattleShipMainFxController extends Initializable {
     */
   @FXML def onShowHighscore(): Unit = {
     val scene: Scene = BattleShipFxApp.getHighscoreScene
-    BattleShipFxApp.showScene(scene,BattleShipFxApp.getRootStage)
+    BattleShipFxApp.showScene(scene, BattleShipFxApp.getRootStage)
 
   }
 
@@ -38,7 +38,7 @@ class BattleShipMainFxController extends Initializable {
     */
   @FXML def onShowCredits(): Unit = {
     val scene: Scene = BattleShipFxApp.getCreditsScene
-    BattleShipFxApp.showScene(scene,BattleShipFxApp.getRootStage)
+    BattleShipFxApp.showScene(scene, BattleShipFxApp.getRootStage)
   }
 
 
@@ -46,31 +46,30 @@ class BattleShipMainFxController extends Initializable {
     val jukeBox: BattleShipJukeBox = BattleShipFxApp.getBattleShipJukeBox
     //Set opponent value of current mute state on button click
     jukeBox.setTotalMute(!jukeBox.isTotalMute)
-    setSoundButtonLayout
+    setSoundButtonLayout()
   }
 
   private def setSoundButtonLayout(): Unit = {
-    //Set corret style accoring new state
-    btSound.getStyleClass.clear
-    BattleShipFxApp.getBattleShipJukeBox.isTotalMute match {
-      case true => btSound.getStyleClass.add("buttonSoundOff")
-      case false => btSound.getStyleClass.add("buttonSoundOn")
+    //Set correct style according to the new state
+    btSound.getStyleClass.clear()
+    if (BattleShipFxApp.getBattleShipJukeBox.isTotalMute) {
+      btSound.getStyleClass.add("buttonSoundOff")
+    } else {
+      btSound.getStyleClass.add("buttonSoundOn")
     }
   }
 
-
   @FXML def onChangeApplicationSettings(): Unit = {
-    val result: Optional[(Boolean, Boolean,FleetConfig)] = BattleShipFxDialogHandler().showApplicationSettingDialog()
-    if(result.isPresent) {
+    val result: Optional[(Boolean, Boolean, FleetConfig)] = BattleShipFxDialogHandler().showApplicationSettingDialog()
+    if (result.isPresent) {
       result.get() match {
-        case (music, soundEffects, fleetConfig) => {
-          BattleShipFxApp.getBattleShipJukeBox.playMusic(music,soundEffects)
-          //Refresh in the case that user disabled both
+        case (music, soundEffects, fleetConfig) =>
+          BattleShipFxApp.getBattleShipJukeBox.playMusic(music, soundEffects)
+          //Refresh in case the user disabled both
           setSoundButtonLayout()
 
           //Set FleetConfig
           BattleShipFxApp.setUsedFleetConfig(fleetConfig)
-        }
       }
     }
   }

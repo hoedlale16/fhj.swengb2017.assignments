@@ -25,6 +25,13 @@ object BattleField {
 case class BattleField(width: Int, height: Int, fleet: Fleet) {
 
   /**
+    * All positions in this battlefield
+    */
+  val allPos: Set[BattlePos] = (for {x <- 0 until width
+                                     y <- 0 until height} yield BattlePos(x, y)).toSet
+  val availablePos: Set[BattlePos] = allPos -- fleet.occupiedPositions
+
+  /**
     * Adds vessel at a random, free position in the battlefield. if no position could be found,
     * returns the current battlefield without vessel added.
     *
@@ -45,26 +52,16 @@ case class BattleField(width: Int, height: Int, fleet: Fleet) {
         val p = pos.toSeq(Random.nextInt(pos.size))
         val vessel = v.copy(startPos = p)
         if (vessel.occupiedPos.subsetOf(availablePos)) {
-          loop(pos - p, currBf.copy(fleet = currBf.fleet.copy(vessels = currBf.fleet.vessels + vessel)), true)
+          loop(pos - p, currBf.copy(fleet = currBf.fleet.copy(vessels = currBf.fleet.vessels + vessel)), found = true)
         } else {
-          loop(pos - p, currBf, false)
+          loop(pos - p, currBf, found = false)
         }
       }
     }
 
-    loop(availablePos, this, false)
+    loop(availablePos, this, found = false)
 
   }
-
-
-  /**
-    * All positions in this battlefield
-    */
-  val allPos: Set[BattlePos] = (for {x <- 0 until width
-                                     y <- 0 until height} yield BattlePos(x, y)).toSet
-
-
-  val availablePos: Set[BattlePos] = allPos -- fleet.occupiedPositions
 
   def randomFleet(): Fleet = {
     Fleet(Set[Vessel]())

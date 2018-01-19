@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package at.fhj.swengb.apps.battleship;
 
-option java_package         = "at.fhj.swengb.apps.battleship";
+option java_package = "at.fhj.swengb.apps.battleship";
 option java_outer_classname = "BattleShipProtobuf";
 
 
@@ -26,7 +26,7 @@ message BattleShipPlayRound {
     message BattleFieldGame {
         Player player = 1;
         repeated Vessel vessels = 2;
-        repeated Position clickedPositions= 3;
+        repeated Position clickedPositions = 3;
         int32 fieldWidth = 4;
         int32 fieldHeight = 5;
     }
@@ -47,5 +47,5 @@ message BattleShipPlayRound {
 
 
 message HighScore {
-  repeated BattleShipPlayRound playedPlayRounds = 1;
+    repeated BattleShipPlayRound playedPlayRounds = 1;
 }

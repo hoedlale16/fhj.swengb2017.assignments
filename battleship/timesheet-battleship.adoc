@@ -188,12 +188,18 @@ The project is based on homework 4 assignment.
 | WP2.1: Write User-Manual to start application
 
 | weilands16
+| 19.01.18
+| 2
+| 3
+| Proofreading & restructuring
+
+| weilands16
 | 20.01.18
 | 4
 | 4
 | WP2.2: Write User-Manual for game flow
 
-| qerimiar16
+| fernbach16
 | 20.01.18
 | 2
 | 2
@@ -217,7 +223,7 @@ The project is based on homework 4 assignment.
 | 1.5
 | WP3.3: Final preparation of application
 
-| qerimiar16
+| weilands16
 | 22.01.18
 | 3
 | 3

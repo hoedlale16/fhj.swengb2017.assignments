@@ -10,7 +10,7 @@ import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.{Button, SelectionMode, TableColumn, TableView}
 import javafx.util.Callback
 
-import at.fhj.swengb.apps.battleship.model.{BattleShipGamePlayRound, HighScore, Player}
+import at.fhj.swengb.apps.battleship.model.{BattleShipGamePlayRound, HighScore}
 
 class BattleShipHighscoreFxController extends Initializable {
 
@@ -19,33 +19,33 @@ class BattleShipHighscoreFxController extends Initializable {
 
   @FXML private var colDate: TableColumn[HighScoreEntry, String] = _
   @FXML private var colWinner: TableColumn[HighScoreEntry, String] = _
-  @FXML private var colGameName: TableColumn[HighScoreEntry, String] =_
+  @FXML private var colGameName: TableColumn[HighScoreEntry, String] = _
   @FXML private var colClickAmount: TableColumn[HighScoreEntry, Int] = _
 
 
   /**
-    * Show and reply selected highscore game
+    * Show and replay selected highscore game
     */
   @FXML def onReplayGame(): Unit = {
     val selectedEntry: HighScoreEntry = tbHighscore.getSelectionModel.getSelectedItem
 
-    //Check if entry is selected
+    //Check if an entry is selected
     if (!(selectedEntry == null)) {
-      //Open dialog to show history game
-      val selectedBattleShipPlayRound = selectedEntry.getBattleShipPlayRound()
+      //Open the dialog to show history game
+      val selectedBattleShipPlayRound = selectedEntry.getBattleShipPlayRound
       BattleShipFxDialogHandler().showHigschoreGameDialog(selectedBattleShipPlayRound)
     }
   }
 
   /**
-    * Ask user again if Highscore should cleared and if confirmed clear it
+    * Ask user again if Highscore should be cleared and upon confirmation clear it
     */
   @FXML def resetHighscore(): Unit = {
 
     val deleteHighscore: Boolean = BattleShipFxDialogHandler().askResetHighscoreDialog()
-    if (deleteHighscore == true) {
+    if (deleteHighscore) {
       HighScore().clearHighscore()
-      initData
+      initData()
     }
 
   }
@@ -53,15 +53,14 @@ class BattleShipHighscoreFxController extends Initializable {
   /**
     * Go back to main Scene
     */
-  @FXML def returnToMain(): Unit = BattleShipFxApp.showScene(BattleShipFxApp.getWelcomeScene,BattleShipFxApp.getRootStage)
+  @FXML def returnToMain(): Unit = BattleShipFxApp.showScene(BattleShipFxApp.getWelcomeScene, BattleShipFxApp.getRootStage)
 
-
-  override def initialize(location: URL, resources: ResourceBundle) = {
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {
     //Init table columns
-    initTableViewColumn[String](colDate,_.formatedDate)
-    initTableViewColumn[String](colWinner,_.winnerName)
-    initTableViewColumn[String](colGameName,_.playroundName)
-    initTableViewColumn[Int](colClickAmount,_.clickAmount)
+    initTableViewColumn[String](colDate, _.formatedDate)
+    initTableViewColumn[String](colWinner, _.winnerName)
+    initTableViewColumn[String](colGameName, _.playroundName)
+    initTableViewColumn[Int](colClickAmount, _.clickAmount)
 
     //Set correct table (selection mode,CellSize, ...)
     tbHighscore.getSelectionModel.setSelectionMode(SelectionMode.SINGLE)
@@ -69,12 +68,12 @@ class BattleShipHighscoreFxController extends Initializable {
     tbHighscore.setFixedCellSize(25)
 
     //Show data
-    initData
+    initData()
   }
 
   private def initData(): Unit = {
-    //Load highscore and display
-    val tableData: ObservableList[HighScoreEntry] = convertToObservableList( HighScore().getSortedHighScore())
+    //Load highscore and display it
+    val tableData: ObservableList[HighScoreEntry] = convertToObservableList(HighScore().getSortedHighScore)
     tbHighscore.setItems(tableData)
   }
 
@@ -82,11 +81,11 @@ class BattleShipHighscoreFxController extends Initializable {
     val tableData: ObservableList[HighScoreEntry] = FXCollections.observableArrayList()
     highScore.foreach(e => tableData.add(HighScoreEntry(e)))
 
-      //Return observable list
+    //Return observable list
     tableData
   }
 
-  /**EXTERNAL HELP  FOR TABLE MODEL */
+  /** EXTERNAL HELP  FOR TABLE MODEL */
   /*Helper Source: https://github.com/rladstaetter/fx-scala-tableview/blob/master/src/main/scala/net/ladstatt/fx/tableview/TableViewApp.scala **/
 
   /**
@@ -104,11 +103,12 @@ class BattleShipHighscoreFxController extends Initializable {
   }
 
   private def createCellValueFactory[HighScoreEntry, T](fn: TableColumn.CellDataFeatures[HighScoreEntry, T] => ObservableValue[T]):
-       Callback[TableColumn.CellDataFeatures[HighScoreEntry, T], ObservableValue[T]] = {
+  Callback[TableColumn.CellDataFeatures[HighScoreEntry, T], ObservableValue[T]] = {
 
 
     (cdf: TableColumn.CellDataFeatures[HighScoreEntry, T]) => fn(cdf)
   }
+
   /** END EXTERNAL HELP **/
 
 }
@@ -122,19 +122,19 @@ class HighScoreEntry {
 
   private var playRound: BattleShipGamePlayRound = _
 
-  def setDate(date: Date) = formatedDate.set(new SimpleDateFormat("yyyy/MM/dd").format(date))
+  def setDate(date: Date): Unit = formatedDate.set(new SimpleDateFormat("yyyy/MM/dd").format(date))
 
-  def setWinner(name: String) = winnerName.set(name)
+  def setWinner(name: String): Unit = winnerName.set(name)
 
-  def setPlayroundName(name: String) = playroundName.set(name)
+  def setPlayroundName(name: String): Unit = playroundName.set(name)
 
-  def setClickAmount(clicks: Int) = clickAmount.set(clicks)
+  def setClickAmount(clicks: Int): Unit = clickAmount.set(clicks)
 
-  def setPlayRound(roundToReplay: BattleShipGamePlayRound) = {
+  def setPlayRound(roundToReplay: BattleShipGamePlayRound): Unit = {
     playRound = roundToReplay
   }
 
-  def getBattleShipPlayRound(): BattleShipGamePlayRound = playRound
+  def getBattleShipPlayRound: BattleShipGamePlayRound = playRound
 }
 
 object HighScoreEntry {
@@ -143,7 +143,7 @@ object HighScoreEntry {
     hsEntry.setDate(playRound.startDate)
     hsEntry.setWinner(playRound.getWinnerName)
     hsEntry.setPlayroundName(playRound.name)
-    hsEntry.setClickAmount(playRound.getTotalAmountOfMoves())
+    hsEntry.setClickAmount(playRound.getTotalAmountOfMoves)
     hsEntry.setPlayRound(playRound)
 
     hsEntry
