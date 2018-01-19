@@ -28,17 +28,17 @@ case class EditorFxCell(pos: BattlePos,
       case Some(v) =>
         colorizeAfterClick()
       case None =>
-        setFill (Color.DARKBLUE)
+        setFill(Color.DARKBLUE)
     }
   }
 
   setOnMouseClicked(e => {
-      colorizeAfterClick()
-      updateEditor(pos)
+    colorizeAfterClick()
+    updateEditor(pos)
   })
 
   def colorizeAfterClick(): Unit = {
-    setFill (Color.YELLOWGREEN)
+    setFill(Color.YELLOWGREEN)
   }
 
 }

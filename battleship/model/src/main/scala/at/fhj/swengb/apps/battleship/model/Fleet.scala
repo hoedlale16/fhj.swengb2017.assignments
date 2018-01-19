@@ -6,7 +6,24 @@ import scala.util.Random
 object Fleet {
 
   val Empty = Fleet(Set[Vessel]())
+  val Default: Fleet = {
+    val battleships: Set[Vessel] = Set(new BattleShip("Ardian", BattlePos(0, 0), Vertical))
+    val cruisers: Set[Vessel] = Set(new Cruiser("Cruz", BattlePos(1, 0), Vertical), new Cruiser("Santa", BattlePos(2, 0), Vertical))
+    val destroyers: Set[Vessel] = Set(
+      new Destroyer("Graz", BattlePos(5, 5), Horizontal),
+      new Destroyer("Wien", BattlePos(0, 6), Horizontal),
+      new Destroyer("Linz", BattlePos(0, 7), Horizontal),
+    )
+    val submarines: Set[Vessel] = Set(
+      new Submarine("A", BattlePos(6, 6), Horizontal),
+      new Submarine("A", BattlePos(1, 6), Horizontal),
+      new Submarine("A", BattlePos(3, 2), Horizontal),
+      new Submarine("A", BattlePos(4, 4), Horizontal),
+    )
 
+    val fleet: Set[Vessel] = battleships ++ cruisers ++ destroyers ++ submarines
+    Fleet(fleet)
+  }
 
   def apply(battleField: BattleField): Fleet = {
     Default
@@ -27,25 +44,6 @@ object Fleet {
 
 
     Fleet(vessels)
-  }
-
-  val Default: Fleet = {
-    val battleships: Set[Vessel] = Set(new BattleShip("Archduke John", BattlePos(0, 0), Vertical))
-    val cruisers: Set[Vessel] = Set(new Cruiser("Cruz", BattlePos(1, 0), Vertical), new Cruiser("Santa", BattlePos(2, 0), Vertical))
-    val destroyers: Set[Vessel] = Set(
-      new Destroyer("Graz", BattlePos(5, 5), Horizontal),
-      new Destroyer("Wien", BattlePos(0, 6), Horizontal),
-      new Destroyer("Linz", BattlePos(0, 7), Horizontal),
-    )
-    val submarines: Set[Vessel] = Set(
-      new Submarine("A", BattlePos(6, 6), Horizontal),
-      new Submarine("A", BattlePos(1, 6), Horizontal),
-      new Submarine("A", BattlePos(3, 2), Horizontal),
-      new Submarine("A", BattlePos(4, 4), Horizontal),
-    )
-
-    val fleet: Set[Vessel] = battleships ++ cruisers ++ destroyers ++ submarines
-    Fleet(fleet)
   }
 
 }

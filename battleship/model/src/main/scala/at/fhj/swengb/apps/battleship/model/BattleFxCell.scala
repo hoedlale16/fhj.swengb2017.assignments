@@ -18,8 +18,9 @@ case class BattleFxCell(pos: BattlePos,
   extends Rectangle(width, height) {
 
   /**
-    * Initialize BattleFxCell. If cell is in given list cell get colorized immediately(already clicked)
+    * Initialize BattleFxCell. If cell is in given list cell gets colorized immediately (already clicked)
     * If simulation mode is active, no further action is triggered
+    *
     * @param clickedPos - List of all already clicked positions. Colorize this cell if given list contains it
     */
   def init(clickedPos: Seq[BattlePos]): Unit = {
@@ -49,20 +50,12 @@ case class BattleFxCell(pos: BattlePos,
     //Color clicked field
     colorizedAfterClick()
 
-    //Just play music on a phyiscal click!
+    //Just play music on a physical click!
     playMusicAfterClick()
 
     //Add click to clicked list
     upClickedPos(pos)
   })
-
-
-  def playMusicAfterClick(): Unit = {
-    someVessel match {
-      case None => jukeBox.hitWater()
-      case Some(v) => jukeBox.hitShip()
-    }
-  }
 
   def colorizedAfterClick(): Unit = {
     someVessel match {
@@ -71,9 +64,16 @@ case class BattleFxCell(pos: BattlePos,
         setFill(Color.MEDIUMAQUAMARINE)
       case Some(v) =>
         // log(s"Hit an enemy vessel!")
-        setFill (Color.RED)
+        setFill(Color.RED)
         upGameState(v, pos)
 
+    }
+  }
+
+  def playMusicAfterClick(): Unit = {
+    someVessel match {
+      case None => jukeBox.hitWater()
+      case Some(v) => jukeBox.hitShip()
     }
   }
 

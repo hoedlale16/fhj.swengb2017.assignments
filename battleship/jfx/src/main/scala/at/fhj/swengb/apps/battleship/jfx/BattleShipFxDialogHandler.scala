@@ -2,11 +2,11 @@ package at.fhj.swengb.apps.battleship.jfx
 
 import java.util.Optional
 import javafx.fxml.FXMLLoader
-import javafx.scene.{Parent, Scene}
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.image.Image
 import javafx.scene.layout.GridPane
+import javafx.scene.{Parent, Scene}
 import javafx.stage.{Stage, StageStyle}
 
 import at.fhj.swengb.apps.battleship.model._
@@ -18,29 +18,29 @@ case class BattleShipFxDialogHandler() {
   def askGameMode(): Optional[String] = {
     val dialog: ChoiceDialog[String] =
       new ChoiceDialog("Singleplayer", "Singleplayer", "Multiplayer")
-    dialog.setTitle("Select Game setting")
+    dialog.setTitle("Select Game Mode")
     dialog.setHeaderText("Start a new Game:")
-    dialog.setContentText("Select your enemy")
+    dialog.setContentText("Choose your enemy")
 
     dialog.showAndWait()
   }
 
   def askSinglePlayerName(): Optional[String] = {
-    //Ask for username
+    //Ask for the username
     val dialog: TextInputDialog = new TextInputDialog
-    dialog.setTitle("Enter name")
+    dialog.setTitle("Enter your name")
     dialog.setHeaderText("Captain, please enter your name!")
     dialog.setContentText("Please enter your name:")
 
     dialog.showAndWait()
   }
 
-  def initMultiPlayer(playerNr: Int): (Player,BattleField) = {
+  def initMultiPlayer(playerNr: Int): (Player, BattleField) = {
     val fxml: String = "/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipMutiplayerEditDialog.fxml"
     val fxmlLoader: FXMLLoader = new FXMLLoader()
 
-    //Set play round to controller and controller for dialog
-    val controller: BattleShipMutliplayerEditFxController= new BattleShipMutliplayerEditFxController()
+    //Set playround to controller and controller for dialog
+    val controller: BattleShipMutliplayerEditFxController = new BattleShipMutliplayerEditFxController()
     controller.initPlayerNr = playerNr
 
     fxmlLoader.setController(controller)
@@ -61,33 +61,31 @@ case class BattleShipFxDialogHandler() {
         val css = "/at/fhj/swengb/apps/battleship/jfx/battleshipfx.css"
         dialog.getScene.getStylesheets.add(css)
 
-        //Set Icon and Display stage...
-        dialog.getIcons().add(new Image(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/logo.jpg").toString))
+        //Set Icon and Display stage…
+        dialog.getIcons.add(new Image(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/logo.jpg").toString))
         dialog.showAndWait()
 
         //return result
         controller.getResult match {
-          case Some(result) => {
+          case Some(result) =>
             if (controller.closedRegularly)
               result
             else
-              (null,null)
-          }
-          case None => (null,null) //Abort - return empty
+              (null, null)
+          case None => (null, null) //Abort - return empty
         }
 
-      case Failure(e) => {
+      case Failure(e) =>
         e.printStackTrace()
-        (null,null) //If we are here, some crazy shit was going on!
-      }
+        (null, null) //If we end up here, some crazy shit was going on!
     }
   }
 
   def askResetHighscoreDialog(): Boolean = {
     val alert = new Alert(AlertType.CONFIRMATION)
-    alert.setTitle("Clear Highscore")
-    alert.setHeaderText("Are you shure to delete this Highscore?")
-    alert.setContentText("All Entries will be deleted?")
+    alert.setTitle("Clear Highscores")
+    alert.setHeaderText("Are you sure you want to delete all Highscores?")
+    alert.setContentText("All Entries will be deleted!")
 
     val result = alert.showAndWait
     result.get() match {
@@ -104,7 +102,7 @@ case class BattleShipFxDialogHandler() {
   }
 
 
-  def showHigschoreGameDialog(playRound: BattleShipGamePlayRound) = {
+  def showHigschoreGameDialog(playRound: BattleShipGamePlayRound): Unit = {
 
     val fxml: String = "/at/fhj/swengb/apps/battleship/jfx/fxml/battleshipHighscoreGameReplayDialogfx.fxml"
     val fxmlLoader: FXMLLoader = new FXMLLoader()
@@ -133,7 +131,7 @@ case class BattleShipFxDialogHandler() {
         dialog.getScene.getStylesheets.add(css)
 
         //Set Icon and Display stage...
-        dialog.getIcons().add(new Image(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/logo.jpg").toString))
+        dialog.getIcons.add(new Image(getClass.getResource("/at/fhj/swengb/apps/battleship/jfx/pics/logo.jpg").toString))
         dialog.show()
       case Failure(e) => e.printStackTrace()
     }
@@ -141,43 +139,44 @@ case class BattleShipFxDialogHandler() {
 
   /**
     * Game is over - Show winner and store game for highscore!
+    *
     * @param gamePlayround - Current played round
     */
   def showGameOverDialog(gamePlayround: BattleShipGamePlayRound): Optional[ButtonType] = {
     //Deactivate gamePlayround field
     gamePlayround.currentBattleShipGame.getCells.foreach(e => e.setDisable(true))
 
-    //Show dialog according
+    //Show dialog accordingly
     gamePlayround.getWinner match {
       case None => Optional.empty() //When this happens, game ended without winner!
-      case Some(winner) => {
+      case Some(winner) =>
         val alert = new Alert(AlertType.INFORMATION)
-        alert.setTitle("G A M E - O V E R")
+        alert.setTitle("GAME OVER!")
         alert.setHeaderText("Game over!")
-        alert.setContentText("Player <" + gamePlayround.getWinnerName + "> has won!")
+        alert.setContentText("Player " + gamePlayround.getWinnerName + " won! Congratulations!")
         alert.showAndWait()
-      }
     }
   }
 
   /**
-    * Dialog shown when player in edit-mode place a vessel on a illegal positon
-    * @param vessel - Vessel which is placed on a illegal position
+    * Dialog shown when player in edit-mode places a vessel on an illegal position
+    *
+    * @param vessel - Vessel which is placed on an illegal position
     */
   def showIllegalShipPlacementDialog(vessel: Vessel, illegalPos: Set[BattlePos]): Optional[ButtonType] = {
     val alert = new Alert(AlertType.ERROR)
-    alert.setTitle("CAPTAIN, YOU'RE DRUNK!")
-    alert.setHeaderText("Illegal Position for ship!")
+    alert.setTitle("CAPTAIN, ARE YOU DRUNK)")
+    alert.setHeaderText("Illegal position for this ship!")
 
     def context: String = {
-      val builder = new StringBuilder("Ship <").append(vessel.name.value).append("> set on an illegal positions:\n")
+      val builder = new StringBuilder("Ship ").append(vessel.name.value).append(" was almost set on an illegal position:\n")
 
       //Append illegal Positions to Dialog
       builder.append("  ")
-      val posString:String =  illegalPos.foldLeft("")((acc,e) => "("+e.x+"/"+e.y+") " + acc )
+      val posString: String = illegalPos.foldLeft("")((acc, e) => "(" + e.x + "/" + e.y + ") " + acc)
       builder.append(posString.trim).append("\n")
 
-      builder.append("\nEither ship collidates with another or it is not in the game ground!")
+      builder.append("\nThis ship either collides with another ship, or it is not inside the game ground!")
       builder.toString()
     }
 
@@ -186,11 +185,10 @@ case class BattleShipFxDialogHandler() {
   }
 
 
-
-  def showApplicationSettingDialog(): Optional[(Boolean,Boolean,FleetConfig)] = {
+  def showApplicationSettingDialog(): Optional[(Boolean, Boolean, FleetConfig)] = {
 
     val jukeBox = BattleShipFxApp.getBattleShipJukeBox
-    val dialog = new Dialog[(Boolean,Boolean,FleetConfig)]
+    val dialog = new Dialog[(Boolean, Boolean, FleetConfig)]
 
     dialog.setTitle("Sound Settings:")
     dialog.getDialogPane.getButtonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
@@ -216,28 +214,27 @@ case class BattleShipFxDialogHandler() {
     fleetListView.getSelectionModel.selectFirst()
 
 
-
-    grid.add(new Label("Play Backgroundmusic:"),0,0)
+    grid.add(new Label("Play Background-Music:"), 0, 0)
     grid.add(backgroundCheckBox, 1, 0)
 
-    grid.add(new Label("Play SoundEffects:"),0,1)
+    grid.add(new Label("Play Sound_Effects:"), 0, 1)
     grid.add(effectCheckBox, 1, 1)
 
-    grid.add(new Label("Battle fleet size:"),0,2)
-    grid.add(fleetListView,1,2)
+    grid.add(new Label("Battle fleet size:"), 0, 2)
+    grid.add(fleetListView, 1, 2)
 
     dialog.getDialogPane.setContent(grid)
 
     dialog.setResultConverter {
-      case ButtonType.OK     => {
+      case ButtonType.OK => {
 
         val fleetConfig: FleetConfig = fleetListView.getSelectionModel.getSelectedItem match {
           case "Standard" => FleetConfig.Standard
           case "TwoShips" => FleetConfig.TwoShips
-          case "OneShip"  => FleetConfig.OneShip
+          case "OneShip" => FleetConfig.OneShip
         }
 
-        (backgroundCheckBox.isSelected,effectCheckBox.isSelected,fleetConfig)
+        (backgroundCheckBox.isSelected, effectCheckBox.isSelected, fleetConfig)
       }
       case ButtonType.CANCEL => null
     }

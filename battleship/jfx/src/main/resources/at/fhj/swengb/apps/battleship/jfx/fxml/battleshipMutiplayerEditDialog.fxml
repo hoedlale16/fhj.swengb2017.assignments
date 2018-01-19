@@ -1,140 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<BorderPane fx:id="gameBackground" prefHeight="455.0" prefWidth="734.0" styleClass="bg_game" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="gameBackground" prefHeight="455.0" prefWidth="734.0"
+            styleClass="bg_game" xmlns="http://javafx.com/javafx/8.0.141">
     <right>
 
 
     </right>
     <top>
-        <Label fx:id="lbHeader" contentDisplay="CENTER" styleClass="lb_header" text="Initialize Player" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
+        <Label fx:id="lbHeader" contentDisplay="CENTER" styleClass="lb_header" text="Initialize Player"
+               textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" BorderPane.alignment="BOTTOM_CENTER">
             <font>
-                <Font size="27.0" />
+                <Font size="27.0"/>
             </font>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
         </Label>
     </top>
-   <center>
-      <BorderPane prefHeight="329.0" prefWidth="598.0" BorderPane.alignment="CENTER">
-         <left>
-            <BorderPane fx:id="btLeft" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <top>
-                  <HBox prefHeight="28.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Label styleClass="lb_player" text="Fleet:" />
-                        <Label fx:id="lbPlayerName" styleClass="lb_player" />
-                     </children>
-                  </HBox>
-               </top>
-               <BorderPane.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
-               </BorderPane.margin>
-               <center>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
-                     <content>
-                        <ListView fx:id="lvFleet" onMouseClicked="#onShipSelected" prefHeight="310.0" prefWidth="190.0" />
-                     </content>
-                  </ScrollPane>
-               </center>
-               <bottom>
-                  <ComboBox fx:id="cbOrientation" prefWidth="200.0" promptText="Select Orientation" visibleRowCount="2" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets top="10.0" />
-                     </BorderPane.margin>
-                  </ComboBox>
-               </bottom>
-            </BorderPane>
-         </left>
-         <right>
-            <BorderPane fx:id="btRight" prefHeight="413.0" prefWidth="135.0" BorderPane.alignment="CENTER">
-               <left>
-                    <VBox spacing="5.0" styleClass="bg_gray" BorderPane.alignment="CENTER">
-                        <children>
-                            <Button id="button" fx:id="btInitialize" cancelButton="true" disable="true" maxWidth="200.0" onAction="#onInitialize" styleClass="buttons" text="Initialize" />
-                        <Button id="button" fx:id="btSetRandomFleet" maxWidth="200.0" onAction="#onSetRandomFleet" styleClass="buttons" text="Set fleet randomly" />
-                        <Button id="button" fx:id="btClearFleet" maxWidth="200.0" onAction="#onClearFleet" prefHeight="27.0" styleClass="buttons" text="Clear fleet" />
-                        </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                     <BorderPane.margin>
-                        <Insets right="5.0" />
-                     </BorderPane.margin>
-                    </VBox>
-               </left>
-            </BorderPane>
-         </right>
-         <center>
-              <GridPane fx:id="battleGroundGridPane" alignment="CENTER" hgap="5.0" prefHeight="301.0" prefWidth="283.0" styleClass="bg_sea" vgap="5.0" BorderPane.alignment="CENTER">
-                  <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                  </rowConstraints>
-               <BorderPane.margin>
-                  <Insets left="10.0" right="10.0" />
-               </BorderPane.margin>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-              </GridPane>
-         </center>
-         <top>
-            <HBox alignment="CENTER" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="lbPlayer" styleClass="lb_player" text="Playername:">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="tfPlayerName" onAction="#onPlayerNameEntered" onInputMethodTextChanged="#onPlayerNameEntered" promptText="Playername" />
-               </children>
-               <BorderPane.margin>
-                  <Insets bottom="10.0" />
-               </BorderPane.margin>
-            </HBox>
-         </top>
-         <BorderPane.margin>
-            <Insets bottom="5.0" top="10.0" />
-         </BorderPane.margin>
-      </BorderPane>
-   </center>
-   <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-   </padding>
+    <center>
+        <BorderPane prefHeight="329.0" prefWidth="598.0" BorderPane.alignment="CENTER">
+            <left>
+                <BorderPane fx:id="btLeft" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <top>
+                        <HBox prefHeight="28.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <Label styleClass="lb_player" text="Fleet:"/>
+                                <Label fx:id="lbPlayerName" styleClass="lb_player"/>
+                            </children>
+                        </HBox>
+                    </top>
+                    <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" top="10.0"/>
+                    </BorderPane.margin>
+                    <center>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+                            <content>
+                                <ListView fx:id="lvFleet" onMouseClicked="#onShipSelected" prefHeight="310.0"
+                                          prefWidth="190.0"/>
+                            </content>
+                        </ScrollPane>
+                    </center>
+                    <bottom>
+                        <ComboBox fx:id="cbOrientation" prefWidth="200.0" promptText="Select Orientation"
+                                  visibleRowCount="2" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets top="10.0"/>
+                            </BorderPane.margin>
+                        </ComboBox>
+                    </bottom>
+                </BorderPane>
+            </left>
+            <right>
+                <BorderPane fx:id="btRight" prefHeight="413.0" prefWidth="135.0" BorderPane.alignment="CENTER">
+                    <left>
+                        <VBox spacing="5.0" styleClass="bg_gray" BorderPane.alignment="CENTER">
+                            <children>
+                                <Button id="button" fx:id="btInitialize" cancelButton="true" disable="true"
+                                        maxWidth="200.0" onAction="#onInitialize" styleClass="buttons"
+                                        text="Initialize"/>
+                                <Button id="button" fx:id="btSetRandomFleet" maxWidth="200.0"
+                                        onAction="#onSetRandomFleet" styleClass="buttons" text="Set fleet randomly"/>
+                                <Button id="button" fx:id="btClearFleet" maxWidth="200.0" onAction="#onClearFleet"
+                                        prefHeight="27.0" styleClass="buttons" text="Clear fleet"/>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                            <BorderPane.margin>
+                                <Insets right="5.0"/>
+                            </BorderPane.margin>
+                        </VBox>
+                    </left>
+                </BorderPane>
+            </right>
+            <center>
+                <GridPane fx:id="battleGroundGridPane" alignment="CENTER" hgap="5.0" prefHeight="301.0"
+                          prefWidth="283.0" styleClass="bg_sea" vgap="5.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                    <BorderPane.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </BorderPane.margin>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                </GridPane>
+            </center>
+            <top>
+                <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label fx:id="lbPlayer" styleClass="lb_player" text="Playername:">
+                            <padding>
+                                <Insets right="5.0"/>
+                            </padding>
+                        </Label>
+                        <TextField fx:id="tfPlayerName" onAction="#onPlayerNameEntered"
+                                   onInputMethodTextChanged="#onPlayerNameEntered" promptText="Playername?"/>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets bottom="10.0"/>
+                    </BorderPane.margin>
+                </HBox>
+            </top>
+            <BorderPane.margin>
+                <Insets bottom="5.0" top="10.0"/>
+            </BorderPane.margin>
+        </BorderPane>
+    </center>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
 </BorderPane>
