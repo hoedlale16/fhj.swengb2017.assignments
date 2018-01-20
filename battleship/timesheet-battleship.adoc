@@ -199,11 +199,7 @@ The project is based on homework 4 assignment.
 | 4
 | WP2.2: Write User-Manual for game flow
 
-<<<<<<< HEAD
-| weilands16
-=======
 | fernbach16
->>>>>>> 149d7e3c0c7906fa79b9079d2ea7ded3380ca544
 | 20.01.18
 | 2
 | 2
@@ -227,11 +223,7 @@ The project is based on homework 4 assignment.
 | 1.5
 | WP3.3: Final preparation of application
 
-<<<<<<< HEAD
-| fernbach16
-=======
 | weilands16
->>>>>>> 149d7e3c0c7906fa79b9079d2ea7ded3380ca544
 | 22.01.18
 | 3
 | 3
