@@ -14,7 +14,7 @@ class BattleShipCreditsFxController extends Initializable {
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     //Load credits and display them
-    val credits: String = BattleShipGameCredits().getCreditText()
+    val credits: String = BattleShipGameCredits().getCreditText
     webView.getEngine.loadContent(credits)
   }
 
