@@ -1,7 +1,7 @@
 package at.fhj.swengb.apps.battleship
 
-import java.text.{DateFormat, SimpleDateFormat}
-import java.util.{Calendar, Date}
+import java.text.SimpleDateFormat
+import java.util.Date
 
 import at.fhj.swengb.apps.battleship.BattleShipProtobuf.BattleShipPlayRound.{Position, Vessel, VesselOrientation}
 import at.fhj.swengb.apps.battleship.BattleShipProtobuf.HighScore
@@ -14,40 +14,6 @@ object BattleShipProtocol {
   def convert(protoHighScore: HighScore): Seq[BattleShipGamePlayRound] = {
     val highScore: Seq[BattleShipGamePlayRound] = protoHighScore.getPlayedPlayRoundsList.asScala.map(e => convert(e))
     highScore
-  }
-
-  def convert(highScore: Seq[BattleShipGamePlayRound]): BattleShipProtobuf.HighScore = {
-
-    //Convert all highscore-Entries
-    val protoHighScoreEntries: Seq[BattleShipProtobuf.BattleShipPlayRound] = highScore.map(e => convert(e))
-
-    //Add Entries to protHighScore
-    val protoHighScore: HighScore.Builder = protoHighScoreEntries.foldLeft(HighScore.newBuilder())((acc,e) =>acc.addPlayedPlayRounds(e))
-    protoHighScore.build()
-  }
-
-  def convert(g: BattleShipGamePlayRound): BattleShipProtobuf.BattleShipPlayRound = {
-    //Create Protobuf Battlefield
-    val protoPlayRound = BattleShipProtobuf.BattleShipPlayRound
-      .newBuilder()
-      .setGameName(g.name)
-
-     //Add all Instances of BattleshipGames
-      //Singleplayer => max 1
-      //Multiplayer => max 2
-     val protoGames = g.games.map(e => convert(e))
-     protoGames.foreach(e => protoPlayRound.addBattlefieldsGames(e))
-
-    //If change on format is required change reverse-convert function as well!!
-    protoPlayRound.setStartdate(new SimpleDateFormat("yyyy/MM/dd").format(g.startDate))
-
-    //Set winner if set. (HighScore)
-    if (! g.getWinner.isEmpty) {
-      protoPlayRound.setWinner(convert(g.getWinner.get))
-    }
-
-    //Build battlefield and write to file
-    protoPlayRound.build()
   }
 
   def convert(protoPlayGround: BattleShipProtobuf.BattleShipPlayRound): BattleShipGamePlayRound = {
@@ -64,7 +30,7 @@ object BattleShipProtocol {
 
     //Create BattleshipGame and set aready clicked positions
     val playRound = BattleShipGamePlayRound(gameName,
-                              battleFieldGames,startDate)
+      battleFieldGames, startDate)
 
     //Set Winner of round if set (Highscore data)
     if (protoPlayGround.hasWinner) {
@@ -74,8 +40,101 @@ object BattleShipProtocol {
     //return game
     playRound
   }
-  
-    def convert(game: BattleShipGame): BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame = {
+
+  def convert(protoGame: BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame): BattleShipGame = {
+
+    val fleet = Fleet(protoGame.getVesselsList.asScala.map(e => convert(e)).toSet)
+
+    val field: BattleField = BattleField(protoGame.getFieldWidth,
+      protoGame.getFieldHeight, fleet)
+
+
+    val game: BattleShipGame = BattleShipGame(convert(protoGame.getPlayer),
+      field,
+      x => x.toDouble,
+      x => x.toDouble,
+      x => (),
+      x => (),
+      null)
+
+    game.clickedPositions = protoGame.getClickedPositionsList.asScala.map(e => convert(e)).toList
+
+    //Return game
+    game
+  }
+
+  /**
+    * Convert a Protobuf Vessel to a BattleShipGame Vessel
+    *
+    * @param vessel Vessel to convert to protobuf vessel
+    * @return
+    */
+  //Previously convertProtobufVesseltoVessel
+  def convert(vessel: Vessel): at.fhj.swengb.apps.battleship.model.Vessel = {
+
+    val name: NonEmptyString = NonEmptyString(vessel.getName)
+    val startPos: BattlePos =
+      BattlePos(vessel.getStartPos.getX, vessel.getStartPos.getY)
+    val size = vessel.getSize
+    val direction: Direction = vessel.getOrientation match {
+      case VesselOrientation.Horizontal => Horizontal
+      case VesselOrientation.Vertical => Vertical
+      case _ => ??? //When this happens, some crazy shit is going on…
+    }
+
+    //Create Battleship Vessel and return it.
+    at.fhj.swengb.apps.battleship.model.Vessel(name, startPos, direction, size)
+  }
+
+  /** Converts a ProtobufPosition to a BattleShipGame BattlePos
+    *
+    * @param position protobuf position to convert to BattlePos
+    * @return
+    */
+  //previously convertProtoBufPositionToBattlePos
+  private def convert(position: Position): BattlePos = {
+    BattlePos(position.getX, position.getY)
+  }
+
+  private def convert(player: BattleShipProtobuf.BattleShipPlayRound.Player): Player = {
+    Player(player.getName, player.getCssStyleClass)
+  }
+
+  def convert(highScore: Seq[BattleShipGamePlayRound]): BattleShipProtobuf.HighScore = {
+
+    //Convert all highscore-entries
+    val protoHighScoreEntries: Seq[BattleShipProtobuf.BattleShipPlayRound] = highScore.map(e => convert(e))
+
+    //Add Entries to protHighScore
+    val protoHighScore: HighScore.Builder = protoHighScoreEntries.foldLeft(HighScore.newBuilder())((acc, e) => acc.addPlayedPlayRounds(e))
+    protoHighScore.build()
+  }
+
+  def convert(g: BattleShipGamePlayRound): BattleShipProtobuf.BattleShipPlayRound = {
+    //Create Protobuf-Battlefield
+    val protoPlayRound = BattleShipProtobuf.BattleShipPlayRound
+      .newBuilder()
+      .setGameName(g.name)
+
+    //Add all Instances of BattleshipGames
+    //Singleplayer => max 1
+    //Multiplayer => max 2
+    val protoGames = g.games.map(e => convert(e))
+    protoGames.foreach(e => protoPlayRound.addBattlefieldsGames(e))
+
+    //If change on format is required change reverse-convert function as well!!
+    protoPlayRound.setStartdate(new SimpleDateFormat("yyyy/MM/dd").format(g.startDate))
+
+    //Set winner if set. (HighScore)
+    if (g.getWinner.isDefined) {
+      protoPlayRound.setWinner(convert(g.getWinner.get))
+    }
+
+    //Build battlefield and write to file
+    protoPlayRound.build()
+  }
+
+  def convert(game: BattleShipGame): BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame = {
     val protoGame = BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame.newBuilder()
 
     protoGame.setPlayer(convert(game.player))
@@ -93,31 +152,8 @@ object BattleShipProtocol {
     protoGame.build()
   }
 
-  def convert(protoGame: BattleShipProtobuf.BattleShipPlayRound.BattleFieldGame): BattleShipGame = {
-
-    val fleet = Fleet(protoGame.getVesselsList.asScala.map(e => convert(e)).toSet)
-
-    val field: BattleField = BattleField(protoGame.getFieldWidth,
-                                         protoGame.getFieldHeight, fleet)
-
-
-    val game: BattleShipGame = BattleShipGame(convert(protoGame.getPlayer),
-                                              field,
-                                              x => x.toDouble,
-                                              x => x.toDouble,
-                                              x => (),
-                                              x => (),
-                                              null)
-
-    game.clickedPositions = protoGame.getClickedPositionsList.asScala.map(e => convert(e)).toList
-
-    //Return game
-    game
-  }
-  
-
   /**
-    * Convertes a given Battleship-Game Vessel to an Protobuf Vessel to store
+    * Convertes a given Battleship-Game Vessel to a Protobuf-Vessel for storage
     *
     * @param vessel Vessel from BattleShipGame which become converted
     * @return
@@ -128,12 +164,12 @@ object BattleShipProtocol {
     val vesselOrientation = {
       vessel.direction match {
         case Horizontal => VesselOrientation.Horizontal;
-        case Vertical   => VesselOrientation.Vertical;
-        case _          => ??? /*When this happens, some crazy shit is going on... */
+        case Vertical => VesselOrientation.Vertical;
+        case _ => ??? /*When this happens, some crazy shit is going on… */
       }
     }
 
-    //Create new protobuf Vessel
+    //Create new protobuf-Vessel
     Vessel
       .newBuilder()
       .setName(vessel.name.value)
@@ -149,32 +185,9 @@ object BattleShipProtocol {
   }
 
   /**
-    * Convert a Protobuf Vessel to a BattleShipGame Vessel
+    * Generates a Protobuf-Position from a given BattlePos-position
     *
-    * @param vessel Vessel to convert to protobuf vessel
-    * @return
-    */
-  //Previous convertProtobufVesseltoVessel
-  def convert(vessel: Vessel): at.fhj.swengb.apps.battleship.model.Vessel = {
-
-    val name: NonEmptyString = NonEmptyString(vessel.getName)
-    val startPos: BattlePos =
-      BattlePos(vessel.getStartPos.getX, vessel.getStartPos.getY)
-    val size = vessel.getSize
-    val direction: Direction = vessel.getOrientation match {
-      case VesselOrientation.Horizontal => Horizontal
-      case VesselOrientation.Vertical   => Vertical
-      case _                            => ??? //When this happens, some crazy shit is going on...
-    }
-
-    //Create Battleship Vessel and return it.
-    at.fhj.swengb.apps.battleship.model.Vessel(name, startPos, direction, size)
-  }
-
-  /**
-    * Generates a Protobuf Position from given BattlePos possiton
-    *
-    * @param battlePos battlepos convert to protobuf positon
+    * @param battlePos battlepos convert to protobuf position
     * @return
     */
   //Previous convertBattlePosToProtobufPosition
@@ -186,25 +199,10 @@ object BattleShipProtocol {
       .build()
   }
 
-
-  /** Converts a Protobuf Position to a BattleShipGame BattlePos
-    *
-    * @param position protobuf position to convert to BattlePos
-    * @return
-    */
-  //previous convertProtoBufPositionToBattlePos
-  private def convert(position: Position): BattlePos = {
-    BattlePos(position.getX, position.getY)
-  }
-
   private def convert(player: Player): BattleShipProtobuf.BattleShipPlayRound.Player = {
     BattleShipProtobuf.BattleShipPlayRound.Player.newBuilder()
       .setName(player.name)
       .setCssStyleClass(player.cssStyleClass)
       .build()
-  }
-
-  private def convert(player: BattleShipProtobuf.BattleShipPlayRound.Player): Player = {
-    Player(player.getName,player.getCssStyleClass)
   }
 }
