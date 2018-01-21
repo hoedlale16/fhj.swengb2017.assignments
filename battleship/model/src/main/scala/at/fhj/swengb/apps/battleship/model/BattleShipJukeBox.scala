@@ -21,7 +21,7 @@ case class BattleShipJukeBox(backgroundMusic: Media, shipHitMedia: Media, waterH
     playBackgroundMusic()
   }
 
-  def isTotalMute: Boolean = muteBackground && muteBackground
+  def isTotalMute: Boolean = muteBackground && muteSoundEffect
 
   def setTotalMute(state: Boolean): Unit = {
     muteBackground = state
