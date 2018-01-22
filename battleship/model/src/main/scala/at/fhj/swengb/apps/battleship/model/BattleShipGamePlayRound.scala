@@ -112,7 +112,7 @@ object BattleShipGamePlayRound {
     val w3: Seq[String] = Seq("of", "from", "since", "for", "at", "in", "against")
     val w4: Seq[String] = Seq("Graz", "Eggenberg", "1908", "FH Joanneum", "Kapfenberg", "London", "1997", "1492")
 
-    val rGen: Random = new Random
+    val rGen: Random = new Random()
 
     val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
       w2(rGen.nextInt(w2.size - 1)) + " " +
