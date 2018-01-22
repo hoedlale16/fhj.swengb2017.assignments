@@ -300,6 +300,7 @@ class BattleShipFxController extends Initializable {
       }
     } else {
       //Switch game to multiplayer mode
+      //Autorefactoring: lengthCompare equals method size (-1 shorter, 0 equal, 1 longer)
       if (gamePlayround.games.lengthCompare(1) > 0) {
         //Display Info that other user is ready to play
         val otherGame: BattleShipGame = gamePlayround.getOtherBattleShipGame
@@ -325,8 +326,8 @@ class BattleShipFxController extends Initializable {
     battleGroundGridPane.getChildren.clear()
     for (c <- gameToLoad.getCells) {
       battleGroundGridPane.add(c, c.pos.x, c.pos.y)
+      c.init(gameToLoad.clickedPositions)
     }
-    gameToLoad.getCells.foreach(c => c.init(gameToLoad.clickedPositions))
 
     //Change Background according to style from user
     gameBackground.getStyleClass.remove("bg_playerA")
