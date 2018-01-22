@@ -37,36 +37,6 @@ object BattleShipGamePlayRound {
   }
 
   /**
-    * * Creates a new BattleShip game for given user
-    *
-    * @param player               - Create game for given player
-    * @param getCellWidth         - Function which defines the width of each cell
-    * @param getCellHeight        - Function which defines the height of each cell
-    * @param log                  - Function to write log
-    * @param updateGUIAfterAction - Function which get called after click
-    * @return a new BattleShipGame
-    */
-  private def createBattleShipGame(player: Player,
-                                   getCellWidth: Int => Double,
-                                   getCellHeight: Int => Double,
-                                   log: String => Unit,
-                                   updateGUIAfterAction: BattleShipGame => Unit,
-                                   jukeBox: BattleShipJukeBox,
-                                   fleetConfig: FleetConfig): BattleShipGame = {
-
-    val battlefield: BattleField =
-      BattleField(10, 10, Fleet(fleetConfig))
-
-    BattleShipGame(player,
-      BattleField.placeRandomly(battlefield),
-      getCellWidth,
-      getCellHeight,
-      log,
-      updateGUIAfterAction,
-      jukeBox)
-  }
-
-  /**
     * Create A BattleShipPlayRound for Multiplayer-Mode
     *
     * @param playerA              - First player to create play round for
@@ -98,55 +68,6 @@ object BattleShipGamePlayRound {
       createRandomPlayRoundName(),
       Seq(gamePlayerA, gamePlayerB),
       Calendar.getInstance.getTime)
-  }
-
-  /**
-    * Creates a random Name for a new created battleship gamePlayround according feature "Naming of battles"
-    * Name is build from 4 lists where words get randomly choosen.
-    *
-    * @return Random generated Name for a new battleshipName
-    */
-  private def createRandomPlayRoundName(): String = {
-    val w1: Seq[String] = Seq("The", "Holy", "Deadly", "Epic", "Peaceful")
-    val w2: Seq[String] = Seq("battle", "fight", "encounter", "conflict", "war", "crusade", "board examination")
-    val w3: Seq[String] = Seq("of", "from", "since", "for", "at", "in", "against")
-    val w4: Seq[String] = Seq("Graz", "Eggenberg", "1908", "FH Joanneum", "Kapfenberg", "London", "1997", "1492")
-
-    val rGen: Random = new Random()
-
-    val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
-      w2(rGen.nextInt(w2.size - 1)) + " " +
-      w3(rGen.nextInt(w3.size - 1)) + " " +
-      w4(rGen.nextInt(w4.size - 1))
-
-    name
-  }
-
-  /**
-    * * Creates a new BattleShip game for given user
-    *
-    * @param player               - Create game for given player
-    * @param battlefield          - Battlefield for this game.
-    * @param getCellWidth         - Function which defines the width of each cell
-    * @param getCellHeight        - Function which defines the height of each cell
-    * @param log                  - Function to write log
-    * @param updateGUIAfterAction - Function which get called after click
-    * @return a new BattleShipGame
-    */
-  private def createBattleShipGame(player: Player,
-                                   battlefield: BattleField,
-                                   getCellWidth: Int => Double,
-                                   getCellHeight: Int => Double,
-                                   log: String => Unit,
-                                   updateGUIAfterAction: BattleShipGame => Unit,
-                                   jukeBox: BattleShipJukeBox): BattleShipGame = {
-    BattleShipGame(player,
-      battlefield,
-      getCellWidth,
-      getCellHeight,
-      log,
-      updateGUIAfterAction,
-      jukeBox)
   }
 
   /**
@@ -194,6 +115,86 @@ object BattleShipGamePlayRound {
     val newPR = BattleShipGamePlayRound(highScorePlayround.name, games, highScorePlayround.startDate)
     newPR.winner = highScorePlayround.winner
     newPR
+  }
+
+
+  /**
+    * Creates a random Name for a new created battleship gamePlayround according feature "Naming of battles"
+    * Name is build from 4 lists where words get randomly choosen.
+    *
+    * @return Random generated Name for a new battleshipName
+    */
+  private def createRandomPlayRoundName(): String = {
+    val w1: Seq[String] = Seq("The", "Holy", "Deadly", "Epic", "Peaceful")
+    val w2: Seq[String] = Seq("battle", "fight", "encounter", "conflict", "war", "crusade", "board examination")
+    val w3: Seq[String] = Seq("of", "from", "since", "for", "at", "in", "against")
+    val w4: Seq[String] = Seq("Graz", "Eggenberg", "1908", "FH Joanneum", "Kapfenberg", "London", "1997", "1492")
+
+    val rGen: Random = new Random()
+
+    val name: String = w1(rGen.nextInt(w1.size - 1)) + " " +
+      w2(rGen.nextInt(w2.size - 1)) + " " +
+      w3(rGen.nextInt(w3.size - 1)) + " " +
+      w4(rGen.nextInt(w4.size - 1))
+
+    name
+  }
+
+  /**
+    * * Creates a new BattleShip game for given user
+    *
+    * @param player               - Create game for given player
+    * @param getCellWidth         - Function which defines the width of each cell
+    * @param getCellHeight        - Function which defines the height of each cell
+    * @param log                  - Function to write log
+    * @param updateGUIAfterAction - Function which get called after click
+    * @return a new BattleShipGame
+    */
+  private def createBattleShipGame(player: Player,
+                                   getCellWidth: Int => Double,
+                                   getCellHeight: Int => Double,
+                                   log: String => Unit,
+                                   updateGUIAfterAction: BattleShipGame => Unit,
+                                   jukeBox: BattleShipJukeBox,
+                                   fleetConfig: FleetConfig): BattleShipGame = {
+
+    val battlefield: BattleField =
+      BattleField(10, 10, Fleet(fleetConfig))
+
+    BattleShipGame(player,
+      BattleField.placeRandomly(battlefield),
+      getCellWidth,
+      getCellHeight,
+      log,
+      updateGUIAfterAction,
+      jukeBox)
+  }
+
+  /**
+    * * Creates a new BattleShip game for given user
+    *
+    * @param player               - Create game for given player
+    * @param battlefield          - Battlefield for this game.
+    * @param getCellWidth         - Function which defines the width of each cell
+    * @param getCellHeight        - Function which defines the height of each cell
+    * @param log                  - Function to write log
+    * @param updateGUIAfterAction - Function which get called after click
+    * @return a new BattleShipGame
+    */
+  private def createBattleShipGame(player: Player,
+                                   battlefield: BattleField,
+                                   getCellWidth: Int => Double,
+                                   getCellHeight: Int => Double,
+                                   log: String => Unit,
+                                   updateGUIAfterAction: BattleShipGame => Unit,
+                                   jukeBox: BattleShipJukeBox): BattleShipGame = {
+    BattleShipGame(player,
+      battlefield,
+      getCellWidth,
+      getCellHeight,
+      log,
+      updateGUIAfterAction,
+      jukeBox)
   }
 
   /**
